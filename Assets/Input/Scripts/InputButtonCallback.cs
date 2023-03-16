@@ -5,8 +5,8 @@ namespace Greenyass.Input
 {
     public class InputButtonCallback : InputCallback
     {
-        private Action onButtonPressed = Empty;
-        private Action onButtonReleased = Empty;
+        private Action onButtonPressed = EmptyCallback;
+        private Action onButtonReleased = EmptyCallback;
 
         public InputButtonCallback(InputAction action)
         {

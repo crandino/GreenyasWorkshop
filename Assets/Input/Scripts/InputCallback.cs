@@ -5,8 +5,6 @@ namespace Greenyass.Input
 {
     public abstract class InputCallback
     {
-        protected static readonly Action Empty = delegate { };
-
-        //protected abstract InputCallback(InputAction action);  
+        protected static readonly Action EmptyCallback = delegate { };
     } 
 }

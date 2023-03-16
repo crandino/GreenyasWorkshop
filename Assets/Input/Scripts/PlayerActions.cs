@@ -35,6 +35,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotatePiece"",
+                    ""type"": ""Value"",
+                    ""id"": ""a2ff521e-4189-4b87-920d-d39489e0c31a"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Selection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c56c9e3-17e2-4b8b-9385-cb45dfac7de4"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotatePiece"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +77,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         // InGame
         m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
         m_InGame_Selection = m_InGame.FindAction("Selection", throwIfNotFound: true);
+        m_InGame_RotatePiece = m_InGame.FindAction("RotatePiece", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -117,11 +138,13 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_InGame;
     private IInGameActions m_InGameActionsCallbackInterface;
     private readonly InputAction m_InGame_Selection;
+    private readonly InputAction m_InGame_RotatePiece;
     public struct InGameActions
     {
         private @PlayerActions m_Wrapper;
         public InGameActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Selection => m_Wrapper.m_InGame_Selection;
+        public InputAction @RotatePiece => m_Wrapper.m_InGame_RotatePiece;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -134,6 +157,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Selection.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnSelection;
                 @Selection.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnSelection;
                 @Selection.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnSelection;
+                @RotatePiece.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnRotatePiece;
+                @RotatePiece.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnRotatePiece;
+                @RotatePiece.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnRotatePiece;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -141,6 +167,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Selection.started += instance.OnSelection;
                 @Selection.performed += instance.OnSelection;
                 @Selection.canceled += instance.OnSelection;
+                @RotatePiece.started += instance.OnRotatePiece;
+                @RotatePiece.performed += instance.OnRotatePiece;
+                @RotatePiece.canceled += instance.OnRotatePiece;
             }
         }
     }
@@ -148,5 +177,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     public interface IInGameActions
     {
         void OnSelection(InputAction.CallbackContext context);
+        void OnRotatePiece(InputAction.CallbackContext context);
     }
 }
