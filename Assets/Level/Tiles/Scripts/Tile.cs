@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class Tile : MonoBehaviour
 {
+    [SerializeField]
+    private Collider trigger;
+
     // Position
     float targetHeight = 0f;
 
@@ -17,8 +20,8 @@ public class Tile : MonoBehaviour
 
     private bool IsRotating => currentRotationTime < ROTATION_TIME;
 
-    private static Tile selectedTile = null;
-    public static bool IsTileSelected => selectedTile != null;
+    //private static Tile selectedTile = null;
+    //public static bool IsTileSelected => selectedTile != null;
 
     private InputManager input = null;
     private Hex hex = null;
@@ -45,31 +48,28 @@ public class Tile : MonoBehaviour
     {
         targetHeight = 0.25f;
 
+        trigger.enabled = false;
+
         input.OnAxis.OnPositiveDelta += RotateClockwise;
         input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
-
-        selectedTile = this;
     }
 
     public void Release()
     {
         targetHeight = 0.0f;
 
+        trigger.enabled = true;
+
         input.OnAxis.OnPositiveDelta -= RotateClockwise;
         input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
 
         hex = Hex.GetNearestHex(transform.position);
-        //Vector3 releasedPos = HexMap.GetNearestHexWorldPosFrom(transform.position).SwizzleX_Y(targetHeight);
-
-        //Vector3 releasedPos = TilePlaceHelper.GetNearestPossiblePoint(transform.position);
-        UpdatePosition(hex.Get3DCartesianWorldPos(), 0f);
-
-        selectedTile = null;
+        UpdatePosition(hex.Get3DCartesianWorldPos());
     }
 
-    public void UpdatePosition(Vector3 position, float height)
+    public void UpdatePosition(Vector3 position)
     {
-        transform.position = new Vector3(position.x, height, position.z);
+        transform.position = position;
     }
 
     private void Update()

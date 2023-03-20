@@ -28,7 +28,7 @@ public class Hex
         return new Vector2(x, y);
     }
 
-    public Vector3 Get3DCartesianWorldPos(float defaultYValue = 0)
+    public Vector3 Get3DCartesianWorldPos(float defaultYValue = 0f)
     {
         return Get2DCartesianWorldPos().SwizzleX_Y(defaultYValue);
     }
@@ -41,6 +41,16 @@ public class Hex
         FractionalHex fracHex = new FractionalHex(fracQ, fracR);
         return fracHex.RoundCubeCoordinates();
     }
+
+    //public static bool operator ==(Hex a, Hex b)
+    //{
+    //    return a.Q == b.Q && a.R == b.R && a.S == b.S;
+    //}
+
+    //public static bool operator !=(Hex a, Hex b)
+    //{
+    //    return a.Q != b.Q || a.R != b.R || a.S != b.S;
+    //}
 
     private class FractionalHex 
     {

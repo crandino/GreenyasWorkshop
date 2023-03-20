@@ -1,5 +1,6 @@
 using UnityEngine;
 using Greenyas.VectorExtensions.Swizzle;
+using JetBrains.Annotations;
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
 using UnityEditor;
