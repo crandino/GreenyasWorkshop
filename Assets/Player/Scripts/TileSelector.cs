@@ -45,7 +45,6 @@ public class TileSelector : MonoBehaviour
     {
         if(currentSelectedTile)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit = new RaycastHit();
             if (CursorRaycast(boardMask, out hit))
             {
