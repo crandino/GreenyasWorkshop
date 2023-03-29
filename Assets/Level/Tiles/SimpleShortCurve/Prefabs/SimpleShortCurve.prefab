@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4515900480938141937}
   - component: {fileID: 1290353551350455901}
   m_Layer: 6
-  m_Name: NodeB
+  m_Name: NodeA2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 1948492805737371542}
   - component: {fileID: 8414498469947638583}
   m_Layer: 6
-  m_Name: NodeA
+  m_Name: NodeA1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
