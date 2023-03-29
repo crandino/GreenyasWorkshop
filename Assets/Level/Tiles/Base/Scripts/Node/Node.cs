@@ -11,7 +11,7 @@ public abstract class Node : MonoBehaviour
     protected internal Node inNode = null;
 
     public HexSide.Side WorldSide => hexSide.WorldSide;
-   
+
     public void TryConnection()
     {
         CubeCoord toHexCoord = hexSide.GetNeighborCoordOnWorldSide();
@@ -29,7 +29,7 @@ public abstract class Node : MonoBehaviour
     public void TryDisconnection()
     {
         Node nodeDisconnected = Disconnect();
-        if(nodeDisconnected != null)
+        if (nodeDisconnected != null)
             nodeDisconnected.Disconnect();
     }
 
@@ -39,16 +39,15 @@ public abstract class Node : MonoBehaviour
 #if UNITY_EDITOR
     public virtual void ShowConnections()
     {
+        Handles.color = CustomColors.darkOrange;
         if (inNode != null)
         {
-            Handles.color = Color.yellow;
             Vector3 toInNodeVector = inNode.transform.position - transform.position;
-            Handles.DrawLine(transform.position, transform.position + toInNodeVector * 0.5f, 1f);
+            Handles.DrawLine(transform.position, transform.position + toInNodeVector * 0.5f, 2f);
         }
         else
         {
-            Handles.color = Color.red;
-            Handles.CubeHandleCap(0, transform.position, Quaternion.identity, 0.1f, EventType.Repaint);
+            Handles.SphereHandleCap(0, transform.position, Quaternion.identity, 0.05f, EventType.Repaint);
         }
     }
 #endif
