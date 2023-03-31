@@ -47,7 +47,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 3
     parentTile: {fileID: 7961371567547795030}
-  inNode: {fileID: 3724902371689599171}
+  inward: {fileID: 3724902371689599171}
 --- !u!1 &9022780244304269557
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 1
     parentTile: {fileID: 7961371567547795030}
-  inNode: {fileID: 2555365287751169711}
+  inward: {fileID: 2555365287751169711}
 --- !u!1001 &4368084568074449550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -117,7 +117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.714
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -125,7 +125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.285
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalRotation.w

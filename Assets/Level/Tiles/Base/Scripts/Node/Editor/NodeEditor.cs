@@ -52,7 +52,7 @@ public class NodeEditor : Editor
 
         EditorGUI.indentLevel--;
 
-        EditorGUILayout.ObjectField(serializedObject.FindProperty("inNode"));
+        EditorGUILayout.ObjectField(serializedObject.FindProperty("inward"));
 
         if (serializedObject.hasModifiedProperties)
             serializedObject.ApplyModifiedProperties();

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 375509324932550050}
   - component: {fileID: 6281303885607025102}
   m_Layer: 6
-  m_Name: NodeB
+  m_Name: NodeA2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1871723844698177505}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.8660254}
+  m_LocalPosition: {x: 0, y: 0, z: -0.4330127}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,7 +47,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 3
     parentTile: {fileID: 1026472003833483302}
-  inNode: {fileID: 8383171178233126793}
+  inward: {fileID: 8383171178233126793}
 --- !u!1 &7061922058300386322
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 9219274754889001962}
   - component: {fileID: 8383171178233126793}
   m_Layer: 6
-  m_Name: NodeA
+  m_Name: NodeA1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7061922058300386322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.8660254}
+  m_LocalPosition: {x: 0, y: 0, z: 0.4330127}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -95,7 +95,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 0
     parentTile: {fileID: 1026472003833483302}
-  inNode: {fileID: 6281303885607025102}
+  inward: {fileID: 6281303885607025102}
 --- !u!1001 &6691282926606574846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,7 +105,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5972604920604767441, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_Name
-      value: StraightTile
+      value: Straight
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767443, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_Materials.Array.data[0]

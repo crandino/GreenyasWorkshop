@@ -1,6 +1,6 @@
-using UnityEngine;
 using Greenyas.Hexagon;
 using UnityEditor;
+using UnityEngine;
 
 public abstract class Node : MonoBehaviour
 {
@@ -8,7 +8,7 @@ public abstract class Node : MonoBehaviour
     private HexSide hexSide;
 
     [SerializeField]
-    protected internal Node inNode = null;
+    protected internal Node inward = null;
 
     public HexSide.Side WorldSide => hexSide.WorldSide;
 
@@ -40,9 +40,9 @@ public abstract class Node : MonoBehaviour
     public virtual void ShowConnections()
     {
         Handles.color = CustomColors.darkOrange;
-        if (inNode != null)
+        if (inward != null)
         {
-            Vector3 toInNodeVector = inNode.transform.position - transform.position;
+            Vector3 toInNodeVector = inward.transform.position - transform.position;
             Handles.DrawLine(transform.position, transform.position + toInNodeVector * 0.5f, 2f);
         }
         else

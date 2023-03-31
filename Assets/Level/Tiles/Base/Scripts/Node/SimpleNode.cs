@@ -3,21 +3,21 @@ using UnityEngine;
 
 public class SimpleNode : Node
 {
-    private Node outNode;
+    private Node outward;
 
     protected override void Connect(Node node)
     {
-        outNode = node;
+        outward = node;
     }
 
     protected override Node Disconnect()
     {
         Node disconnectedNode = null;
 
-        if (outNode != null)
+        if (outward != null)
         {
-            disconnectedNode = outNode;
-            outNode = null;
+            disconnectedNode = outward;
+            outward = null;
         }
 
         return disconnectedNode;
@@ -28,7 +28,7 @@ public class SimpleNode : Node
     {
         base.ShowConnections();
 
-        Handles.color = outNode != null ? Color.green : Color.red;
+        Handles.color = outward != null ? Color.green : Color.red;
         Handles.ArrowHandleCap(0, transform.position, transform.rotation * Quaternion.LookRotation(transform.localPosition), 0.2f, EventType.Repaint);
     }
 #endif

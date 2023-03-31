@@ -47,7 +47,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 2
     parentTile: {fileID: 7709798206687043339}
-  inNode: {fileID: 6926638520443234915}
+  inward: {fileID: 6926638520443234915}
 --- !u!1 &2025988403568767875
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 5
     parentTile: {fileID: 7709798206687043339}
-  inNode: {fileID: 599799199564379587}
+  inward: {fileID: 599799199564379587}
 --- !u!1 &2666937317684348871
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 0
     parentTile: {fileID: 7709798206687043339}
-  inNode: {fileID: 8697186695438017350}
+  inward: {fileID: 8697186695438017350}
 --- !u!1 &2674807482679082777
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
   hexSide:
     initialLocalSide: 3
     parentTile: {fileID: 7709798206687043339}
-  inNode: {fileID: 715423762890483430}
+  inward: {fileID: 715423762890483430}
 --- !u!1001 &4043177041923926995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,15 +213,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.493
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05000036
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.887
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalRotation.w
