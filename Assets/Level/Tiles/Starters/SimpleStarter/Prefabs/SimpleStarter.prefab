@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5660227389205496634}
-  - component: {fileID: 6740146773655745548}
+  - component: {fileID: 4867450621028721500}
   m_Layer: 6
   m_Name: Node_A
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 9214805875131468527}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6740146773655745548
+--- !u!114 &4867450621028721500
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,13 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4207715392993883009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a07960f80bf825419c72b7f36b8c794, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e280088149ee62478ead47f886f34e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hexSide:
     initialLocalSide: 0
     parentTile: {fileID: 9214805875131468513}
-  inNode: {fileID: 0}
+  inward: []
 --- !u!1001 &3243547864323948089
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69,15 +69,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5972604920604767446, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -114,7 +114,7 @@ PrefabInstance:
     - target: {fileID: 5972604920604767448, guid: d70455185d791314db046330c40b9a2d, type: 3}
       propertyPath: nodes.Array.data[0]
       value: 
-      objectReference: {fileID: 6740146773655745548}
+      objectReference: {fileID: 4867450621028721500}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d70455185d791314db046330c40b9a2d, type: 3}
 --- !u!114 &9214805875131468513 stripped

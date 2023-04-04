@@ -1,8 +1,8 @@
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 namespace Greenyas.VectorExtensions.Swizzle
 {
+    // TODO: Maybe this class is very obtuse
     public static class VectorSwizzleExtensions
     {
         public static Vector3 SwizzleX_Y(this Vector2 v, float yValue = 0) => new Vector3(v.x, yValue, v.y);
