@@ -2,7 +2,6 @@ using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static Greenyas.Hexagon.HexSide;
 
 [System.Serializable]
 public class TilePath
@@ -11,6 +10,9 @@ public class TilePath
 
     [SerializeField]
     private Node[] nodes;
+
+    [SerializeField]
+    private bool isStarter = false;
 
     public TilePath()
     {
@@ -38,23 +40,6 @@ public class TilePath
     {
         return nodes[0] == entrance ? nodes[1] : nodes[0];
     }
-  
-    //public void Connect(TilePath[] paths)
-    //{
-    //    for (int i = 0; i < paths.Length; i++)
-    //    {
-    //        for (int j = 0; j < nodes.Length; j++)
-    //        {
-    //            Node connection = GetConnectionNode(nodes[j].Side);
-    //            if(connection != null)
-    //            {
-    //                // Conection in both ways
-    //                nodes[i].Connect(paths[i], connection);
-    //                connection.Connect(this, nodes[j]);
-    //            }
-    //        }
-    //    }
-    //}
 
     public void GetLinkPoint(Node entryPoint, List<Node.LinkPoint> candidates)
     {
@@ -65,17 +50,7 @@ public class TilePath
         }
     }
 
-    //private Node GetConnectionNode(Side side)
-    //{
-    //    for (int i = 0; i < nodes.Length; i++)
-    //    {
-    //        if (nodes[i].Side == side.GetOpposite())
-    //            return nodes[i];
-    //    }
-    //    return null;
-    //}
-
-    public void GetCandidateConnections(CubeCoord tileCoord, List<Node.LinkPoint> candidates)
+    public void GetLinkPoints(CubeCoord tileCoord, List<Node.LinkPoint> candidates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {

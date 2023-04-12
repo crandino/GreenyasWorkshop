@@ -90,10 +90,10 @@ public class Tile : MonoBehaviour
 
                 for (int j = 0; j < externalLinkPoints.Length; j++)
                 {
+                    // Connect in both directions
                     linkPoint.Connect(externalLinkPoints[j]);
                     externalLinkPoints[j].Connect(linkPoint);
                 }
-                //linkPoint.path.Connect(tileToConnect.paths);
             }
         }
 
@@ -107,7 +107,7 @@ public class Tile : MonoBehaviour
         List<Node.LinkPoint> candidates = new List<Node.LinkPoint>(); 
 
         for (int i = 0; i < paths.Length; i++)
-            paths[i].GetCandidateConnections(HexCoord, candidates);
+            paths[i].GetLinkPoints(HexCoord, candidates);
 
         return candidates.ToArray();
     }
@@ -137,18 +137,6 @@ public class Tile : MonoBehaviour
         HexCoord = HexTools.GetNearestCubeCoord(transform.position);
         transform.position = HexTools.GetCartesianWorldPos(HexCoord);
     }
-
-    //private void TryConnectTileThrough(Tile tileToConnect, Node entryPoint)
-    //{
-
-    //}
-
-    //private void SetNodeLinkDataOn(HexSide.Side side, Node.NodeLink nodeLinkData)
-    //{
-    //    nodeLinkData.LinkTile(this);
-    //    for (int i = 0; i < paths.Length; i++)
-    //        paths[i].SetNodeLinkDataOn(side, nodeLinkData);
-    //}
 
     public void UpdatePosition(Vector3 position)
     {

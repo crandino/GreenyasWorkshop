@@ -27,23 +27,27 @@ public class TileEditor : Editor
         ++EditorGUI.indentLevel;
         for (int i = 0; i < props.pathsArray.arraySize; i++)
         {
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Path {i + 1}");
-            ++EditorGUI.indentLevel;
+            EditorGUILayout.PropertyField(props.paths[i].isStarter);
+            EditorGUILayout.EndHorizontal();
 
+            ++EditorGUI.indentLevel;
             for (int j = 0; j < props.paths[i].nodes.Length; j++)
             {
+                if (j == 1 && props.paths[i].isStarter.boolValue)
+                    continue;
+
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField($"Node {j + 1}");
 
                 ++EditorGUI.indentLevel;
-
                 ShowHexSideCarousel(ref props.paths[i].nodes[j]);
+                --EditorGUI.indentLevel;
 
                 EditorGUILayout.EndHorizontal();
 
-                --EditorGUI.indentLevel;
             }
-
             --EditorGUI.indentLevel;
         }
         --EditorGUI.indentLevel;
@@ -62,12 +66,12 @@ public class TileEditor : Editor
         public struct PathProperties
         {
             public SerializedProperty path;
+            public SerializedProperty isStarter;
             public NodeProperties[] nodes;
 
             public struct NodeProperties
             {
                 public SerializedProperty node;
-
                 public SerializedProperty hexSide;
                 public SerializedProperty initialLocalSide;
 
@@ -87,6 +91,7 @@ public class TileEditor : Editor
             for (int i = 0; i < paths.Length; i++)
             {
                 paths[i].path = pathsArray.GetArrayElementAtIndex(i);
+                paths[i].isStarter = paths[i].path.FindPropertyRelative("isStarter");
                 paths[i].nodes = new PathProperties.NodeProperties[2];
                 SerializedProperty nodes = paths[i].path.FindPropertyRelative("nodes");
 
