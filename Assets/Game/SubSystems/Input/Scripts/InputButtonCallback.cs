@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.InputSystem;
 
-namespace Greenyass.Input
+namespace Greenyas.Input
 {
     public class InputButtonCallback : InputCallback
     {

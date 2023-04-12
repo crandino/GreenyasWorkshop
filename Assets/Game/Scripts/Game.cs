@@ -1,4 +1,4 @@
-using Greenyass.Input;
+using Greenyas.Input;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

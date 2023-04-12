@@ -1,4 +1,4 @@
-namespace Greenyass.Input
+namespace Greenyas.Input
 {
     public class InputManager : Game.SubSystem
     {

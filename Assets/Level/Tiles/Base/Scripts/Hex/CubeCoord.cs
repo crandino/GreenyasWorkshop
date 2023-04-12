@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Assertions;
+using static Greenyas.Hexagon.HexSide;
 
 namespace Greenyas.Hexagon
 {
@@ -42,7 +44,32 @@ namespace Greenyas.Hexagon
             {
                 return 0;
             }
+        }
 
+        private readonly static CubeCoord[] neighborCoords = new CubeCoord[]
+        {
+            new CubeCoord( 0,  1, -1), // north
+            new CubeCoord( 1,  0, -1), // north-east
+            new CubeCoord( 1, -1,  0), // south-east
+            new CubeCoord( 0, -1,  1), // south
+            new CubeCoord(-1,  0,  1), // south-west
+            new CubeCoord(-1 , 1,  0)  // north-west
+        };
+
+        public static CubeCoord GetNeighborCoord(CubeCoord from, Side hexSide)
+        {
+            return from + neighborCoords[(int)hexSide];
+        }
+
+        public static Vector2 GetVectorToNeighborHexOn(Side side)
+        {
+            CubeCoord coord = neighborCoords[(int)side];
+
+            return new Vector2()
+            {
+                x = HexTools.hexagonSize * (3f / 2) * coord.Q,
+                y = HexTools.hexagonSize * ((Mathf.Sqrt(3f) / 2) * coord.Q + Mathf.Sqrt(3f) * coord.R)
+            };
         }
     }
 

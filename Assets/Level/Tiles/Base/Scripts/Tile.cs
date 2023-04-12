@@ -1,7 +1,7 @@
 using Greenyas.Hexagon;
-using Greenyass.Input;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+using Greenyas.Input;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -10,15 +10,18 @@ public class Tile : MonoBehaviour
     private Collider trigger;
 
     [SerializeField]
-    private Node[] nodes;
+    private TilePath[] paths = null;
 
     // Rotation
-    public const int ROTATION_ANGLE = 60;
+    private const int ROTATION_ANGLE = 60;
+    private float targetRotationAngle = 0f;
     private float currentRotationTime = 0f;
 
     private InputManager input = null;
-    public int AccumulatedRotationAngle { private set; get; } = 0;
     public CubeCoord HexCoord { private set; get; }
+
+    private event Action OnPickUp;
+    private event Action OnRelease;
 
     private void Start()
     {
@@ -30,13 +33,19 @@ public class Tile : MonoBehaviour
     public void RotateClockwise()
     {
         currentRotationTime = 0f;
-        AccumulatedRotationAngle += ROTATION_ANGLE;
+        targetRotationAngle += ROTATION_ANGLE;
+
+        for (int i = 0; i < paths.Length; i++)
+            paths[i].RotateClockwise();
     }
 
     public void RotateCounterClockwise()
     {
         currentRotationTime = 0f;
-        AccumulatedRotationAngle -= ROTATION_ANGLE;
+        targetRotationAngle -= ROTATION_ANGLE;
+
+        for (int i = 0; i < paths.Length; i++)
+            paths[i].RotateCounterClockwise();
     }
 
     public void PickUp()
@@ -46,7 +55,7 @@ public class Tile : MonoBehaviour
         input.OnAxis.OnPositiveDelta += RotateClockwise;
         input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
 
-        DisconnectNodes();
+        DisconnectTile();
 
         HexMap.Instance.RemoveTile(HexCoord);
     }
@@ -60,21 +69,67 @@ public class Tile : MonoBehaviour
 
         FindNearCubeCoordAndPlace();
 
-        ConnectNodes();
+        ConnectTile();
 
         HexMap.Instance.AddTile(HexCoord, this);
     }
 
-    private void ConnectNodes()
+    private void ConnectTile()
     {
-        for (int i = 0; i < nodes.Length; i++)
-            nodes[i].TryConnection();
+        Node.LinkPoint[] linkPoints = SearchLinkPoints();
+
+        for (int i = 0; i < linkPoints.Length; i++)
+        {
+            Node.LinkPoint linkPoint = linkPoints[i];
+
+            CubeCoord neighborCoords = CubeCoord.GetNeighborCoord(HexCoord, linkPoint.entryPoint.Side);
+
+            if (HexMap.Instance.TryGetTile(neighborCoords, out Tile tileToConnect))
+            {
+                Node.LinkPoint[] externalLinkPoints = SearchLinkPoints(linkPoint, tileToConnect);
+
+                for (int j = 0; j < externalLinkPoints.Length; j++)
+                {
+                    linkPoint.Connect(externalLinkPoints[j]);
+                    externalLinkPoints[j].Connect(linkPoint);
+                }
+                //linkPoint.path.Connect(tileToConnect.paths);
+            }
+        }
+
+        //NodeIterator iterator = new NodeIterator();
+        //HexMap.Instance.TryGetTile(new CubeCoord(0, 0), out Tile startingTile);
+        //iterator.LookForClosedPaths(startingTile);
     }
 
-    private void DisconnectNodes()
+    private Node.LinkPoint[] SearchLinkPoints()
     {
-        for (int i = 0; i < nodes.Length; i++)
-            nodes[i].TryDisconnection();
+        List<Node.LinkPoint> candidates = new List<Node.LinkPoint>(); 
+
+        for (int i = 0; i < paths.Length; i++)
+            paths[i].GetCandidateConnections(HexCoord, candidates);
+
+        return candidates.ToArray();
+    }
+
+    private Node.LinkPoint[] SearchLinkPoints(Node.LinkPoint point, Tile neighborTile)
+    {
+        List<Node.LinkPoint> candidates = new List<Node.LinkPoint>();
+
+        for (int i = 0; i < neighborTile.paths.Length; i++)
+        {
+            TilePath path = neighborTile.paths[i];
+            path.GetLinkPoint(point.entryPoint, candidates);
+
+        }
+
+        return candidates.ToArray();
+    }
+
+    private void DisconnectTile()
+    {
+        for (int i = 0; i < paths.Length; i++)
+            paths[i].Disconnect();
     }
 
     private void FindNearCubeCoordAndPlace()
@@ -83,21 +138,17 @@ public class Tile : MonoBehaviour
         transform.position = HexTools.GetCartesianWorldPos(HexCoord);
     }
 
-    public bool TryGetNodeOnWorldSide(HexSide.Side worldSide, out Node node)
-    {
-        node = null;
+    //private void TryConnectTileThrough(Tile tileToConnect, Node entryPoint)
+    //{
 
-        for (int i = 0; i < nodes.Length; i++)
-        {
-            if (nodes[i].WorldSide == worldSide)
-            {
-                node = nodes[i];
-                return true; 
-            }
-        }
+    //}
 
-        return false;
-    }
+    //private void SetNodeLinkDataOn(HexSide.Side side, Node.NodeLink nodeLinkData)
+    //{
+    //    nodeLinkData.LinkTile(this);
+    //    for (int i = 0; i < paths.Length; i++)
+    //        paths[i].SetNodeLinkDataOn(side, nodeLinkData);
+    //}
 
     public void UpdatePosition(Vector3 position)
     {
@@ -108,22 +159,23 @@ public class Tile : MonoBehaviour
     {
         // Rotation
         currentRotationTime += Time.deltaTime;
-        float angle = Mathf.LerpAngle(transform.eulerAngles.y, AccumulatedRotationAngle, currentRotationTime);
+        float angle = Mathf.LerpAngle(transform.eulerAngles.y, targetRotationAngle, currentRotationTime);
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, angle, transform.localEulerAngles.z);
     }
 
 #if UNITY_EDITOR
-    [ContextMenu("Get References")]
-    private void GetReferences()
-    {
-        nodes = GetComponentsInChildren<Node>();
-    }
 
-    private void OnDrawGizmos()
+    //[ContextMenu("Get References")]
+    //private void GetReferences()
+    //{
+    //    nodes = GetComponentsInChildren<TilePath>();
+    //}
+
+    private void OnDrawGizmosSelected()
     {
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 0; i < paths.Length; i++)
         {
-            nodes[i].ShowConnections();
+            paths[i].ShowConnections();
         }
     }
 #endif

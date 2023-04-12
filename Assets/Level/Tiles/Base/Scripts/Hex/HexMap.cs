@@ -51,6 +51,11 @@ public class HexMap : MonoBehaviour
         mapStorage.Remove(coord);
     }
 
+    public bool IsTileOn(CubeCoord coord)
+    {
+        return mapStorage.ContainsKey(coord);
+    }
+
     public bool TryGetTile(CubeCoord coord, out Tile tile)
     {
         return mapStorage.TryGetValue(coord, out tile);

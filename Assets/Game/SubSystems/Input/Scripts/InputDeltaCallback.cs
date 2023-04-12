@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Greenyass.Input
+namespace Greenyas.Input
 {
     public class InputDeltaCallback : InputCallback
     {

@@ -5,17 +5,7 @@ namespace Greenyas.Hexagon
     [System.Serializable]
     public class HexSide
     {
-        private readonly static CubeCoord[] sideNeighborCoords = new CubeCoord[]
-        {
-        new CubeCoord( 0,  1, -1), // north
-        new CubeCoord( 1,  0, -1), // north-east
-        new CubeCoord( 1, -1,  0), // south-east
-        new CubeCoord( 0, -1,  1), // south
-        new CubeCoord(-1,  0,  1), // south-west
-        new CubeCoord(-1 , 1,  0)  // north-west
-        };
-
-        private const int TOTAL_SIDES = 6;
+        public const int TOTAL_SIDES = 6;
 
         public enum Side
         {
@@ -30,15 +20,16 @@ namespace Greenyas.Hexagon
         [SerializeField]
         private Side initialLocalSide;
 
-        [SerializeField]
-        private Tile parentTile;
+        public Side WorldSide => initialLocalSide;
 
-        public Side WorldSide => GetWorldSideAfterRotStep(initialLocalSide, parentTile.AccumulatedRotationAngle / Tile.ROTATION_ANGLE);
-        public Side OppositeWorldSide => GetWorldSideAfterRotStep(initialLocalSide, (parentTile.AccumulatedRotationAngle + 180) / Tile.ROTATION_ANGLE);
-
-        public CubeCoord GetNeighborCoordOnWorldSide()
+        public void RotateClockwise()
         {
-            return sideNeighborCoords[(int)WorldSide] + parentTile.HexCoord;
+            initialLocalSide = GetWorldSideAfterRotStep(initialLocalSide, 1);
+        }
+
+        public void RotateCounterClockwise()
+        {
+            initialLocalSide = GetWorldSideAfterRotStep(initialLocalSide, -1);
         }
 
         public static Side GetWorldSideAfterRotStep(Side localSide, int rotationSteps = 0)
@@ -65,17 +56,6 @@ namespace Greenyas.Hexagon
             if (localSide < Side.North)
                 return (Side)TOTAL_SIDES - rotationSteps;
             return localSide;
-        }
-
-        public static Vector2 GetVectorToNeighborHexOn(Side side)
-        {
-            CubeCoord coord = sideNeighborCoords[(int)side];
-
-            return new Vector2()
-            {
-                x = HexTools.hexagonSize * (3f / 2) * coord.Q,
-                y = HexTools.hexagonSize * ((Mathf.Sqrt(3f) / 2) * coord.Q + Mathf.Sqrt(3f) * coord.R)
-            };
-        }
+        }  
     }
 }
