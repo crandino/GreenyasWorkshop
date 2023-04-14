@@ -1,61 +1,110 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public static class NodeIterator
 {
-    //private static readonly Stack<TileNode> remainingNodes = new();
+    private class StepTracker<T>
+    {
+        private readonly Stack<IterationStep<T>> iteratedStack = new Stack<IterationStep<T>>();
 
-    //public static void LookForClosedPaths(Tile startingTile)
-    //{
-    //    remainingNodes.Clear();
-    //    //remainingNodes.Push(startingTile.Nodes);
+        private class IterationStep<T> : IEnumerator
+        {
+            private T[] set;
+            private int currentStep;
 
-    //    //string debugLog = "";
+            public IterationStep(params T[] set)
+            {
+                this.set = set;
+                currentStep = -1;
+            }
 
-    //    //while (remainingNodes.Count != 0)
-    //    //{
-    //    //    Node node = remainingNodes.Pop().Outward;
+            public object Current
+            {
+                get
+                {
+                    Assert.IsTrue(currentStep >= 0, "Use MoveNext() first before accessing the current Link");
+                    return set[currentStep];
+                }
+            }           
 
-    //    //    if (node)
-    //    //    {
-    //    //        debugLog += $"Node: {node.transform.parent.gameObject.name}\n";
-    //    //        if (node.IsStartNode)
-    //    //        {
-    //    //            Debug.Log("Loop closed");
-    //    //            Debug.Log(debugLog);
-    //    //            debugLog = "";
-    //    //        }
-    //    //        else
-    //    //            remainingNodes.Push(node.Inward);
-    //    //    }
-    //    //}
+            public bool MoveNext()
+            {
+                ++currentStep;
+                return currentStep < set.Length;
+            }
 
-    //    TileData data = new TileData();
-    //}
+            public void Reset()
+            {
+                currentStep = -1;
+            }
+        }
 
-    //private struct TileData
-    //{
-    //    public Tile parentTile;
+        public void AddStep(params T[] stepSet)
+        {
+            iteratedStack.Push(new IterationStep<T>(stepSet));
+        }
 
-    //    private struct NodePath
-    //    {
-    //        private TileNode nodeEntrance;
-    //        private TileNode nodeExit;
-    //    }
+        public T GetCurrentStep()
+        {
+            return (T)iteratedStack.Peek().Current;
+        }
 
-    //    private NodePath[] paths;
+        public bool Empty => iteratedStack.Count == 0;
 
-    //    //public TileData()
-    //    //{
-    //    //    parentTile = tile;
+        public bool MoveNext()
+        {
+            while (!Empty)
+            {
+                if (iteratedStack.Peek().MoveNext())
+                    return true;
 
-    //    //    //paths = new NodePath[tile.Nodes.Length / 2];
+                iteratedStack.Pop();
+            }
 
+            return false;
+        }
 
+        public T[] GetEvaluatedSteps()
+        {
+            IterationStep<T>[] steps = new IterationStep<T>[iteratedStack.Count];
+            iteratedStack.CopyTo(steps, 0);
+            return steps.Select(s => (T)s.Current).ToArray();
+        }
+    }
 
+    public static void LookForClosedPaths(Link[] startingLinks)
+    {
+        StepTracker<Link> tracker = new StepTracker<Link>();
 
-        //    //    //tile.Nodes[0].outw
-        //    //}
-        //}
-    //}
+        for (int i = 0; i < startingLinks.Length; i++)
+        {
+            Link initialLinkPoint = startingLinks[i];         
+
+            //if (initialLinkPoint.IsStarter)
+            //{
+            //    Debug.Log("One via is closed!");
+            //}
+            //if (initialLinkPoint.CurrentLinks.Length > 0)
+            //    tracker.AddStep(initialLinkPoint.CurrentLinks);
+
+            //while (tracker.MoveNext())
+            //{
+            //    Link linkPoint = tracker.GetCurrentStep();
+            //    if (linkPoint.IsStarter)
+            //    {
+            //        Debug.Log("One via is closed!");
+            //        Link[] links = tracker.GetEvaluatedSteps();
+            //    }
+            //    else
+            //    {
+            //        Link[] links = linkPoint.OppositeLinks;
+            //        if(links.Length > 0)
+            //            tracker.AddStep(links);
+            //    }
+            //}
+        }
+    }
 }
