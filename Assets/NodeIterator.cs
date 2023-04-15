@@ -28,7 +28,7 @@ public static class NodeIterator
                     Assert.IsTrue(currentStep >= 0, "Use MoveNext() first before accessing the current Link");
                     return set[currentStep];
                 }
-            }           
+            }
 
             public bool MoveNext()
             {
@@ -44,6 +44,9 @@ public static class NodeIterator
 
         public void AddStep(params T[] stepSet)
         {
+            if (stepSet.Length == 0)
+                return;
+
             iteratedStack.Push(new IterationStep<T>(stepSet));
         }
 
@@ -75,36 +78,40 @@ public static class NodeIterator
         }
     }
 
-    public static void LookForClosedPaths(Link[] startingLinks)
+    public static void LookForClosedPaths()
     {
-        StepTracker<Link> tracker = new StepTracker<Link>();
-
-        for (int i = 0; i < startingLinks.Length; i++)
+        Tile[] starterTiles = HexMap.Instance.GetAllStarterTiles();
+        for (int i = 0; i < starterTiles.Length; i++)
         {
-            Link initialLinkPoint = startingLinks[i];         
+            ExplorePathsFrom(starterTiles[i]);
+        }       
+    }
 
-            //if (initialLinkPoint.IsStarter)
-            //{
-            //    Debug.Log("One via is closed!");
-            //}
-            //if (initialLinkPoint.CurrentLinks.Length > 0)
-            //    tracker.AddStep(initialLinkPoint.CurrentLinks);
+    private static void ExplorePathsFrom(Tile tile)
+    {
+        StepTracker<Connection> tracker = new StepTracker<Connection>();
 
-            //while (tracker.MoveNext())
-            //{
-            //    Link linkPoint = tracker.GetCurrentStep();
-            //    if (linkPoint.IsStarter)
-            //    {
-            //        Debug.Log("One via is closed!");
-            //        Link[] links = tracker.GetEvaluatedSteps();
-            //    }
-            //    else
-            //    {
-            //        Link[] links = linkPoint.OppositeLinks;
-            //        if(links.Length > 0)
-            //            tracker.AddStep(links);
-            //    }
-            //}
+        Connection[] links = tile.GetAllConnections();
+
+        for (int i = 0; i < links.Length; i++)
+        {
+            tracker.AddStep(links[i]);
+
+            while (tracker.MoveNext())
+            {
+                Connection currentLink = tracker.GetCurrentStep();
+                if (currentLink.IsStarter)
+                {
+                    Debug.Log("One via is closed!");
+                    Connection[] sequence = tracker.GetEvaluatedSteps();
+                }
+                else
+                {
+                    Connection[] nextConnections = currentLink.GoThrough();
+                    //if (links.Length > 0)
+                    tracker.AddStep(nextConnections);
+                }
+            }
         }
     }
 }

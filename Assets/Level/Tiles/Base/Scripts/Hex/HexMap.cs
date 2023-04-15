@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Greenyas.Hexagon;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
 using UnityEditor;
@@ -59,6 +60,12 @@ public class HexMap : MonoBehaviour
     public bool TryGetTile(CubeCoord coord, out Tile tile)
     {
         return mapStorage.TryGetValue(coord, out tile);
+    }
+
+    public Tile[] GetAllStarterTiles()
+    {
+        return mapStorage.Select(t => t.Value).
+                          Where(t => t as StarterTile).ToArray();
     }
 
     #region VISUAL_DEBUG

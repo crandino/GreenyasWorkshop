@@ -22,7 +22,7 @@ public class Node
 
     public Side Side => hexSide.WorldSide;
 
-    public List<Link> Links { private set; get; } = new List<Link>();
+    public List<Connection> Links { private set; get; } = new List<Connection>();
 
     public bool IsFacing(Node node) => hexSide.WorldSide.IsOpposite(node.Side);
 

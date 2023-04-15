@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Tilemaps;
 
 [System.Serializable]
 public class TilePath
@@ -23,38 +22,34 @@ public class TilePath
 
     public Node GoThrough(Node entry)
     {
-        Assert.IsTrue(nodes.Contains(entry) && IsStarter, $"Node {entry} doesn't belong to this path or is a Starter");
+        Assert.IsTrue(nodes.Contains(entry) && !IsStarter, $"Node {entry} doesn't belong to this path or is a Starter");
         return entry == nodes[0] ? nodes[1] : nodes[0];
     }
 
     public bool IsStarter => nodes.Length == 1;
 
-    public Link[] GetAllLinks()
+    public void GetAllConnections(List<Connection> connections)
     {
-        List<Link> links = new List<Link>();
-
         for (int i = 0; i < nodes.Length; i++)
-            links.AddRange(nodes[i].Links);
-
-        return links.ToArray();
+            connections.AddRange(nodes[i].Links);
     }
 
-    public void SearchCandidateAgainst(Candidate candidate, List<Candidate> candidates)
+    public void SearchCandidateAgainst(Connection candidate, List<Connection> candidates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
             if (candidate.IsFacing(nodes[i]))
-                candidates.Add(new Candidate(this, nodes[i]));
+                candidates.Add(new Connection(this, nodes[i]));
         }
     }
 
-    public void SearchCandidates(CubeCoord tileCoord, List<Candidate> candidates)
+    public void SearchCandidates(CubeCoord tileCoord, List<Connection> candidates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
             CubeCoord toNeighborHexCoord = CubeCoord.GetNeighborCoord(tileCoord, nodes[i].Side);
             if (HexMap.Instance.IsTileOn(toNeighborHexCoord))
-                candidates.Add(new Candidate(this, nodes[i]));
+                candidates.Add(new Connection(this, nodes[i]));
         }
     }
 
@@ -68,41 +63,6 @@ public class TilePath
     {
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].RotateCounterClockwise();
-    }
-
-    public class Candidate
-    {
-        private TilePath path;
-        private Node node;
-
-        public HexSide.Side Side => node.Side;
-
-        public Candidate(TilePath path, Node nodeToExplore)
-        {
-            this.path = path;
-            node = nodeToExplore;
-        }
-
-        public bool IsFacing(Node againstNode)
-        {
-            return node.IsFacing(againstNode);
-        }
-
-        public void Connect(Candidate[] candidates, bool bidirectional = true)
-        {
-            for (int i = 0; i < candidates.Length; i++)
-            {
-                node.Links.Add(candidates[i]);
-                if (bidirectional)
-                    candidates[i].node.Links.Add(this);
-            }
-        }       
-
-        public static implicit operator Link(Candidate candidate)
-        {
-            return new Link(candidate.path, candidate.node);
-        }
-
     }
 
 #if UNITY_EDITOR

@@ -3,7 +3,7 @@ using Greenyas.Input;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public abstract class Tile : MonoBehaviour
 {
     [SerializeField]
     private Collider trigger;
@@ -79,55 +79,62 @@ public class Tile : MonoBehaviour
 
     public void ConnectTile(bool bidirectional = true)
     {
-        TilePath.Candidate[] candidates = SearchCandidates();
+        Connection[] candidates = SearchCandidates();
 
         for (int i = 0; i < candidates.Length; i++)
         {
-            TilePath.Candidate candidate = candidates[i];
+            Connection candidateConnection = candidates[i];
 
-            CubeCoord neighborCoords = CubeCoord.GetNeighborCoord(HexCoord, candidate.Side);
+            CubeCoord neighborCoords = CubeCoord.GetNeighborCoord(HexCoord, candidateConnection.Side);
 
             if (HexMap.Instance.TryGetTile(neighborCoords, out Tile tileToConnect))
             {
-                TilePath.Candidate[] externalCandidates = tileToConnect.SearchCandidatesAgainst(candidate);
-                candidate.Connect(externalCandidates, bidirectional);
+                Connection[] externalConnections = tileToConnect.SearchCandidatesAgainst(candidateConnection);
+                candidateConnection.Connect(externalConnections, bidirectional);
             }
         }
 
-        //NodeIterator.LookForClosedPaths(linkPoints);
+        NodeIterator.LookForClosedPaths();
     }
 
-    private static List<TilePath.Candidate> candidates = new List<TilePath.Candidate>();
+    private static List<Connection> connections = new List<Connection>();
 
-    private TilePath.Candidate[] SearchCandidates()
+    private Connection[] SearchCandidates()
     {
-        candidates.Clear();
+        connections.Clear();
 
         for (int i = 0; i < paths.Length; i++)
-            paths[i].SearchCandidates(HexCoord, candidates);
+            paths[i].SearchCandidates(HexCoord, connections);
 
-        return candidates.ToArray();
+        return connections.ToArray();
     }
 
-    private TilePath.Candidate[] SearchCandidatesAgainst(TilePath.Candidate candidate)
+    private Connection[] SearchCandidatesAgainst(Connection connection)
     {
-        candidates.Clear();
+        connections.Clear();
 
         for (int i = 0; i < paths.Length; i++)
         {
-            paths[i].SearchCandidateAgainst(candidate, candidates);
+            paths[i].SearchCandidateAgainst(connection, connections);
         }
 
-        return candidates.ToArray();
+        return connections.ToArray();
     }
 
     private void DisconnectTile()
     {
+        Connection[] connections = GetAllConnections();
+        connections.Disconnect();
+    }
+
+    public Connection[] GetAllConnections()
+    {
+        connections.Clear();
+
         for (int i = 0; i < paths.Length; i++)
-        {
-            Link[] links = paths[i].GetAllLinks();
-            links.Disconnect();
-        }
+            paths[i].GetAllConnections(connections);
+
+        return connections.ToArray();
     }
 
     private void FindNearCubeCoordAndPlace()
