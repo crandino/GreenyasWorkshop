@@ -7,6 +7,7 @@ namespace Greenyas.Hexagon
 	public static class HexTools
 	{
         public static readonly float hexagonSize = 0.5f;
+        public const int ROTATION_ANGLE = 60;
 
         public static Vector3 GetCartesianWorldPos(CubeCoord hexCoord, float planeHeightPos = 0f)
         {

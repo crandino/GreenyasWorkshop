@@ -33,6 +33,10 @@ PrefabInstance:
       value: 0.4330127
       objectReference: {fileID: 0}
     - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: paths.Array.data[0].nodes.Array.data[0].hexSide.tileTransform
+      value: 
+      objectReference: {fileID: 4381424003844318818}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
       propertyPath: paths.Array.data[0].nodes.Array.data[0].hexSide.initialLocalSide
       value: 0
       objectReference: {fileID: 0}

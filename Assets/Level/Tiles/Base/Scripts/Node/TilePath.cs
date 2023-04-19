@@ -53,17 +53,17 @@ public class TilePath
         }
     }
 
-    public void RotateClockwise()
-    {
-        for (int i = 0; i < nodes.Length; i++)
-            nodes[i].RotateClockwise();
-    }
+    //public void RotateClockwise()
+    //{
+    //    for (int i = 0; i < nodes.Length; i++)
+    //        nodes[i].RotateClockwise();
+    //}
 
-    public void RotateCounterClockwise()
-    {
-        for (int i = 0; i < nodes.Length; i++)
-            nodes[i].RotateCounterClockwise();
-    }
+    //public void RotateCounterClockwise()
+    //{
+    //    for (int i = 0; i < nodes.Length; i++)
+    //        nodes[i].RotateCounterClockwise();
+    //}
 
 #if UNITY_EDITOR
     public void ShowPath()

@@ -108,7 +108,6 @@ public static class NodeIterator
                 else
                 {
                     Connection[] nextConnections = currentLink.GoThrough();
-                    //if (links.Length > 0)
                     tracker.AddStep(nextConnections);
                 }
             }

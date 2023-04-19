@@ -12,12 +12,11 @@ public abstract class Tile : MonoBehaviour
     private TilePath[] paths = null;
 
     // Rotation
-    private const int ROTATION_ANGLE = 60;
     private float targetRotationAngle = 0f;
     private float currentRotationTime = 0f;
 
     private InputManager input = null;
-    public CubeCoord HexCoord { private set; get; } = new CubeCoord(int.MaxValue, int.MaxValue);
+    public CubeCoord HexCoord { private set; get; }
 
     //private event Action OnPickUp;
     //private event Action OnRelease;
@@ -25,6 +24,7 @@ public abstract class Tile : MonoBehaviour
     private void Start()
     {
         input = Game.Instance.GetSystem<InputManager>();
+        targetRotationAngle = transform.rotation.eulerAngles.y;
     }
 
     public void Initialize()
@@ -36,19 +36,19 @@ public abstract class Tile : MonoBehaviour
     public void RotateClockwise()
     {
         currentRotationTime = 0f;
-        targetRotationAngle += ROTATION_ANGLE;
+        targetRotationAngle += HexTools.ROTATION_ANGLE;
 
-        for (int i = 0; i < paths.Length; i++)
-            paths[i].RotateClockwise();
+        //for (int i = 0; i < paths.Length; i++)
+        //    paths[i].RotateClockwise();
     }
 
     public void RotateCounterClockwise()
     {
         currentRotationTime = 0f;
-        targetRotationAngle -= ROTATION_ANGLE;
+        targetRotationAngle -= HexTools.ROTATION_ANGLE;
 
-        for (int i = 0; i < paths.Length; i++)
-            paths[i].RotateCounterClockwise();
+        //for (int i = 0; i < paths.Length; i++)
+        //    paths[i].RotateCounterClockwise();
     }
 
     public void PickUp()
@@ -163,6 +163,6 @@ public abstract class Tile : MonoBehaviour
         {
             paths[i].ShowPath();
         }
-    }
+    }   
 #endif
 }

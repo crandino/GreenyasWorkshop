@@ -11,6 +11,12 @@ public class TileEditor : Editor
     private void OnEnable()
     {
         props = new Properties(serializedObject);
+        EditorSnapSettings.rotate = HexTools.ROTATION_ANGLE;
+    }
+
+    private void OnDisable()
+    {
+        EditorSnapSettings.ResetSnapSettings();
     }
 
     public override void OnInspectorGUI()
@@ -33,9 +39,6 @@ public class TileEditor : Editor
             ++EditorGUI.indentLevel;
             for (int j = 0; j < props.paths[i].nodes.Length; j++)
             {
-                //if (j == 1 && props.paths[i].isStarter.boolValue)
-                //    continue;
-
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField($"Node {j + 1}");
 
@@ -52,7 +55,7 @@ public class TileEditor : Editor
 
         if (serializedObject.hasModifiedProperties)
             serializedObject.ApplyModifiedProperties();
-    }
+    }   
 
     private struct Properties
     {
@@ -71,6 +74,7 @@ public class TileEditor : Editor
                 public SerializedProperty node;
                 public SerializedProperty hexSide;
                 public SerializedProperty initialLocalSide;
+                public SerializedProperty parentTile;
 
                 // Debug visualization
                 public SerializedProperty tileTransform;
@@ -93,13 +97,16 @@ public class TileEditor : Editor
 
                 for (int j = 0; j < paths[i].nodes.Length; ++j)
                 {
+                    Tile tile = ((Tile)@object.targetObject);
+
                     paths[i].nodes[j].node = nodes.GetArrayElementAtIndex(j);
 
                     paths[i].nodes[j].hexSide = paths[i].nodes[j].node.FindPropertyRelative("hexSide");
+                    paths[i].nodes[j].parentTile = paths[i].nodes[j].hexSide.FindPropertyRelative("tileTransform");
+                    paths[i].nodes[j].parentTile.objectReferenceValue = tile.transform;
                     paths[i].nodes[j].initialLocalSide = paths[i].nodes[j].hexSide.FindPropertyRelative("initialLocalSide");
 
                     paths[i].nodes[j].tileTransform = paths[i].nodes[j].node.FindPropertyRelative("tileTransform");
-                    Tile tile = ((Tile)@object.targetObject);
                     paths[i].nodes[j].tileTransform.objectReferenceValue = tile.transform;
                     paths[i].nodes[j].worldDebugPos = paths[i].nodes[j].node.FindPropertyRelative("localDebugPosition");
                 }

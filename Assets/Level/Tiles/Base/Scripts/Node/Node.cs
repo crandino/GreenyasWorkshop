@@ -26,8 +26,8 @@ public class Node
 
     public bool IsFacing(Node node) => hexSide.WorldSide.IsOpposite(node.Side);
 
-    public void RotateClockwise() => hexSide.RotateClockwise();
-    public void RotateCounterClockwise() => hexSide.RotateCounterClockwise();
+    //public void RotateClockwise() => hexSide.RotateClockwise();
+    //public void RotateCounterClockwise() => hexSide.RotateCounterClockwise();
 
 #if UNITY_EDITOR
     public void ShowDebugInfo()

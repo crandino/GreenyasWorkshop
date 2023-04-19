@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Level/Scripts/Editor/TilePlacerUSS.uss?fileID=7433441132597879392&amp;guid=de4af8b02dd725745a3442c66199608d&amp;type=3#TilePlacerUSS" />
+    <ui:VisualElement name="Background" class="background">
+        <ui:VisualElement name="TileGroup" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:Label tabindex="-1" text="Starters" display-tooltip-when-elided="true" enable-rich-text="true" name="TileType" class="TileTypeLabel" style="color: rgb(255, 255, 255); -unity-text-align: upper-center;">
+                <ui:GroupBox style="-unity-text-align: upper-left;">
+                    <PrefabPathLabel text="Simple Starter" assetPath="Assets/Level/Tiles/Starters/SimpleStarter/Prefabs/SimpleStarter.prefab" />
+                    <PrefabPathLabel text="Double Starter" assetPath="Assets/Level/Tiles/Starters/DoubleStarter/Prefabs/DoubleStarter.prefab" />
+                </ui:GroupBox>
+            </ui:Label>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:Button text="Remove Manipulators" />
+</ui:UXML>

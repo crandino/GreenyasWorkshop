@@ -17,10 +17,44 @@ namespace Greenyas.Hexagon
             NorthWest = 5
         }
 
+        private static class Convertor
+        {
+            private static Quaternion[] angleRotations = new Quaternion[6]
+            {
+                new Quaternion(0f, 0f, 0f, 1f),          // 0
+                new Quaternion(0f, 0.5f, 0f, 0.86603f),  // 60
+                new Quaternion(0f, 0.86603f, 0f, 0.5f),  // 120
+                new Quaternion(0f, 1f, 0f, 0f),          // 180
+                new Quaternion(0f, 0.86603f, 0f, -0.5f), // 240
+                new Quaternion(0f, 0.5f, 0f, -0.86603f)  // 300
+            };
+
+            public static Side GetWorldSide(Side localSide, Transform transform)
+            {
+                float maxDot = 0;
+                int numRotations = 0;
+
+                for (int i = 0; i < angleRotations.Length; i++)
+                {
+                    float dot = Mathf.Abs(Quaternion.Dot(transform.rotation, angleRotations[i]));
+                    if (dot > maxDot)
+                    {
+                        maxDot = dot;
+                        numRotations = i;
+                    }
+                }
+
+                return (Side)(((int)localSide + numRotations) % TOTAL_SIDES);
+            }
+        }
+
         [SerializeField]
         private Side initialLocalSide;
 
-        public Side WorldSide => initialLocalSide;
+        [SerializeField]
+        private Transform tileTransform;
+
+        public Side WorldSide => Convertor.GetWorldSide(initialLocalSide, tileTransform);
 
         public void RotateClockwise()
         {
@@ -56,6 +90,6 @@ namespace Greenyas.Hexagon
             if (localSide < Side.North)
                 return (Side)TOTAL_SIDES - rotationSteps;
             return localSide;
-        }  
+        }
     }
 }
