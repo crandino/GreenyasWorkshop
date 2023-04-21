@@ -24,12 +24,12 @@ public abstract class Tile : MonoBehaviour
     private void Start()
     {
         input = Game.Instance.GetSystem<InputManager>();
+        HexCoord = HexTools.GetNearestCubeCoord(transform.position);
         targetRotationAngle = transform.rotation.eulerAngles.y;
     }
 
     public void Initialize()
     {
-        FindNearCubeCoordAndPlace();
         HexMap.Instance.AddTile(HexCoord, this);
     }
 
@@ -37,18 +37,12 @@ public abstract class Tile : MonoBehaviour
     {
         currentRotationTime = 0f;
         targetRotationAngle += HexTools.ROTATION_ANGLE;
-
-        //for (int i = 0; i < paths.Length; i++)
-        //    paths[i].RotateClockwise();
     }
 
     public void RotateCounterClockwise()
     {
         currentRotationTime = 0f;
         targetRotationAngle -= HexTools.ROTATION_ANGLE;
-
-        //for (int i = 0; i < paths.Length; i++)
-        //    paths[i].RotateCounterClockwise();
     }
 
     public void PickUp()

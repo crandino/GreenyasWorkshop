@@ -11,12 +11,6 @@ public class TileEditor : Editor
     private void OnEnable()
     {
         props = new Properties(serializedObject);
-        EditorSnapSettings.rotate = HexTools.ROTATION_ANGLE;
-    }
-
-    private void OnDisable()
-    {
-        EditorSnapSettings.ResetSnapSettings();
     }
 
     public override void OnInspectorGUI()

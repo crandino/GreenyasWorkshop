@@ -73,6 +73,18 @@ PrefabInstance:
       value: -0.21650635
       objectReference: {fileID: 0}
     - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: paths.Array.data[0].nodes.Array.data[0].hexSide.tileTransform
+      value: 
+      objectReference: {fileID: 703939067632686272}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: paths.Array.data[1].nodes.Array.data[0].hexSide.tileTransform
+      value: 
+      objectReference: {fileID: 703939067632686272}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: paths.Array.data[2].nodes.Array.data[0].hexSide.tileTransform
+      value: 
+      objectReference: {fileID: 703939067632686272}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
       propertyPath: paths.Array.data[0].nodes.Array.data[0].hexSide.initialLocalSide
       value: 0
       objectReference: {fileID: 0}

@@ -14,7 +14,3 @@
     border-top-color: rgb(40, 154, 229);
     border-bottom-color: rgb(40, 154, 229);
 }
-
-.tileTypeLabel {
-    color: rgb(255, 255, 255);
-}

@@ -26,20 +26,20 @@ public class HexMap : MonoBehaviour
     {
         private set
         {
-            instance = value; 
+            instance = value;
         }
 
         get
         {
             return instance;
         }
-    }   
-    
+    }
+
     private readonly Dictionary<CubeCoord, Tile> mapStorage = new Dictionary<CubeCoord, Tile>(new CubeCoord.CoordinateComparer());
 
     private void Awake()
     {
-        Instance = this;        
+        Instance = this;
     }
 
     public void AddTile(CubeCoord coord, Tile tile)
@@ -47,7 +47,7 @@ public class HexMap : MonoBehaviour
         mapStorage.Add(coord, tile);
     }
 
-    public void RemoveTile(CubeCoord coord) 
+    public void RemoveTile(CubeCoord coord)
     {
         mapStorage.Remove(coord);
     }
@@ -81,7 +81,7 @@ public class HexMap : MonoBehaviour
                 CubeCoord hexCoord = new CubeCoord(q, r);
                 Vector3 hexCenterPos = HexTools.GetCartesianWorldPos(hexCoord);
                 DrawHexagon(hexCenterPos);
-                if(DebugOptions.showHexagonMapCoordinates)
+                if (DebugOptions.showHexagonMapCoordinates)
                     DrawCubeCoordinates(hexCenterPos, hexCoord);
             }
         }
@@ -113,7 +113,7 @@ public class HexMap : MonoBehaviour
         {
             Vector3 vertexA = GetHexWorldCorner(centerPosition, size, cornerIndex);
             Vector3 vertexB = GetHexWorldCorner(centerPosition, size, (cornerIndex + 1) % MAX_NUM_CORNERS);
-           
+
             Gizmos.DrawLine(vertexA, vertexB);
         }
     }
@@ -122,7 +122,7 @@ public class HexMap : MonoBehaviour
     {
         Assert.IsTrue(cornerIndex >= 0 && cornerIndex <= 6, $"Invalid index {cornerIndex} for hexagon corner");
         float angle = Mathf.Deg2Rad * 60 * cornerIndex;
-        return new Vector3(hexCenter.x + size * Mathf.Cos(angle),hexCenter.y, hexCenter.z + size * Mathf.Sin(angle));
+        return new Vector3(hexCenter.x + size * Mathf.Cos(angle), hexCenter.y, hexCenter.z + size * Mathf.Sin(angle));
     }
 
 #endif 

@@ -1,4 +1,5 @@
 using Greenyas.Input;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,7 +32,7 @@ public class TileSelector : MonoBehaviour
 
     private void ReleaseTile()
     {
-        if (!CursorRaycastToTile(tileMask, out Tile _))
+        if (!CursorRaycast(tileMask, out hit))
         {
             currentSelectedTile.Release();
             currentSelectedTile = null;
@@ -53,19 +54,31 @@ public class TileSelector : MonoBehaviour
         }
     }
 
-    private RaycastHit hit = new RaycastHit();
+    private static RaycastHit hit = new RaycastHit();
 
     private bool CursorRaycastToTile(LayerMask mask, out Tile component)
     {
-        if (CursorRaycast(mask, out hit))
+        if (CursorRaycastToComponent(mask, out component))
         {
-            component = hit.collider.GetComponent<Tile>();
             offset = (component.transform.position - hit.point);
             offset.y = 0.25f;
             return true;
         }
 
         component = null;
+        return false;
+    }
+
+    private bool CursorRaycastToComponent<T>(LayerMask mask, out T component) where T : Component
+    {
+        component = null;
+
+        if(CursorRaycast(mask, out hit))
+        {
+            component = hit.collider.GetComponent<T>();
+            return true;
+        }
+
         return false;
     }
 

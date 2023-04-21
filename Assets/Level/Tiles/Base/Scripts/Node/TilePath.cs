@@ -11,6 +11,11 @@ public class TilePath
     [SerializeField]
     protected Node[] nodes;
 
+    [SerializeField]
+    private int emissionPathIndex;
+
+    private static int pathEmissionID = Shader.PropertyToID("_EmissionPathSelector");
+
     public TilePath(int nodesPerPath)
     {
         nodes = new Node[nodesPerPath];
@@ -52,18 +57,6 @@ public class TilePath
                 candidates.Add(new Connection(this, nodes[i]));
         }
     }
-
-    //public void RotateClockwise()
-    //{
-    //    for (int i = 0; i < nodes.Length; i++)
-    //        nodes[i].RotateClockwise();
-    //}
-
-    //public void RotateCounterClockwise()
-    //{
-    //    for (int i = 0; i < nodes.Length; i++)
-    //        nodes[i].RotateCounterClockwise();
-    //}
 
 #if UNITY_EDITOR
     public void ShowPath()
