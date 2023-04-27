@@ -3,17 +3,17 @@ using Greenyas.Hexagon;
 public class Connection
 {
     private Node node;
-    private TilePath path;
+    public TileSegment Segment { private set; get; }
 
-    public Connection(TilePath path, Node node)
+    public Connection(TileSegment segment, Node node)
     {
-        this.path = path;
+        Segment = segment;
         this.node = node;
     }
 
     public HexSide.Side Side => node.Side;
 
-    public bool IsStarter => path.IsStarter;
+    public bool IsStarter => Segment.IsStarter;
 
     public bool IsFacing(Node againstNode)
     {
@@ -22,7 +22,7 @@ public class Connection
 
     public Connection[] GoThrough()
     {
-        return path.GoThrough(node).Links.ToArray();
+        return Segment.GoThrough(node).Links.ToArray();
     }
 
     public void Connect(Connection[] connections, bool bidirectional = true)

@@ -20,10 +20,10 @@ public partial class TilePlacer : EditorWindow
 
     private struct Label
     {
-        public PrefabPathLabel label;
+        public TilePrefabLabel label;
         private DragAndDropManipulator manipulator;
 
-        public Label(PrefabPathLabel prefabPathlabel)
+        public Label(TilePrefabLabel prefabPathlabel)
         {
             label = prefabPathlabel;
             manipulator = new DragAndDropManipulator(label);
@@ -48,7 +48,7 @@ public partial class TilePlacer : EditorWindow
         {
             styleSheet.CloneTree(rootVisualElement);
 
-            labels = rootVisualElement.Query<PrefabPathLabel>().ForEach(prefabPathLabel => new Label(prefabPathLabel)).ToArray();
+            labels = rootVisualElement.Query<TilePrefabLabel>().ForEach(prefabPathLabel => new Label(prefabPathLabel)).ToArray();
 
             foreach (var label in labels)
             {

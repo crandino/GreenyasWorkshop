@@ -9,7 +9,7 @@ public abstract class Tile : MonoBehaviour
     private Collider trigger;
 
     [SerializeField]
-    private TilePath[] paths = null;
+    private TileSegment[] paths = null;
 
     // Rotation
     private float targetRotationAngle = 0f;
@@ -88,7 +88,7 @@ public abstract class Tile : MonoBehaviour
             }
         }
 
-        NodeIterator.LookForClosedPaths();
+        TileIterator.LookForClosedPaths();
     }
 
     private static List<Connection> connections = new List<Connection>();
@@ -151,12 +151,10 @@ public abstract class Tile : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    [ContextMenu("Get References")]
+    private void GetReferences()
     {
-        for (int i = 0; i < paths.Length; i++)
-        {
-            paths[i].ShowPath();
-        }
-    }   
+        paths = GetComponents<TileSegment>();
+    }
 #endif
 }

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1791548941332363202, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1791548941332363202, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1791548941332363202, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.7320508
       objectReference: {fileID: 0}
     - target: {fileID: 1791548941332363202, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -64,6 +64,14 @@ PrefabInstance:
       propertyPath: paths.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      propertyPath: paths.Array.data[0]
+      value: 
+      objectReference: {fileID: 5769492824453049792}
+    - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      propertyPath: paths.Array.data[1]
+      value: 
+      objectReference: {fileID: 1537513357240512556}
     - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
       propertyPath: paths.Array.data[0].nodes.Array.size
       value: 2
@@ -171,10 +179,76 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1791548941332363205, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 5769492824453049792}
+    - targetCorrespondingSourceObject: {fileID: 1791548941332363205, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 1537513357240512556}
   m_SourcePrefab: {fileID: 100100000, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
 --- !u!4 &9203548458036206920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1791548941332363202, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
   m_PrefabInstance: {fileID: 7450447789244295818}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &9203548458036206925 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1791548941332363207, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+  m_PrefabInstance: {fileID: 7450447789244295818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9203548458036206927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1791548941332363205, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+  m_PrefabInstance: {fileID: 7450447789244295818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5769492824453049792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203548458036206927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e3fe0c31746a545bf37352e9278205, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodes:
+  - localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
+    tileTransform: {fileID: 9203548458036206920}
+    hexSide:
+      initialLocalSide: 0
+      tileTransform: {fileID: 9203548458036206920}
+  - localDebugPosition: {x: -0.375, y: 0.025, z: 0.21650635}
+    tileTransform: {fileID: 9203548458036206920}
+    hexSide:
+      initialLocalSide: 5
+      tileTransform: {fileID: 9203548458036206920}
+  meshRenderer: {fileID: 9203548458036206925}
+  emissionPathIndex: 0
+--- !u!114 &1537513357240512556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203548458036206927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e3fe0c31746a545bf37352e9278205, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodes:
+  - localDebugPosition: {x: 0.375, y: 0.025, z: -0.21650635}
+    tileTransform: {fileID: 9203548458036206920}
+    hexSide:
+      initialLocalSide: 2
+      tileTransform: {fileID: 9203548458036206920}
+  - localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
+    tileTransform: {fileID: 9203548458036206920}
+    hexSide:
+      initialLocalSide: 3
+      tileTransform: {fileID: 9203548458036206920}
+  meshRenderer: {fileID: 9203548458036206925}
+  emissionPathIndex: 1

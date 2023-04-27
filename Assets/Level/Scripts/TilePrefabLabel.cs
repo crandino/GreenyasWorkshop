@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PrefabPathLabel : Label
+public class TilePrefabLabel : Label
 {
-    public new class UxmlFactory : UxmlFactory<PrefabPathLabel, UxmlTraits> { }
+    public new class UxmlFactory : UxmlFactory<TilePrefabLabel, UxmlTraits> { }
 
     // Traits class
     public new class UxmlTraits : Label.UxmlTraits
@@ -17,7 +17,7 @@ public class PrefabPathLabel : Label
             string path = "";
             if (m_PrefabPath.TryGetValueFromBag(bag, cc, ref path))
             {
-                ((PrefabPathLabel)ve).AssetPrefab = path;
+                ((TilePrefabLabel)ve).AssetPrefab = path;
             }
         }
     }

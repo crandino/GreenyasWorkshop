@@ -2,21 +2,21 @@
     <Style src="project://database/Assets/Level/Scripts/Editor/TilePlacerUSS.uss?fileID=7433441132597879392&amp;guid=de4af8b02dd725745a3442c66199608d&amp;type=3#TilePlacerUSS" />
     <ui:VisualElement name="Background" class="background">
         <ui:GroupBox text="Starters" name="StarterGroup" style="flex-shrink: 0; flex-grow: 0; color: rgb(255, 255, 255); background-color: rgba(255, 95, 0, 0.37); border-left-color: rgb(255, 95, 0); border-right-color: rgb(255, 95, 0); border-top-color: rgb(255, 95, 0); border-bottom-color: rgb(255, 95, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-            <PrefabPathLabel text="Simple Starter" assetPath="Assets/Level/Tiles/Starters/SimpleStarter/Prefabs/SimpleStarter.prefab" />
-            <PrefabPathLabel text="Double Starter" assetPath="Assets/Level/Tiles/Starters/DoubleStarter/Prefabs/DoubleStarter.prefab" />
-            <PrefabPathLabel text="Triple Starter" assetPath="Assets/Level/Tiles/Starters/TripleStarter/Prefabs/TripleStarter.prefab" />
+            <TilePrefabLabel text="Simple Starter" assetPath="Assets/Level/Tiles/Starters/SimpleStarter/Prefabs/SimpleStarter.prefab" />
+            <TilePrefabLabel text="Double Starter" assetPath="Assets/Level/Tiles/Starters/DoubleStarter/Prefabs/DoubleStarter.prefab" />
+            <TilePrefabLabel text="Triple Starter" assetPath="Assets/Level/Tiles/Starters/TripleStarter/Prefabs/TripleStarter.prefab" />
         </ui:GroupBox>
         <ui:GroupBox text="Flow" name="FlowGroup" style="color: rgb(255, 255, 255); background-color: rgba(0, 157, 255, 0.25); border-left-color: rgb(0, 157, 255); border-right-color: rgb(0, 157, 255); border-top-color: rgb(0, 157, 255); border-bottom-color: rgb(0, 157, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-            <PrefabPathLabel text="Straight" assetPath="Assets/Level/Tiles/Flow/Straight/Prefabs/StraightFlow.prefab" />
-            <PrefabPathLabel text="Simple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/SimpleShortCurve/Prefabs/SimpleShortCurveFlow.prefab" />
-            <PrefabPathLabel text="Double Near Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleNearShortCurve/Prefabs/DoubleNearShortCurve.prefab" />
-            <PrefabPathLabel text="Double Far Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleFarShortCurve/Prefabs/DoubleFarShortCurveFlow.prefab" />
-            <PrefabPathLabel text="Triple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/TripleShortCurve/Prefabs/TripleShortCurveFlow.prefab" />
-            <PrefabPathLabel text="Simple Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/SimpleLongCurve/Prefabs/SimpleLongCurveFlow.prefab" enable-rich-text="false" />
-            <PrefabPathLabel text="Double Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/DoubleLongCurve/Prefabs/DoubleLongCurveFlow.prefab" />
+            <TilePrefabLabel text="Straight" assetPath="Assets/Level/Tiles/Flow/Straight/Prefabs/StraightFlow.prefab" />
+            <TilePrefabLabel text="Simple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/SimpleShortCurve/Prefabs/SimpleShortCurveFlow.prefab" />
+            <TilePrefabLabel text="Double Near Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleNearShortCurve/Prefabs/DoubleNearShortCurve.prefab" />
+            <TilePrefabLabel text="Double Far Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleFarShortCurve/Prefabs/DoubleFarShortCurveFlow.prefab" />
+            <TilePrefabLabel text="Triple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/TripleShortCurve/Prefabs/TripleShortCurveFlow.prefab" />
+            <TilePrefabLabel text="Simple Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/SimpleLongCurve/Prefabs/SimpleLongCurveFlow.prefab" enable-rich-text="false" />
+            <TilePrefabLabel text="Double Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/DoubleLongCurve/Prefabs/DoubleLongCurveFlow.prefab" />
         </ui:GroupBox>
         <ui:GroupBox text="Splits" name="SplitGroup" style="color: rgb(255, 255, 255); background-color: rgba(0, 152, 5, 0.25); border-left-color: rgb(0, 152, 5); border-right-color: rgb(0, 152, 5); border-top-color: rgb(0, 152, 5); border-bottom-color: rgb(0, 152, 5); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-            <PrefabPathLabel text="Split Long Curve" assetPath="Assets/Level/Tiles/Flow/Splits/SplitLongCurve/Prefabs/SplitLongCurveFlow.prefab" />
+            <TilePrefabLabel text="Split Long Curve" assetPath="Assets/Level/Tiles/Flow/Splits/SplitLongCurve/Prefabs/SplitLongCurveFlow.prefab" />
         </ui:GroupBox>
         <ui:Toggle label="Enable Quick Rot (LMB with Shift/Ctrl)" style="color: rgb(255, 255, 255);" />
     </ui:VisualElement>

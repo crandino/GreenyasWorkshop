@@ -5,25 +5,18 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-[System.Serializable]
-public class TilePath
+public abstract class TileSegment : MonoBehaviour
 {
     [SerializeField]
     protected Node[] nodes;
 
     [SerializeField]
+    private MeshRenderer meshRenderer;
+
+    [SerializeField]
     private int emissionPathIndex;
 
     private static int pathEmissionID = Shader.PropertyToID("_EmissionPathSelector");
-
-    public TilePath(int nodesPerPath)
-    {
-        nodes = new Node[nodesPerPath];
-        for (int i = 0; i < nodes.Length; i++)
-        {
-            nodes[i] = new Node();
-        }
-    }
 
     public Node GoThrough(Node entry)
     {
@@ -58,10 +51,24 @@ public class TilePath
         }
     }
 
-#if UNITY_EDITOR
-    public void ShowPath()
+    public void Highlight()
     {
-        if (DebugOptions.showTilePaths && nodes.Length == 2)
+        Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
+        values[emissionPathIndex] = 1f;
+        meshRenderer.material.SetVector(pathEmissionID, values);
+    }
+
+    public void Unhighlight()
+    {
+        Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
+        values[emissionPathIndex] = 0f;
+        meshRenderer.material.SetVector(pathEmissionID, values);
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (DebugOptions.ShowPaths && nodes.Length == 2)
         {
             Handles.color = CustomColors.darkOrange;
             Handles.DrawLine(nodes[0].WorldDebugPos, nodes[1].WorldDebugPos, 2f);
@@ -69,6 +76,31 @@ public class TilePath
 
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].ShowDebugInfo();
+    }
+    protected abstract int NumberOfNodes { get; }
+
+    private void Reset()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+        InitializeNodes();
+    }
+
+    private void OnValidate()
+    {
+        if (nodes.Length != NumberOfNodes)
+        {
+            Debug.LogWarning("The number of nodes cannot be changed");
+            InitializeNodes();
+        }
+    }
+
+    private void InitializeNodes()
+    {
+        nodes = new Node[NumberOfNodes];
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i] = new Node();
+        }
     }
 #endif
 }

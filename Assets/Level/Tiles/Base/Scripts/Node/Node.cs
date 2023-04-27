@@ -26,21 +26,18 @@ public class Node
 
     public bool IsFacing(Node node) => hexSide.WorldSide.IsOpposite(node.Side);
 
-    //public void RotateClockwise() => hexSide.RotateClockwise();
-    //public void RotateCounterClockwise() => hexSide.RotateCounterClockwise();
-
 #if UNITY_EDITOR
     public void ShowDebugInfo()
     {
         // Node position for debug purposes
-        if(DebugOptions.showTilePaths)
+        if(DebugOptions.ShowPaths)
         {
             Gizmos.color = CustomColors.darkOrange;
             Gizmos.DrawSphere(WorldDebugPos, 0.05f);
         }
 
         // Outward node conntections
-        if(DebugOptions.showTileConnections)
+        if(DebugOptions.ShowConnections)
         {
             Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(hexSide.WorldSide);
             Vector3 toNextTile = new Vector3(vec.x, 0f, vec.y);
@@ -53,15 +50,6 @@ public class Node
             
             Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, EventType.Repaint);
         }
-    }
-
-    public string GetDebugInfo()
-    {
-        string debugLog = $"Node on {tileTransform.name}.\n";
-        //foreach (var link in Links)
-        //{
-        //}
-        return debugLog;
     }
 #endif
 }

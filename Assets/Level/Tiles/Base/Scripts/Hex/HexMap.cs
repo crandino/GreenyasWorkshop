@@ -81,7 +81,7 @@ public class HexMap : MonoBehaviour
                 CubeCoord hexCoord = new CubeCoord(q, r);
                 Vector3 hexCenterPos = HexTools.GetCartesianWorldPos(hexCoord);
                 DrawHexagon(hexCenterPos);
-                if (DebugOptions.showHexagonMapCoordinates)
+                if (DebugOptions.ShowHexagonCoord)
                     DrawCubeCoordinates(hexCenterPos, hexCoord);
             }
         }

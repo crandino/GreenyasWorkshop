@@ -9,9 +9,8 @@ public partial class TilePlacer
     {
         string tilePrefabPath = string.Empty;
 
-        public DragAndDropManipulator(PrefabPathLabel pathLabel)
+        public DragAndDropManipulator(TilePrefabLabel pathLabel)
         {
-            // The target of the manipulator, the object to which to register all callbacks, is the drop area.
             target = pathLabel;
             tilePrefabPath = pathLabel.AssetPrefab;
         }

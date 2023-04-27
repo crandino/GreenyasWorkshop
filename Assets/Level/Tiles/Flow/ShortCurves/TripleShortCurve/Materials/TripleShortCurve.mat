@@ -97,5 +97,5 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionPathSelector: {r: 0, g: 0, b: 0, a: 1}
-    - _PathSelectionColor: {r: 0.9056604, g: 0.78431374, b: 0, a: 1}
+    - _PathSelectionColor: {r: 1, g: 0.6627451, b: 0, a: 1}
   m_BuildTextureStacks: []

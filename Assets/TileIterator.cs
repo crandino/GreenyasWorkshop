@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public static class NodeIterator
+public static class TileIterator
 {
     private class StepTracker<T>
     {
@@ -102,8 +102,16 @@ public static class NodeIterator
                 Connection currentLink = tracker.GetCurrentStep();
                 if (currentLink.IsStarter)
                 {
-                    Debug.Log("One via is closed!");
-                    Connection[] sequence = tracker.GetEvaluatedSteps();
+                    Debug.Log("Path closed!");
+                    TileSegment[] path = tracker.GetEvaluatedSteps().
+                                         Select(c => c.Segment).
+                                         Prepend(links[i].Segment).
+                                         ToArray();
+                    if(!PathStorage.CheckEqualPath(path))
+                    {
+                        PathStorage.AddPath(path);
+                        PathStorage.ShowLastPath(tile);
+                    }                   
                 }
                 else
                 {
