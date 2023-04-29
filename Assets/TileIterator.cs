@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Gate = TileSegment.Gate;
 
 public static class TileIterator
 {
@@ -10,12 +11,12 @@ public static class TileIterator
     {
         private readonly Stack<IterationStep<T>> iteratedStack = new Stack<IterationStep<T>>();
 
-        private class IterationStep<T> : IEnumerator
+        private class IterationStep<S> : IEnumerator
         {
-            private T[] set;
+            private S[] set;
             private int currentStep;
 
-            public IterationStep(params T[] set)
+            public IterationStep(params S[] set)
             {
                 this.set = set;
                 currentStep = -1;
@@ -89,24 +90,24 @@ public static class TileIterator
 
     private static void ExplorePathsFrom(Tile tile)
     {
-        StepTracker<Connection> tracker = new StepTracker<Connection>();
+        StepTracker<Gate> tracker = new StepTracker<Gate>();
 
-        Connection[] links = tile.GetAllConnections();
+        List<Gate> gates = tile.GetAllGates();
 
-        for (int i = 0; i < links.Length; i++)
+        for (int i = 0; i < gates.Count; i++)
         {
-            tracker.AddStep(links[i]);
+            tracker.AddStep(gates[i].Node.Connections.ToArray());
 
             while (tracker.MoveNext())
             {
-                Connection currentLink = tracker.GetCurrentStep();
-                if (currentLink.IsStarter)
+                Gate currentGate = tracker.GetCurrentStep();
+                if (currentGate.Segment.IsStarter)
                 {
                     Debug.Log("Path closed!");
                     TileSegment[] path = tracker.GetEvaluatedSteps().
-                                         Select(c => c.Segment).
-                                         Prepend(links[i].Segment).
-                                         ToArray();
+                                         Select(g => g.Segment).
+                                         Append(gates[i].Segment).ToArray();
+
                     if(!PathStorage.CheckEqualPath(path))
                     {
                         PathStorage.AddPath(path);
@@ -115,10 +116,12 @@ public static class TileIterator
                 }
                 else
                 {
-                    Connection[] nextConnections = currentLink.GoThrough();
-                    tracker.AddStep(nextConnections);
+                    Gate[] nextGates = currentGate.GoThrough().Connections.ToArray();
+                    tracker.AddStep(nextGates);
                 }
             }
         }
+
+        Gate.Pool.TryRelease(gates);
     }
 }

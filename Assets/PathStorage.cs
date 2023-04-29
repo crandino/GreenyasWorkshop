@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class PathStorage
 {
-    private static WaitForSeconds interval = new WaitForSeconds(0.5f);
+    private static WaitForSeconds interval = new WaitForSeconds(0.25f);
     private static List<TileSegment[]> sequences = new List<TileSegment[]>();
 
     static PathStorage()

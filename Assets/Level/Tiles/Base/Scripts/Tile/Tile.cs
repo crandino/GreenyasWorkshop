@@ -18,9 +18,6 @@ public abstract class Tile : MonoBehaviour
     private InputManager input = null;
     public CubeCoord HexCoord { private set; get; }
 
-    //private event Action OnPickUp;
-    //private event Action OnRelease;
-
     private void Start()
     {
         input = Game.Instance.GetSystem<InputManager>();
@@ -67,68 +64,74 @@ public abstract class Tile : MonoBehaviour
         FindNearCubeCoordAndPlace();
 
         ConnectTile();
+        TileIterator.LookForClosedPaths();
 
         HexMap.Instance.AddTile(HexCoord, this);
     }
 
     public void ConnectTile(bool bidirectional = true)
     {
-        Connection[] candidates = SearchCandidates();
+        List<TileSegment.Gate> gates = GetInnerGates();
 
-        for (int i = 0; i < candidates.Length; i++)
+        for (int i = 0; i < gates.Count; i++)
         {
-            Connection candidateConnection = candidates[i];
+            TileSegment.Gate gate = gates[i];
 
-            CubeCoord neighborCoords = CubeCoord.GetNeighborCoord(HexCoord, candidateConnection.Side);
+            CubeCoord neighborCoords = HexCoord + CubeCoord.GetToNeighborCoord(gate.Node.Side);
 
             if (HexMap.Instance.TryGetTile(neighborCoords, out Tile tileToConnect))
             {
-                Connection[] externalConnections = tileToConnect.SearchCandidatesAgainst(candidateConnection);
-                candidateConnection.Connect(externalConnections, bidirectional);
+                List<TileSegment.Gate> externalGates = tileToConnect.SearchGatesAgainst(gate);
+                gate.Connect(externalGates, bidirectional);
             }
-        }
-
-        TileIterator.LookForClosedPaths();
+        }   
+        
+        TileSegment.Gate.Pool.TryRelease(gates);
     }
 
-    private static List<Connection> connections = new List<Connection>();
+    private readonly static List<TileSegment.Gate> gates = new List<TileSegment.Gate>();
 
-    private Connection[] SearchCandidates()
+    private List<TileSegment.Gate> GetInnerGates()
     {
-        connections.Clear();
+        gates.Clear();
 
         for (int i = 0; i < paths.Length; i++)
-            paths[i].SearchCandidates(HexCoord, connections);
+            paths[i].GetInnerGates(HexCoord, gates);
 
-        return connections.ToArray();
+        return gates;
     }
 
-    private Connection[] SearchCandidatesAgainst(Connection connection)
+    private List<TileSegment.Gate> SearchGatesAgainst(TileSegment.Gate gate)
     {
-        connections.Clear();
+        List<TileSegment.Gate> tmpGates = new List<TileSegment.Gate>();
 
         for (int i = 0; i < paths.Length; i++)
-        {
-            paths[i].SearchCandidateAgainst(connection, connections);
-        }
+            paths[i].SearchGatesAgainst(gate, tmpGates);
 
-        return connections.ToArray();
+        return tmpGates;
     }
 
     private void DisconnectTile()
     {
-        Connection[] connections = GetAllConnections();
-        connections.Disconnect();
-    }
-
-    public Connection[] GetAllConnections()
-    {
-        connections.Clear();
+        gates.Clear();
 
         for (int i = 0; i < paths.Length; i++)
-            paths[i].GetAllConnections(connections);
+            paths[i].GetAllConnections(gates);
 
-        return connections.ToArray();
+        for (int i = 0; i < gates.Count; i++)
+            gates[i].Disconnect();
+
+        //TileSegment.Gate.Release(gates);
+    }
+
+    public List<TileSegment.Gate> GetAllGates()
+    {
+        gates.Clear();
+
+        for (int i = 0; i < paths.Length; i++)
+            paths[i].GetAllGates(gates);
+
+        return gates;
     }
 
     private void FindNearCubeCoordAndPlace()
@@ -154,6 +157,7 @@ public abstract class Tile : MonoBehaviour
     [ContextMenu("Get References")]
     private void GetReferences()
     {
+        trigger = GetComponent<MeshCollider>();
         paths = GetComponents<TileSegment>();
     }
 #endif

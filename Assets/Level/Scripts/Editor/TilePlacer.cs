@@ -1,8 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UIElements;
 
 public partial class TilePlacer : EditorWindow
@@ -15,7 +12,7 @@ public partial class TilePlacer : EditorWindow
     [MenuItem("Window/Greenyas/Tile Placer")]
     private static void OpenTilePlacerWindow()
     {
-        GetWindow<TilePlacer>(typeof(Editor).Assembly.GetType("UnityEditor.ConsoleWindow"));
+        GetWindow<TilePlacer>(/*typeof(Editor).Assembly.GetType("UnityEditor.ConsoleWindow")*/);
     }
 
     private struct Label

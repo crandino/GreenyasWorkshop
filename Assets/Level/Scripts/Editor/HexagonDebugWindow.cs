@@ -1,8 +1,5 @@
-using System.Collections;
-using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Greenyas.Hexagon
 {
@@ -11,10 +8,10 @@ namespace Greenyas.Hexagon
         [SerializeField]
         private DebugOptions debugOptions;
 
-        [MenuItem("Window/Hexagon Debug Options")]
+        [MenuItem("Window/Greenyas/Hexagon Debug Options")]
         public static void Init()
         {
-            GetWindow(typeof(HexagonDebugWindow));
+            GetWindow<HexagonDebugWindow>("Debug Options");
         }
 
         void OnGUI()

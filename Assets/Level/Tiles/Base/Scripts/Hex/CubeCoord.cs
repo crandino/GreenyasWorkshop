@@ -56,9 +56,9 @@ namespace Greenyas.Hexagon
             new CubeCoord(-1 , 1,  0)  // north-west
         };
 
-        public static CubeCoord GetNeighborCoord(CubeCoord from, Side hexSide)
+        public static CubeCoord GetToNeighborCoord(Side hexSide)
         {
-            return from + neighborCoords[(int)hexSide];
+            return neighborCoords[(int)hexSide];
         }
 
         public static Vector2 GetVectorToNeighborHexOn(Side side)

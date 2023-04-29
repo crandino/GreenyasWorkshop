@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: trigger
+      value: 
+      objectReference: {fileID: 4381424003844318819}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
       propertyPath: paths.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -109,6 +113,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3847913035907798777, guid: 8142be89494e9454c94af2c73721b998, type: 3}
   m_PrefabInstance: {fileID: 696784081524076699}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &4381424003844318819 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 3847913035907798776, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+  m_PrefabInstance: {fileID: 696784081524076699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4381424003844318821 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3847913035907798782, guid: 8142be89494e9454c94af2c73721b998, type: 3}
@@ -127,11 +136,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
-  - localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
-    tileTransform: {fileID: 4381424003844318818}
-    hexSide:
+  - hexSide:
       initialLocalSide: 0
       tileTransform: {fileID: 4381424003844318818}
+    parentSegment: {fileID: 2200427973166620460}
+    localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
+    tileTransform: {fileID: 4381424003844318818}
   meshRenderer: {fileID: 4381424003844318823}
   emissionPathIndex: 0
 --- !u!23 &4381424003844318823 stripped

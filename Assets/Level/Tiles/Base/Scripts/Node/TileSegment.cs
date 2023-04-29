@@ -1,11 +1,12 @@
 using Greenyas.Hexagon;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public abstract class TileSegment : MonoBehaviour
+public abstract partial class TileSegment : MonoBehaviour
 {
     [SerializeField]
     protected Node[] nodes;
@@ -26,28 +27,34 @@ public abstract class TileSegment : MonoBehaviour
 
     public bool IsStarter => nodes.Length == 1;
 
-    public void GetAllConnections(List<Connection> connections)
+    public void GetAllGates(List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
-            connections.AddRange(nodes[i].Links);
+            gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
     }
 
-    public void SearchCandidateAgainst(Connection candidate, List<Connection> candidates)
+    public void GetAllConnections(List<Gate> gates)
+    {
+        for (int i = 0; i < nodes.Length; i++)
+            gates.AddRange(nodes[i].Connections);
+    }
+
+    public void SearchGatesAgainst(Gate gate, List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            if (candidate.IsFacing(nodes[i]))
-                candidates.Add(new Connection(this, nodes[i]));
+            if (gate.Node.IsFacing(nodes[i]))
+                gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
         }
     }
 
-    public void SearchCandidates(CubeCoord tileCoord, List<Connection> candidates)
+    public void GetInnerGates(CubeCoord tileCoord, List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            CubeCoord toNeighborHexCoord = CubeCoord.GetNeighborCoord(tileCoord, nodes[i].Side);
+            CubeCoord toNeighborHexCoord = tileCoord + CubeCoord.GetToNeighborCoord(nodes[i].Side);
             if (HexMap.Instance.IsTileOn(toNeighborHexCoord))
-                candidates.Add(new Connection(this, nodes[i]));
+                gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
         }
     }
 
@@ -97,10 +104,6 @@ public abstract class TileSegment : MonoBehaviour
     private void InitializeNodes()
     {
         nodes = new Node[NumberOfNodes];
-        for (int i = 0; i < nodes.Length; i++)
-        {
-            nodes[i] = new Node();
-        }
     }
 #endif
 }
