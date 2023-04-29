@@ -1,4 +1,3 @@
-using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -39,9 +38,13 @@ public partial class TilePlacer
             DragAndDrop.AcceptDrag();
             GetWindow(typeof(SceneView)).rootVisualElement.UnregisterCallback<DragPerformEvent>(OnDragScenePerformed);
 
-            GameObject tile = HandleUtility.PickGameObject(evt.localMousePosition, false);
-            CubeCoord coord = HexTools.GetNearestCubeCoord(tile.transform.position);
-            tile.transform.position = HexTools.GetCartesianWorldPos(coord);
+            Tile tile = HandleUtility.PickGameObject(evt.localMousePosition, false).GetComponent<Tile>();
+            tile.FindNearCubeCoordAndPlace();
+            if (Application.isPlaying)
+            {
+                tile.ConnectTile();
+                HexMap.Instance.AddTile(tile);
+            }
         }       
     }
 }

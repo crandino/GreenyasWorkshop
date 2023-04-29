@@ -5,7 +5,8 @@ using UnityEngine;
 
 public static class PathStorage
 {
-    private static WaitForSeconds interval = new WaitForSeconds(0.25f);
+    private static WaitForSeconds timeBetweenHighlight = new WaitForSeconds(0.15f);
+    private static WaitForSeconds timeBetweenPaths = new WaitForSeconds(1f);
     private static List<TileSegment[]> sequences = new List<TileSegment[]>();
 
     static PathStorage()
@@ -13,37 +14,49 @@ public static class PathStorage
         sequences.Clear();
     }
 
-    private static IEnumerator StartHighlight(TileSegment[] path)
+    private static IEnumerator StartHighlight()
     {
-        for (int i = 0; i < path.Length; i++)
+        for (int i = 0; i < sequences.Count; i++)
         {
-            path[i].Highlight();
-            yield return interval;
+            TileSegment[] path = sequences[i];
+            for (int j = 0; j < path.Length; j++)
+            {
+                yield return timeBetweenHighlight;
+                path[j].Highlight();
+            }
+
+            //yield return timeBetweenPaths;
+            //for (int j = 0; j < path.Length; j++)
+            //    path[j].Unhighlight();
         }
     }
 
     public static void AddPath(TileSegment[] path)
     {
-        sequences.Add(path);      
+        sequences.Add(path);
     }
 
-    public static void ShowLastPath<T>(T mono) where T : MonoBehaviour
+    public static void RemovePathWithSegments(TileSegment[] segments)
     {
-        mono.StartCoroutine(StartHighlight(sequences.Last()));
+        for (int i = sequences.Count - 1; i >= 0; --i)
+        {
+            if (sequences[i].Any(s => segments.Contains(s)))
+            {
+                System.Array.ForEach(sequences[i], s => s.Unhighlight());
+                sequences.RemoveAt(i);
+            }
+        }
+    }
+
+    public static void ShowCompletedPaths<T>(T mono) where T : MonoBehaviour
+    {
+        mono.StartCoroutine(StartHighlight());
     }
 
     public static bool CheckEqualPath(TileSegment[] path)
     {
         for (int i = 0; i < sequences.Count; i++)
         {
-            //TileSegment[] sequencePath = sequences[i];
-            //bool wholeSequence = false;
-
-            //for (int j = 0; j < sequencePath.Length; j++)
-            //{
-            //    wholeSequence = wholeSequence || path.Contains(sequencePath[j]);
-            //}
-
             if (sequences[i].All(s => path.Contains(s)))
                 return true;
         }

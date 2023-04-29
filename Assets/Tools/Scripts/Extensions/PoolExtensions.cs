@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Pool;
 
 public static class PoolExtensions
@@ -17,11 +16,7 @@ public static class PoolExtensions
         while (enumerator.MoveNext())
         {
             if (predicate(enumerator.Current))
-            {
-                TileSegment.Gate gate = enumerator.Current as TileSegment.Gate;
-                Debug.Log($"Releasing: {gate.ID} ID");
                 pool.Release(enumerator.Current);
-            }
         }
     }
 }

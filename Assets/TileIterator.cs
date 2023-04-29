@@ -109,10 +109,7 @@ public static class TileIterator
                                          Append(gates[i].Segment).ToArray();
 
                     if(!PathStorage.CheckEqualPath(path))
-                    {
                         PathStorage.AddPath(path);
-                        PathStorage.ShowLastPath(tile);
-                    }                   
                 }
                 else
                 {
@@ -122,6 +119,7 @@ public static class TileIterator
             }
         }
 
+        PathStorage.ShowCompletedPaths(tile);
         Gate.Pool.TryRelease(gates);
     }
 }
