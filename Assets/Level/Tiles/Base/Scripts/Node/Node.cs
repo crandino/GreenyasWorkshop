@@ -24,35 +24,6 @@ public class Node
     public Vector3 WorldDebugPos => tileTransform.position + tileTransform.rotation * localDebugPosition;
 #endif
 
-    public bool IsFacing(Node node)
-    {
-        return hexSide.WorldSide.IsOpposite(node.Side);
-    }
-
-    //public Node GoThrough()
-    //{
-    //    return parentSegment.GoThrough(this);
-    //}
-
-    //public void Connect(Gate[] gates, bool bidirectional = true)
-    //{
-    //    for (int i = 0; i < gates.Length; i++)
-    //    {
-    //        Connections.AddRange(gates);
-    //        if (bidirectional)
-    //            gates[i].Node.Connections.Add(new Gate();
-    //    }
-    //}
-
-    //public void Disconnect()
-    //{
-    //    for (int i = 0; i < Connections.Count; i++)
-    //        Connections[i].Connections.Clear();
-
-    //    Connections.Clear();
-    //}
-
-    //public static implicit operator TileSegment(Node node) => node.parentSegment;
 
 #if UNITY_EDITOR
     public void ShowDebugInfo()

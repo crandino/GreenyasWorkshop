@@ -30,31 +30,55 @@ public abstract partial class TileSegment : MonoBehaviour
     public void GetAllGates(List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
-            gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
+            gates.Add(Gate.Pool.Generate(this, nodes[i]));
     }
 
-    public void GetAllConnections(List<Gate> gates)
+    public void GetAllNodes(List<Node> nodes)
     {
-        for (int i = 0; i < nodes.Length; i++)
-            gates.AddRange(nodes[i].Connections);
+        nodes.AddRange(nodes);
     }
 
-    public void SearchGatesAgainst(Gate gate, List<Gate> gates)
+    public void SearchGatesAgainst(HexSide.Side side, List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            if (gate.Node.IsFacing(nodes[i]))
-                gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
+            if (side.IsOpposite(nodes[i].Side))
+                gates.Add(Gate.Pool.Generate(this, nodes[i]));
         }
     }
 
-    public void GetInnerGates(CubeCoord tileCoord, List<Gate> gates)
+    public void ConnectSegment(CubeCoord tileCoord, bool bidirectional)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
             CubeCoord toNeighborHexCoord = tileCoord + CubeCoord.GetToNeighborCoord(nodes[i].Side);
-            if (HexMap.Instance.IsTileOn(toNeighborHexCoord))
-                gates.Add(Gate.Pool.GenerateGate(this, nodes[i]));
+
+            if (HexMap.Instance.TryGetTile(toNeighborHexCoord, out Tile contactTile) &&
+                contactTile.SearchGatesAgainst(nodes[i].Side, out List<Gate> gates))
+            {
+                nodes[i].Connections.AddRange(gates);
+
+                if (bidirectional)
+                {
+                    for (int j = 0; j < gates.Count; j++)
+                        gates[j].Node.Connections.Add(Gate.Pool.Generate(this, nodes[i]));
+                }
+            }
+        }
+    }
+
+    public void DisconnectSegment()
+    {
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            for (int j = 0; j < nodes[i].Connections.Count; j++)
+            {
+                Gate.Pool.Release(nodes[i].Connections[j].Node.Connections);
+                nodes[i].Connections[j].Node.Connections.Clear();
+            }
+
+            Gate.Pool.Release(nodes[i].Connections);
+            nodes[i].Connections.Clear();
         }
     }
 

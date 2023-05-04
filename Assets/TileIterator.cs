@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine;
 using Gate = TileSegment.Gate;
 
 public static class TileIterator
@@ -82,15 +82,17 @@ public static class TileIterator
     public static void LookForClosedPaths()
     {
         Tile[] starterTiles = HexMap.Instance.GetAllStarterTiles();
+
         for (int i = 0; i < starterTiles.Length; i++)
-        {
             ExplorePathsFrom(starterTiles[i]);
-        }       
+        
+        PathStorage.ShowCompletedPaths();
     }
 
     private static void ExplorePathsFrom(Tile tile)
     {
         StepTracker<Gate> tracker = new StepTracker<Gate>();
+        HashSet<Gate> visited = new HashSet<Gate>();
 
         List<Gate> gates = tile.GetAllGates();
 
@@ -101,15 +103,20 @@ public static class TileIterator
             while (tracker.MoveNext())
             {
                 Gate currentGate = tracker.GetCurrentStep();
+                if (visited.Contains(currentGate))
+                {
+                    Debug.Log($"Fucntion exits with {currentGate.Segment} and {visited.Count}");
+                    break;
+                }
+
+                visited.Add(currentGate);
                 if (currentGate.Segment.IsStarter)
                 {
-                    Debug.Log("Path closed!");
                     TileSegment[] path = tracker.GetEvaluatedSteps().
                                          Select(g => g.Segment).
                                          Append(gates[i].Segment).ToArray();
 
-                    if(!PathStorage.CheckEqualPath(path))
-                        PathStorage.AddPath(path);
+                    PathStorage.AddPath(path);
                 }
                 else
                 {
@@ -119,7 +126,6 @@ public static class TileIterator
             }
         }
 
-        PathStorage.ShowCompletedPaths(tile);
-        Gate.Pool.TryRelease(gates);
+        Gate.Pool.Release(gates);
     }
 }

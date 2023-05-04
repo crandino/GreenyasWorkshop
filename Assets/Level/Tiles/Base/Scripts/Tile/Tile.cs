@@ -63,7 +63,7 @@ public abstract class Tile : MonoBehaviour
         AllowRotation();
 
         DisconnectTile();
-        PathStorage.RemovePathWithSegments(segments);
+        PathStorage.RemovePath(segments);
 
         HexMap.Instance.RemoveTile(HexCoord);
     }
@@ -77,62 +77,43 @@ public abstract class Tile : MonoBehaviour
         FindNearCubeCoordAndPlace();
 
         ConnectTile();
-        TileIterator.LookForClosedPaths();
 
         HexMap.Instance.AddTile(this);
+        TileIterator.LookForClosedPaths();
     }
 
     public void ConnectTile(bool bidirectional = true)
     {
-        List<TileSegment.Gate> gates = GetInnerGates();
-
-        for (int i = 0; i < gates.Count; i++)
-        {
-            TileSegment.Gate gate = gates[i];
-
-            CubeCoord neighborCoords = HexCoord + CubeCoord.GetToNeighborCoord(gate.Node.Side);
-
-            if (HexMap.Instance.TryGetTile(neighborCoords, out Tile tileToConnect))
-            {
-                List<TileSegment.Gate> externalGates = tileToConnect.SearchGatesAgainst(gate);
-                gate.Connect(externalGates, bidirectional);
-            }
-        }   
-        
-        TileSegment.Gate.Pool.TryRelease(gates);
-    }
-
-    private readonly static List<TileSegment.Gate> gates = new List<TileSegment.Gate>();
-
-    private List<TileSegment.Gate> GetInnerGates()
-    {
-        gates.Clear();
-
         for (int i = 0; i < segments.Length; i++)
-            segments[i].GetInnerGates(HexCoord, gates);
-
-        return gates;
-    }
-
-    private List<TileSegment.Gate> SearchGatesAgainst(TileSegment.Gate gate)
-    {
-        List<TileSegment.Gate> tmpGates = new List<TileSegment.Gate>();
-
-        for (int i = 0; i < segments.Length; i++)
-            segments[i].SearchGatesAgainst(gate, tmpGates);
-
-        return tmpGates;
+            segments[i].ConnectSegment(HexCoord, bidirectional);       
     }
 
     public void DisconnectTile()
     {
-        gates.Clear();
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].DisconnectSegment();
+    }
+
+    private Node[] GetAllNodes()
+    {
+        List<Node> nodes = new();
 
         for (int i = 0; i < segments.Length; i++)
-            segments[i].GetAllConnections(gates);
+            segments[i].GetAllNodes(nodes);
 
-        for (int i = 0; i < gates.Count; i++)
-            gates[i].Disconnect();
+        return nodes.ToArray();
+    }
+
+    private readonly static List<TileSegment.Gate> gates = new List<TileSegment.Gate>();
+
+    public bool SearchGatesAgainst(HexSide.Side side, out List<TileSegment.Gate> gates)
+    {
+        gates = new List<TileSegment.Gate>();
+
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].SearchGatesAgainst(side, gates);
+
+        return gates.Count != 0;
     }
 
     public List<TileSegment.Gate> GetAllGates()
