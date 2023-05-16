@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -25,4 +25,5 @@ namespace Greenyas.Hexagon
             return instance;
         }
     }
-}
+} 
+#endif

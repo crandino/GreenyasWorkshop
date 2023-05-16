@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
-using UnityEngine;
 
 public static class EditorShortcuts
 {
-
     [MenuItem("Assets/Create Common Folders")]
     static void CreateFolder()
     {
@@ -18,7 +15,7 @@ public static class EditorShortcuts
         AssetDatabase.CreateFolder(currentSelectedPpath, "Prefabs");
     }
 
-    public static string GetSelectedPathOrFallback()
+    private static string GetSelectedPathOrFallback()
     {
         string path = "Assets";
 
@@ -33,5 +30,5 @@ public static class EditorShortcuts
         }
         return path;
     }
-
-}
+} 
+#endif

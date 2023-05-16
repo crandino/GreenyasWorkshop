@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using UnityEditor;
 using UnityEngine.Assertions;
@@ -40,4 +41,5 @@ public static class SerializedPropertyExtensions
             array.arraySize = newSize;
     }
 
-}
+} 
+#endif
