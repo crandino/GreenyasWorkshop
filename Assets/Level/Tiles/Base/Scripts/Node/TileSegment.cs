@@ -1,11 +1,12 @@
 using Greenyas.Hexagon;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public abstract class TileSegment : MonoBehaviour
+public abstract partial class TileSegment : MonoBehaviour
 {
     [SerializeField]
     protected Node[] nodes;
@@ -26,28 +27,58 @@ public abstract class TileSegment : MonoBehaviour
 
     public bool IsStarter => nodes.Length == 1;
 
-    public void GetAllConnections(List<Connection> connections)
+    public void GetAllGates(List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
-            connections.AddRange(nodes[i].Links);
+            gates.Add(Gate.Pool.Generate(this, nodes[i]));
     }
 
-    public void SearchCandidateAgainst(Connection candidate, List<Connection> candidates)
+    public void GetAllNodes(List<Node> nodes)
+    {
+        nodes.AddRange(nodes);
+    }
+
+    public void SearchGatesAgainst(HexSide.Side side, List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            if (candidate.IsFacing(nodes[i]))
-                candidates.Add(new Connection(this, nodes[i]));
+            if (side.IsOpposite(nodes[i].Side))
+                gates.Add(Gate.Pool.Generate(this, nodes[i]));
         }
     }
 
-    public void SearchCandidates(CubeCoord tileCoord, List<Connection> candidates)
+    public void ConnectSegment(CubeCoord tileCoord, bool bidirectional)
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            CubeCoord toNeighborHexCoord = CubeCoord.GetNeighborCoord(tileCoord, nodes[i].Side);
-            if (HexMap.Instance.IsTileOn(toNeighborHexCoord))
-                candidates.Add(new Connection(this, nodes[i]));
+            CubeCoord toNeighborHexCoord = tileCoord + CubeCoord.GetToNeighborCoord(nodes[i].Side);
+
+            if (HexMap.Instance.TryGetTile(toNeighborHexCoord, out Tile contactTile) &&
+                contactTile.SearchGatesAgainst(nodes[i].Side, out List<Gate> gates))
+            {
+                nodes[i].Connections.AddRange(gates);
+
+                if (bidirectional)
+                {
+                    for (int j = 0; j < gates.Count; j++)
+                        gates[j].Node.Connections.Add(Gate.Pool.Generate(this, nodes[i]));
+                }
+            }
+        }
+    }
+
+    public void DisconnectSegment()
+    {
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            for (int j = 0; j < nodes[i].Connections.Count; j++)
+            {
+                Gate.Pool.Release(nodes[i].Connections[j].Node.Connections);
+                nodes[i].Connections[j].Node.Connections.Clear();
+            }
+
+            Gate.Pool.Release(nodes[i].Connections);
+            nodes[i].Connections.Clear();
         }
     }
 
@@ -97,10 +128,6 @@ public abstract class TileSegment : MonoBehaviour
     private void InitializeNodes()
     {
         nodes = new Node[NumberOfNodes];
-        for (int i = 0; i < nodes.Length; i++)
-        {
-            nodes[i] = new Node();
-        }
     }
 #endif
 }

@@ -9,11 +9,11 @@
         <ui:GroupBox text="Flow" name="FlowGroup" style="color: rgb(255, 255, 255); background-color: rgba(0, 157, 255, 0.25); border-left-color: rgb(0, 157, 255); border-right-color: rgb(0, 157, 255); border-top-color: rgb(0, 157, 255); border-bottom-color: rgb(0, 157, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
             <TilePrefabLabel text="Straight" assetPath="Assets/Level/Tiles/Flow/Straight/Prefabs/StraightFlow.prefab" />
             <TilePrefabLabel text="Simple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/SimpleShortCurve/Prefabs/SimpleShortCurveFlow.prefab" />
+            <TilePrefabLabel text="Simple Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/SimpleLongCurve/Prefabs/SimpleLongCurveFlow.prefab" enable-rich-text="false" />
             <TilePrefabLabel text="Double Near Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleNearShortCurve/Prefabs/DoubleNearShortCurve.prefab" />
             <TilePrefabLabel text="Double Far Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/DoubleFarShortCurve/Prefabs/DoubleFarShortCurveFlow.prefab" />
-            <TilePrefabLabel text="Triple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/TripleShortCurve/Prefabs/TripleShortCurveFlow.prefab" />
-            <TilePrefabLabel text="Simple Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/SimpleLongCurve/Prefabs/SimpleLongCurveFlow.prefab" enable-rich-text="false" />
             <TilePrefabLabel text="Double Long Curve" assetPath="Assets/Level/Tiles/Flow/LongCurves/DoubleLongCurve/Prefabs/DoubleLongCurveFlow.prefab" />
+            <TilePrefabLabel text="Triple Short Curve" assetPath="Assets/Level/Tiles/Flow/ShortCurves/TripleShortCurve/Prefabs/TripleShortCurveFlow.prefab" />
         </ui:GroupBox>
         <ui:GroupBox text="Splits" name="SplitGroup" style="color: rgb(255, 255, 255); background-color: rgba(0, 152, 5, 0.25); border-left-color: rgb(0, 152, 5); border-right-color: rgb(0, 152, 5); border-top-color: rgb(0, 152, 5); border-bottom-color: rgb(0, 152, 5); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
             <TilePrefabLabel text="Split Long Curve" assetPath="Assets/Level/Tiles/Flow/Splits/SplitLongCurve/Prefabs/SplitLongCurveFlow.prefab" />

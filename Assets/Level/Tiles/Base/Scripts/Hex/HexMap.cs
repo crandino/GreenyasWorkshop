@@ -42,9 +42,9 @@ public class HexMap : MonoBehaviour
         Instance = this;
     }
 
-    public void AddTile(CubeCoord coord, Tile tile)
+    public void AddTile(Tile tile)
     {
-        mapStorage.Add(coord, tile);
+        mapStorage.Add(tile.HexCoord, tile);
     }
 
     public void RemoveTile(CubeCoord coord)

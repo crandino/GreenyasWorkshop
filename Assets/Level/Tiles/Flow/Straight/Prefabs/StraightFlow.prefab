@@ -156,15 +156,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
-  - localDebugPosition: {x: 0, y: 0, z: 0}
-    tileTransform: {fileID: 9203548458036206920}
-    hexSide:
+  - hexSide:
       initialLocalSide: 0
       tileTransform: {fileID: 9203548458036206920}
-  - localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
+    parentSegment: {fileID: 1970303294394538220}
+    localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
     tileTransform: {fileID: 9203548458036206920}
-    hexSide:
+  - hexSide:
       initialLocalSide: 3
       tileTransform: {fileID: 9203548458036206920}
+    parentSegment: {fileID: 1970303294394538220}
+    localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
+    tileTransform: {fileID: 9203548458036206920}
   meshRenderer: {fileID: 9203548458036206925}
   emissionPathIndex: 0

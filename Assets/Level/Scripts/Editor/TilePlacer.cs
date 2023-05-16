@@ -1,8 +1,6 @@
+using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UIElements;
 
 public partial class TilePlacer : EditorWindow
@@ -15,7 +13,7 @@ public partial class TilePlacer : EditorWindow
     [MenuItem("Window/Greenyas/Tile Placer")]
     private static void OpenTilePlacerWindow()
     {
-        GetWindow<TilePlacer>(typeof(Editor).Assembly.GetType("UnityEditor.ConsoleWindow"));
+        GetWindow<TilePlacer>();
     }
 
     private struct Label
@@ -78,12 +76,27 @@ public partial class TilePlacer : EditorWindow
         if (!tile || !tile.GetComponent<Tile>())
             return;
 
-        if (evt.shiftKey)
-            tile.transform.Rotate(Vector3.up, 60f);
-        else if (evt.ctrlKey)
-            tile.transform.Rotate(Vector3.up, -60f);
+        if (evt.shiftKey || evt.ctrlKey)
+        {
+            evt.StopPropagation();
 
-        evt.StopPropagation();
+            if (evt.shiftKey)
+                RotateTile(tile.GetComponent<Tile>(), true);
+            else if (evt.ctrlKey)
+                RotateTile(tile.GetComponent<Tile>(), false);
+        }
+    }
+
+    private void RotateTile(Tile tile, bool clockWise)
+    {
+        if (Application.isPlaying)
+        {
+            tile.DisconnectTile();
+            tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
+            tile.ConnectTile();
+        }
+        else
+            tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
     }
 
     private void SwitchInput(ChangeEvent<bool> evt)

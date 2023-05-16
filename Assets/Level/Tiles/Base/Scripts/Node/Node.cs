@@ -7,6 +7,13 @@ using static Greenyas.Hexagon.HexSide;
 [System.Serializable]
 public class Node
 {
+    [SerializeField]
+    private HexSide hexSide;
+
+    public Side Side => hexSide.WorldSide;
+
+    public List<TileSegment.Gate> Connections { private set; get; } = new List<TileSegment.Gate>();
+
 #if UNITY_EDITOR
     [SerializeField]
     public Vector3 localDebugPosition;
@@ -17,14 +24,6 @@ public class Node
     public Vector3 WorldDebugPos => tileTransform.position + tileTransform.rotation * localDebugPosition;
 #endif
 
-    [SerializeField]
-    private HexSide hexSide;
-
-    public Side Side => hexSide.WorldSide;
-
-    public List<Connection> Links { private set; get; } = new List<Connection>();
-
-    public bool IsFacing(Node node) => hexSide.WorldSide.IsOpposite(node.Side);
 
 #if UNITY_EDITOR
     public void ShowDebugInfo()
@@ -45,8 +44,8 @@ public class Node
 
             GUIStyle textStyle = new GUIStyle();
             textStyle.fontSize = 18;
-            Handles.color = textStyle.normal.textColor = Links.Count != 0 ? Color.green : Color.red;
-            Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{Links.Count}", textStyle);
+            Handles.color = textStyle.normal.textColor = Connections.Count != 0 ? Color.green : Color.red;
+            Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{Connections.Count}", textStyle);
             
             Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, EventType.Repaint);
         }

@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+      propertyPath: trigger
+      value: 
+      objectReference: {fileID: 8440745001256893035}
+    - target: {fileID: 399847745136029076, guid: 8142be89494e9454c94af2c73721b998, type: 3}
       propertyPath: paths.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -144,6 +148,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3847913035907798777, guid: 8142be89494e9454c94af2c73721b998, type: 3}
   m_PrefabInstance: {fileID: 4631112599238552723}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &8440745001256893035 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 3847913035907798776, guid: 8142be89494e9454c94af2c73721b998, type: 3}
+  m_PrefabInstance: {fileID: 4631112599238552723}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8440745001256893037 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3847913035907798782, guid: 8142be89494e9454c94af2c73721b998, type: 3}
@@ -162,11 +171,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
-  - localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
-    tileTransform: {fileID: 8440745001256893034}
-    hexSide:
+  - hexSide:
       initialLocalSide: 0
       tileTransform: {fileID: 8440745001256893034}
+    parentSegment: {fileID: 8781050583339924859}
+    localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
+    tileTransform: {fileID: 8440745001256893034}
   meshRenderer: {fileID: 8440745001256893039}
   emissionPathIndex: 0
 --- !u!114 &8441571217797461770
@@ -182,11 +192,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
-  - localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
-    tileTransform: {fileID: 8440745001256893034}
-    hexSide:
+  - hexSide:
       initialLocalSide: 3
       tileTransform: {fileID: 8440745001256893034}
+    parentSegment: {fileID: 8441571217797461770}
+    localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
+    tileTransform: {fileID: 8440745001256893034}
   meshRenderer: {fileID: 8440745001256893039}
   emissionPathIndex: 1
 --- !u!23 &8440745001256893039 stripped

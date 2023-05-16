@@ -2,57 +2,68 @@ using Greenyas.Hexagon;
 using Greenyas.Input;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class Tile : MonoBehaviour
 {
     [SerializeField]
     private Collider trigger;
 
-    [SerializeField]
-    private TileSegment[] paths = null;
+    [SerializeField, FormerlySerializedAs("paths")]
+    private TileSegment[] segments = null;
 
     // Rotation
     private float targetRotationAngle = 0f;
-    private float currentRotationTime = 0f;
 
     private InputManager input = null;
     public CubeCoord HexCoord { private set; get; }
 
-    //private event Action OnPickUp;
-    //private event Action OnRelease;
+    private EventTimer rotationTimer = null;
 
     private void Start()
     {
         input = Game.Instance.GetSystem<InputManager>();
         HexCoord = HexTools.GetNearestCubeCoord(transform.position);
         targetRotationAngle = transform.rotation.eulerAngles.y;
+        enabled = false;
+
+        const float EVENT_TIME = 0.3f;
+        rotationTimer = new EventTimer(EVENT_TIME, StartingRotation, OnRotation, FinishingRotation);
     }
 
     public void Initialize()
     {
-        HexMap.Instance.AddTile(HexCoord, this);
+        HexMap.Instance.AddTile(this);
     }
 
     public void RotateClockwise()
     {
-        currentRotationTime = 0f;
+        rotationTimer.Start();
         targetRotationAngle += HexTools.ROTATION_ANGLE;
     }
 
     public void RotateCounterClockwise()
     {
-        currentRotationTime = 0f;
+        rotationTimer.Start();
         targetRotationAngle -= HexTools.ROTATION_ANGLE;
     }
+
+#if UNITY_EDITOR
+    public void EditorRotate(float angle)
+    {
+        targetRotationAngle += angle;
+        transform.Rotate(Vector3.up, angle);
+    }
+#endif
 
     public void PickUp()
     {
         trigger.enabled = false;
 
-        input.OnAxis.OnPositiveDelta += RotateClockwise;
-        input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
+        AllowRotation();
 
         DisconnectTile();
+        PathStorage.RemovePath(segments);
 
         HexMap.Instance.RemoveTile(HexCoord);
     }
@@ -61,77 +72,61 @@ public abstract class Tile : MonoBehaviour
     {
         trigger.enabled = true;
 
-        input.OnAxis.OnPositiveDelta -= RotateClockwise;
-        input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
+        RestrictRotation();
 
         FindNearCubeCoordAndPlace();
 
         ConnectTile();
 
-        HexMap.Instance.AddTile(HexCoord, this);
+        HexMap.Instance.AddTile(this);
+        TileIterator.LookForClosedPaths();
     }
 
     public void ConnectTile(bool bidirectional = true)
     {
-        Connection[] candidates = SearchCandidates();
-
-        for (int i = 0; i < candidates.Length; i++)
-        {
-            Connection candidateConnection = candidates[i];
-
-            CubeCoord neighborCoords = CubeCoord.GetNeighborCoord(HexCoord, candidateConnection.Side);
-
-            if (HexMap.Instance.TryGetTile(neighborCoords, out Tile tileToConnect))
-            {
-                Connection[] externalConnections = tileToConnect.SearchCandidatesAgainst(candidateConnection);
-                candidateConnection.Connect(externalConnections, bidirectional);
-            }
-        }
-
-        TileIterator.LookForClosedPaths();
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].ConnectSegment(HexCoord, bidirectional);       
     }
 
-    private static List<Connection> connections = new List<Connection>();
-
-    private Connection[] SearchCandidates()
+    public void DisconnectTile()
     {
-        connections.Clear();
-
-        for (int i = 0; i < paths.Length; i++)
-            paths[i].SearchCandidates(HexCoord, connections);
-
-        return connections.ToArray();
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].DisconnectSegment();
     }
 
-    private Connection[] SearchCandidatesAgainst(Connection connection)
+    private Node[] GetAllNodes()
     {
-        connections.Clear();
+        List<Node> nodes = new();
 
-        for (int i = 0; i < paths.Length; i++)
-        {
-            paths[i].SearchCandidateAgainst(connection, connections);
-        }
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].GetAllNodes(nodes);
 
-        return connections.ToArray();
+        return nodes.ToArray();
     }
 
-    private void DisconnectTile()
+    private readonly static List<TileSegment.Gate> gates = new List<TileSegment.Gate>();
+
+    public bool SearchGatesAgainst(HexSide.Side side, out List<TileSegment.Gate> gates)
     {
-        Connection[] connections = GetAllConnections();
-        connections.Disconnect();
+        gates = new List<TileSegment.Gate>();
+
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].SearchGatesAgainst(side, gates);
+
+        return gates.Count != 0;
     }
 
-    public Connection[] GetAllConnections()
+    public List<TileSegment.Gate> GetAllGates()
     {
-        connections.Clear();
+        gates.Clear();
 
-        for (int i = 0; i < paths.Length; i++)
-            paths[i].GetAllConnections(connections);
+        for (int i = 0; i < segments.Length; i++)
+            segments[i].GetAllGates(gates);
 
-        return connections.ToArray();
+        return gates;
     }
 
-    private void FindNearCubeCoordAndPlace()
+    public void FindNearCubeCoordAndPlace()
     {
         HexCoord = HexTools.GetNearestCubeCoord(transform.position);
         transform.position = HexTools.GetCartesianWorldPos(HexCoord);
@@ -142,19 +137,47 @@ public abstract class Tile : MonoBehaviour
         transform.position = position;
     }
 
+    private void AllowRotation()
+    {
+        input.OnAxis.OnPositiveDelta += RotateClockwise;
+        input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
+    }
+
+    private void RestrictRotation()
+    {
+        input.OnAxis.OnPositiveDelta -= RotateClockwise;
+        input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
+    }
+
+    private void StartingRotation()
+    {
+        RestrictRotation();
+        enabled = true;
+    }
+
+    private void OnRotation(float progress)
+    {
+        float angle = Mathf.LerpAngle(transform.eulerAngles.y, targetRotationAngle, progress);
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, angle, transform.localEulerAngles.z);
+    }
+
+    private void FinishingRotation()
+    {
+        AllowRotation();
+        enabled = false;
+    }
+
     private void Update()
     {
-        // Rotation
-        currentRotationTime += Time.deltaTime;
-        float angle = Mathf.LerpAngle(transform.eulerAngles.y, targetRotationAngle, currentRotationTime);
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, angle, transform.localEulerAngles.z);
+        rotationTimer.Step();
     }
 
 #if UNITY_EDITOR
     [ContextMenu("Get References")]
     private void GetReferences()
     {
-        paths = GetComponents<TileSegment>();
+        trigger = GetComponent<MeshCollider>();
+        segments = GetComponents<TileSegment>();
     }
 #endif
 }
