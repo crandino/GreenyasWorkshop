@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Greenyas.Hexagon
 {
-    [CreateAssetMenu(fileName = "DebugOptions", menuName = "ScriptableObjects/HexagonDebugVisualization", order = 1)]
+    [CreateAssetMenu(fileName = "DebugOptions", menuName = "Hexagon/DebugVisualization", order = 1)]
     public class DebugOptions : ScriptableObject
     {
         [SerializeField] public bool showHexagonMapCoordinates;

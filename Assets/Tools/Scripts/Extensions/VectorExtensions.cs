@@ -100,4 +100,11 @@ public static class VectorExtensions
     {
         return new Vector2(v.y, v.z);
     }
+
+    public static bool Approximately(this Vector3 v, Vector3 match)
+    {
+        return Mathf.Approximately(v.x, match.x) &&
+               Mathf.Approximately(v.y, match.y) &&
+               Mathf.Approximately(v.z, match.z);
+    }
 }
