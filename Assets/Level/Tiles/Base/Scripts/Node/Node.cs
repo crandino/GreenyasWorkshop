@@ -29,14 +29,14 @@ public class Node
     public void ShowDebugInfo()
     {
         // Node position for debug purposes
-        if(DebugOptions.ShowPaths)
+        if(DebugOptions.instance.showTilePaths)
         {
             Gizmos.color = CustomColors.darkOrange;
             Gizmos.DrawSphere(WorldDebugPos, 0.05f);
         }
 
         // Outward node conntections
-        if(DebugOptions.ShowConnections)
+        if(DebugOptions.instance.showTileConnections)
         {
             Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(hexSide.WorldSide);
             Vector3 toNextTile = new Vector3(vec.x, 0f, vec.y);

@@ -99,7 +99,7 @@ public abstract partial class TileSegment : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (DebugOptions.ShowPaths && nodes.Length == 2)
+        if (DebugOptions.instance.showTilePaths && nodes.Length == 2)
         {
             Handles.color = CustomColors.darkOrange;
             Handles.DrawLine(nodes[0].WorldDebugPos, nodes[1].WorldDebugPos, 2f);

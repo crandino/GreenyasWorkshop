@@ -8,6 +8,9 @@ public class TileManager : MonoBehaviour
     [SerializeField]
     private Tile[] excludeTiles;
 
+    [SerializeField]
+    private DeckCreator deckCreator;
+
     private void Start()
     {
         tiles = FindObjectsByType<Tile>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Except(excludeTiles).ToArray();

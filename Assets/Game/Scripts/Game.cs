@@ -39,9 +39,6 @@ public class Game : MonoBehaviour
 
     public T GetSystem<T>() where T : SubSystem
     {
-        T subSystem = (T)systems[typeof(T)];
-        //
-        //subSystem.InitSystem();
         return (T)systems[typeof(T)];
     }
 

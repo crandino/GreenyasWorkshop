@@ -6,25 +6,11 @@ using UnityEngine;
 namespace Greenyas.Hexagon
 {
     [CreateAssetMenu(fileName = "DebugOptions", menuName = "Hexagon/DebugVisualization", order = 1)]
-    public class DebugOptions : ScriptableObject
+    public class DebugOptions : ScriptableSingleton<DebugOptions>
     {
-        [SerializeField] public bool showHexagonMapCoordinates;
-        [SerializeField] public bool showTilePaths;
-        [SerializeField] public bool showTileConnections;
-
-        private static DebugOptions instance;
-
-        public static bool ShowHexagonCoord => (instance ?? FindDebugOptionSO()).showHexagonMapCoordinates;
-        public static bool ShowPaths => (instance ?? FindDebugOptionSO()).showTilePaths;
-        public static bool ShowConnections => (instance ?? FindDebugOptionSO()).showTileConnections;
-
-        private static DebugOptions FindDebugOptionSO()
-        {
-            string[] guids = AssetDatabase.FindAssets("t:" + typeof(DebugOptions));  //FindAssets uses tags check documentation for more info
-            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-            instance = AssetDatabase.LoadAssetAtPath<DebugOptions>(path);
-            return instance;
-        }
+        public bool showHexagonMapCoordinates;
+        public bool showTilePaths;
+        public bool showTileConnections;     
     }
 } 
 #endif

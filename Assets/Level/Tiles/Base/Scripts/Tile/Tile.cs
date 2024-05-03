@@ -19,6 +19,23 @@ public abstract class Tile : MonoBehaviour
 
     private EventTimer rotationTimer = null;
 
+    public enum Type
+    {
+        StarterSimple,
+        StarterDouble,
+        StarterTriple,
+
+        FlowStraight,
+        FlowSimpleShortCurve,
+        FlowSimpleLongCurve,
+        FlowDoubleNearShortCurve,
+        FlowDoubleFarShortCurve,
+        FlowDoubleLongCurve,
+        FlowTripleShortCurve,
+
+        SplitLongCurve
+    }
+
     private void Start()
     {
         input = Game.Instance.GetSystem<InputManager>();
