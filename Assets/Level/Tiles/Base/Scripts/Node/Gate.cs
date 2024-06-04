@@ -31,7 +31,7 @@ public partial class TileSegment
                 };
             }
 
-            public Gate Generate(TileSegment segment, Node node)
+            public Gate CreateGate(TileSegment segment, Node node)
             {
                 Gate gate = pool.Get();
                 gate.Node = node;

@@ -1,4 +1,5 @@
 using Greenyas.Hexagon;
+using Hexagon.Tile.Debug;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ public abstract partial class TileSegment : MonoBehaviour
     public void GetAllGates(List<Gate> gates)
     {
         for (int i = 0; i < nodes.Length; i++)
-            gates.Add(Gate.Pool.Generate(this, nodes[i]));
+            gates.Add(Gate.Pool.CreateGate(this, nodes[i]));
     }
 
     public void GetAllNodes(List<Node> nodes)
@@ -43,7 +44,7 @@ public abstract partial class TileSegment : MonoBehaviour
         for (int i = 0; i < nodes.Length; i++)
         {
             if (side.IsOpposite(nodes[i].Side))
-                gates.Add(Gate.Pool.Generate(this, nodes[i]));
+                gates.Add(Gate.Pool.CreateGate(this, nodes[i]));
         }
     }
 
@@ -51,9 +52,9 @@ public abstract partial class TileSegment : MonoBehaviour
     {
         for (int i = 0; i < nodes.Length; i++)
         {
-            CubeCoord toNeighborHexCoord = tileCoord + CubeCoord.GetToNeighborCoord(nodes[i].Side);
+            CubeCoord neighborHexCoord = tileCoord + CubeCoord.GetToNeighborCoord(nodes[i].Side);
 
-            if (HexMap.Instance.TryGetTile(toNeighborHexCoord, out Tile contactTile) &&
+            if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile contactTile) &&
                 contactTile.SearchGatesAgainst(nodes[i].Side, out List<Gate> gates))
             {
                 nodes[i].Connections.AddRange(gates);
@@ -61,7 +62,7 @@ public abstract partial class TileSegment : MonoBehaviour
                 if (bidirectional)
                 {
                     for (int j = 0; j < gates.Count; j++)
-                        gates[j].Node.Connections.Add(Gate.Pool.Generate(this, nodes[i]));
+                        gates[j].Node.Connections.Add(Gate.Pool.CreateGate(this, nodes[i]));
                 }
             }
         }
@@ -99,15 +100,16 @@ public abstract partial class TileSegment : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (DebugOptions.instance.showTilePaths && nodes.Length == 2)
+        if (TileDebugOptions.Instance.showSegments /*&& nodes.Length == 2*/)
         {
             Handles.color = CustomColors.darkOrange;
             Handles.DrawLine(nodes[0].WorldDebugPos, nodes[1].WorldDebugPos, 2f);
         }
 
         for (int i = 0; i < nodes.Length; i++)
-            nodes[i].ShowDebugInfo();
+            nodes[i].OnDrawGizmos();
     }
+
     protected abstract int NumberOfNodes { get; }
 
     private void Reset()

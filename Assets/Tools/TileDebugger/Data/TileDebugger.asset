@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61c18d0cdf426cc49b9506373ccd5290, type: 3}
-  m_Name: DebugOptions
+  m_Script: {fileID: 11500000, guid: f40f53d7131d13e4ba17050ed611cdad, type: 3}
+  m_Name: TileDebugger
   m_EditorClassIdentifier: 
-  showHexagonMapCoordinates: 0
-  showTilePaths: 0
-  showTileConnections: 0
+  showNodes: 1
+  showSegments: 1
+  showConnections: 1

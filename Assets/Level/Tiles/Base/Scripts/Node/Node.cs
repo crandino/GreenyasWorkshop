@@ -4,6 +4,10 @@ using UnityEditor;
 using UnityEngine;
 using static Greenyas.Hexagon.HexSide;
 
+#if UNITY_EDITOR
+using Hexagon.Tile.Debug; 
+#endif
+
 [System.Serializable]
 public class Node
 {
@@ -22,21 +26,18 @@ public class Node
     private Transform tileTransform;
 
     public Vector3 WorldDebugPos => tileTransform.position + tileTransform.rotation * localDebugPosition;
-#endif
 
-
-#if UNITY_EDITOR
-    public void ShowDebugInfo()
+    public void OnDrawGizmos()
     {
         // Node position for debug purposes
-        if(DebugOptions.instance.showTilePaths)
+        if(TileDebugOptions.Instance.showNodes)
         {
             Gizmos.color = CustomColors.darkOrange;
             Gizmos.DrawSphere(WorldDebugPos, 0.05f);
         }
 
         // Outward node conntections
-        if(DebugOptions.instance.showTileConnections)
+        if(TileDebugOptions.Instance.showConnections)
         {
             Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(hexSide.WorldSide);
             Vector3 toNextTile = new Vector3(vec.x, 0f, vec.y);
