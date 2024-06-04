@@ -10,9 +10,9 @@ public class EventTimer
     private float currentTime = 0f;
     private float inverseTotalTime = 1f;
 
-    private Action onStart = delegate { };
-    private Action<float> onStep = delegate { };
-    private Action onEnd = delegate { };
+    private readonly Action onStart = delegate { };
+    private readonly Action<float> onStep = delegate { };
+    private readonly Action onEnd = delegate { };
 
     public EventTimer(float totalTime, Action onStart = null, Action<float> onStep = null, Action onEnd = null)
     {

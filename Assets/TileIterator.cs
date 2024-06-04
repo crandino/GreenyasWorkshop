@@ -105,7 +105,7 @@ public static class TileIterator
                 Gate currentGate = tracker.GetCurrentStep();
                 if (visited.Contains(currentGate))
                 {
-                    Debug.Log($"Fucntion exits with {currentGate.Segment} and {visited.Count}");
+                    Debug.Log($"Function exits with {currentGate.Segment} and {visited.Count}");
                     break;
                 }
 
