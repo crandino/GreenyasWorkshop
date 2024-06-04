@@ -57,7 +57,7 @@ PrefabInstance:
       value: StraightFlow
       objectReference: {fileID: 0}
     - target: {fileID: 1791548941332363207, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ea9fad810643a8e4bb3fafa1d3f6a1cf, type: 2}
     - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
@@ -65,7 +65,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
-      propertyPath: paths.Array.data[0]
+      propertyPath: 'paths.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1970303294394538220}
+    - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      propertyPath: segments.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
+      propertyPath: 'segments.Array.data[0]'
       value: 
       objectReference: {fileID: 1970303294394538220}
     - target: {fileID: 4982781221792011459, guid: 0e7a2ceb62881b24093a4160a161bde5, type: 3}
@@ -159,13 +167,11 @@ MonoBehaviour:
   - hexSide:
       initialLocalSide: 0
       tileTransform: {fileID: 9203548458036206920}
-    parentSegment: {fileID: 1970303294394538220}
     localDebugPosition: {x: 0, y: 0.025, z: 0.4330127}
     tileTransform: {fileID: 9203548458036206920}
   - hexSide:
       initialLocalSide: 3
       tileTransform: {fileID: 9203548458036206920}
-    parentSegment: {fileID: 1970303294394538220}
     localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
     tileTransform: {fileID: 9203548458036206920}
   meshRenderer: {fileID: 9203548458036206925}

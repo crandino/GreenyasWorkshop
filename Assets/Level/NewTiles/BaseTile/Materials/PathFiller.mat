@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DoubleLongCurve
-  m_Shader: {fileID: 4800000, guid: 0c9ec22625e19774983a9ac60e0e1ac6, type: 3}
+  m_Name: PathFiller
+  m_Shader: {fileID: 4800000, guid: 1e35272939fa70d4a992a40e11002339, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -44,22 +44,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 2d93df526625e1340aed64edf9990d47, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexBase:
-        m_Texture: {fileID: 2800000, guid: 67210e7b80711a740b663b81aeb3f32e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexPath1:
-        m_Texture: {fileID: 2800000, guid: b4e7bb1b1736c3341ad13f1c617ef5aa, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexPath2:
-        m_Texture: {fileID: 2800000, guid: 0c536f93c63701843942f82b3e4ee177, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexPath3:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -82,21 +66,21 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _PathProgress: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionPathSelector: {r: 0, g: 0, b: 0, a: 0}
-    - _PathSelectionColor: {r: 1, g: 0.6627451, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _PathSelectionColor: {r: 0.016815526, g: 0.5377358, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
