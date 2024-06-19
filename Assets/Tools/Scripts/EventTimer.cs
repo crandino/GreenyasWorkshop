@@ -1,18 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class EventTimer
 {
-    private float progress = 0f;
-
     private float currentTime = 0f;
-    private float inverseTotalTime = 1f;
+    private float progress = 0f;
+    private readonly float inverseTotalTime = 1f;
 
     private readonly Action onStart = delegate { };
     private readonly Action<float> onStep = delegate { };
     private readonly Action onEnd = delegate { };
+
+    public bool active = false;
 
     public EventTimer(float totalTime, Action onStart = null, Action<float> onStep = null, Action onEnd = null)
     {
@@ -25,14 +27,17 @@ public class EventTimer
 
     public void Start()
     {
-        progress = currentTime = 0f;
+        active = true;
+        /*currentTime =*/ progress = 0f;
         onStart();
     }
 
     public void Step()
     {
-        currentTime += Time.deltaTime;
-        progress += currentTime * inverseTotalTime;
+        // Safeguard
+        if (!active) return;
+
+        progress += Time.deltaTime * inverseTotalTime;
         onStep(progress);
 
         if (progress > 1f)
@@ -41,6 +46,7 @@ public class EventTimer
 
     public void Stop()
     {
+        active = false;
         onEnd();
     }
 }

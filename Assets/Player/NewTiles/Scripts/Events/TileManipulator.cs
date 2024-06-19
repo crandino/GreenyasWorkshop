@@ -1,6 +1,7 @@
 using Greenyas.Hexagon;
 using Greenyas.Input;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Hexalinks.Tile
 {
@@ -10,6 +11,7 @@ namespace Hexalinks.Tile
         private Collider trigger;
 
         // Rotation
+        private float initialRotationAngle = 0f;
         private float targetRotationAngle = 0f;
         private EventTimer rotationTimer = null;
 
@@ -23,16 +25,17 @@ namespace Hexalinks.Tile
             enabled = false;
 
             input = Game.Instance.GetSystem<InputManager>();
-            targetRotationAngle = transform.rotation.eulerAngles.y;
 
             const float EVENT_TIME = 0.3f;
-            rotationTimer = new EventTimer(EVENT_TIME, RestrictRotation, OnRotation, AllowRotation);
+            rotationTimer = new EventTimer(EVENT_TIME, StartingRotation, OnRotation, FinishingRotation);
         }
 
         public override void OnPickUp(Tile.Data data)
         {
             trigger.enabled = false;
             enabled = true;
+
+            initialRotationAngle = targetRotationAngle = transform.rotation.eulerAngles.y;
 
             AllowRotation();
         }
@@ -42,9 +45,22 @@ namespace Hexalinks.Tile
             trigger.enabled = true;
             enabled = false;
 
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, targetRotationAngle, transform.localEulerAngles.z);
+
             RestrictRotation();
 
             data.SetOnGrid();
+        }
+
+        private void StartingRotation()
+        {
+            initialRotationAngle = targetRotationAngle = transform.rotation.eulerAngles.y;
+            RestrictRotation();
+        }
+
+        private void FinishingRotation()
+        {
+            AllowRotation();
         }
 
         private void RotateClockwise()
@@ -67,12 +83,6 @@ namespace Hexalinks.Tile
         }
 #endif
 
-        //public void FindNearCubeCoordAndPlace()
-        //{
-        //    CubeCoord coord = HexTools.GetNearestCubeCoord(transform.position);
-        //    transform.position = HexTools.GetCartesianWorldPos(coord);
-        //}
-
         private void AllowRotation()
         {
             input.OnAxis.OnPositiveDelta += RotateClockwise;
@@ -87,13 +97,14 @@ namespace Hexalinks.Tile
 
         private void OnRotation(float progress)
         {
-            float angle = Mathf.LerpAngle(transform.eulerAngles.y, targetRotationAngle, progress);
+            float angle = Mathf.LerpAngle(initialRotationAngle, targetRotationAngle, progress);
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, angle, transform.localEulerAngles.z);
         }
 
         private void Update()
         {
             rotationTimer.Step();
+
             if (TileRaycast.CursorRaycastToBoard(out Vector3 boardCursorPos))
                 transform.position = boardCursorPos + verticalOffset;
         }
