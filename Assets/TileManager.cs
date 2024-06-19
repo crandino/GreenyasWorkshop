@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using Hexalinks.Tile;
 
 public class TileManager : MonoBehaviour
 {
@@ -15,10 +16,10 @@ public class TileManager : MonoBehaviour
     {
         tiles = FindObjectsByType<Tile>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Except(excludeTiles).ToArray();
 
-        for (int i = 0; i < tiles.Length; i++)
-            tiles[i].Initialize();
+        //for (int i = 0; i < tiles.Length; i++)
+        //    tiles[i].Initialize();
 
-        for (int i = 0; i < tiles.Length; i++)
-            tiles[i].ConnectTile(false);
+        //for (int i = 0; i < tiles.Length; i++)
+        //    tiles[i].ConnectTile(false);
     }
 }

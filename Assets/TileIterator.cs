@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Assertions;
 using UnityEngine;
-using Gate = TileSegment.Gate;
+using Hexalinks.Tile;
 
 public static class TileIterator
 {
@@ -81,51 +81,51 @@ public static class TileIterator
 
     public static void LookForClosedPaths()
     {
-        Tile[] starterTiles = HexMap.Instance.GetAllStarterTiles();
+        //Tile[] starterTiles = HexMap.Instance.GetAllStarterTiles();
 
-        for (int i = 0; i < starterTiles.Length; i++)
-            ExplorePathsFrom(starterTiles[i]);
+        //for (int i = 0; i < starterTiles.Length; i++)
+        //    ExplorePathsFrom(starterTiles[i]);
         
-        PathStorage.ShowCompletedPaths();
+        //PathStorage.ShowCompletedPaths();
     }
 
     private static void ExplorePathsFrom(Tile tile)
     {
-        StepTracker<Gate> tracker = new StepTracker<Gate>();
-        HashSet<Gate> visited = new HashSet<Gate>();
+        //StepTracker<Gate> tracker = new StepTracker<Gate>();
+        //HashSet<Gate> visited = new HashSet<Gate>();
 
-        List<Gate> gates = tile.GetAllGates();
+        //List<Gate> gates = tile.GetAllGates();
 
-        for (int i = 0; i < gates.Count; i++)
-        {
-            tracker.AddStep(gates[i].Node.Connections.ToArray());
+        //for (int i = 0; i < gates.Count; i++)
+        //{
+        //    tracker.AddStep(gates[i].Node.Connections.ToArray());
 
-            while (tracker.MoveNext())
-            {
-                Gate currentGate = tracker.GetCurrentStep();
-                if (visited.Contains(currentGate))
-                {
-                    Debug.Log($"Function exits with {currentGate.Segment} and {visited.Count}");
-                    break;
-                }
+        //    while (tracker.MoveNext())
+        //    {
+        //        Gate currentGate = tracker.GetCurrentStep();
+        //        if (visited.Contains(currentGate))
+        //        {
+        //            Debug.Log($"Function exits with {currentGate.Segment} and {visited.Count}");
+        //            break;
+        //        }
 
-                visited.Add(currentGate);
-                if (currentGate.Segment.IsStarter)
-                {
-                    TileSegment[] path = tracker.GetEvaluatedSteps().
-                                         Select(g => g.Segment).
-                                         Append(gates[i].Segment).ToArray();
+        //        visited.Add(currentGate);
+        //        if (currentGate.Segment.IsStarter)
+        //        {
+        //            TileSegment[] path = tracker.GetEvaluatedSteps().
+        //                                 Select(g => g.Segment).
+        //                                 Append(gates[i].Segment).ToArray();
 
-                    PathStorage.AddPath(path);
-                }
-                else
-                {
-                    Gate[] nextGates = currentGate.GoThrough().Connections.ToArray();
-                    tracker.AddStep(nextGates);
-                }
-            }
-        }
+        //            PathStorage.AddPath(path);
+        //        }
+        //        else
+        //        {
+        //            Gate[] nextGates = currentGate.GoThrough().Connections.ToArray();
+        //            tracker.AddStep(nextGates);
+        //        }
+        //    }
+        //}
 
-        Gate.Pool.Release(gates);
+        //Gate.Pool.Release(gates);
     }
 }
