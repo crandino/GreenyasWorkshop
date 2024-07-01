@@ -1,7 +1,7 @@
-using Greenyas.Hexagon;
-using Hexagon.Tile.Debug;
+#if UNITY_EDITOR
+using Hexagon.Tile.Debug; 
+#endif
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;

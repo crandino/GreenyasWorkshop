@@ -2,6 +2,7 @@ using Greenyas.Input;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Game;
 
 public class Game : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class Game : MonoBehaviour
     private void InitializeSubSystems()
     {
         RegisterSubSystem<InputManager>();
+        RegisterSubSystem<TileSelector>();
     }
 
     private void RegisterSubSystem<T>() where T : SubSystem, new()
@@ -39,7 +41,17 @@ public class Game : MonoBehaviour
 
     public T GetSystem<T>() where T : SubSystem
     {
-        return (T)systems[typeof(T)];
+        try
+        {
+            return (T)systems[typeof(T)];
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e.Message);
+        }
+
+        return null;
+
     }
 
     public abstract class SubSystem

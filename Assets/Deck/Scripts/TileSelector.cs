@@ -1,21 +1,16 @@
 using Greenyas.Input;
-using System;
-using UnityEngine;
 using Hexalinks.Tile;
 
-public class TileSelector : MonoBehaviour
+public class TileSelector : Game.SubSystem
 {
-    // TODO: La clase Tile debería ser la encargada de distribuir toda la información a los diferentes
-    // procesos. Desconectar sus conexiones, levantarla, pasar a controlarla, rotarla y recolocarla y activar
-    // todo el proceso de dibujar los caminos completos
-
     private Tile currentSelectedTile = null;
     private InputManager input = null;
 
-    private void Start()
+    protected override bool TryInitSystem()
     {
         input = Game.Instance.GetSystem<InputManager>();
         input.OnSelect.OnButtonPressed += PickUpTile;
+        return true;
     }
 
     private void PickUpTile()
@@ -39,5 +34,5 @@ public class TileSelector : MonoBehaviour
             currentSelectedTile.Release();
             currentSelectedTile = null;
         }
-    }    
+    }
 }

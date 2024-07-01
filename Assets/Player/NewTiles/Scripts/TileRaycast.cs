@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +11,7 @@ public static class TileRaycast
     private static bool CursorRaycast(LayerMask mask, out RaycastHit hit)
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        return Physics.Raycast(ray, out hit, float.MaxValue, mask);
+        return Physics.Raycast(ray, out hit, 10f, mask);
     }
 
     public static bool CursorRaycastToTile()

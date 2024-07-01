@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2817471991057592844}
   - component: {fileID: 185849909060254207}
   - component: {fileID: 1818894767486782430}
-  - component: {fileID: 8323962917398002445}
+  - component: {fileID: 6975103463829104100}
   m_Layer: 0
   m_Name: Segment_1
   m_TagString: Untagged
@@ -86,7 +86,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8323962917398002445
+--- !u!114 &6975103463829104100
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 771790804525464102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61e3fe0c31746a545bf37352e9278205, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 215670327312866730}
   - component: {fileID: 6530948531684551092}
   - component: {fileID: 4494584746635627887}
-  - component: {fileID: 5390563413937096505}
+  - component: {fileID: 8576338168299663835}
   m_Layer: 0
   m_Name: Segment_2
   m_TagString: Untagged
@@ -197,7 +197,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5390563413937096505
+--- !u!114 &8576338168299663835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7539691237638085260}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61e3fe0c31746a545bf37352e9278205, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
@@ -230,6 +230,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1682336377212059249, guid: a4be095f10ba338409b75b7d6a4941cc, type: 3}
+      propertyPath: segments.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1682336377212059249, guid: a4be095f10ba338409b75b7d6a4941cc, type: 3}
+      propertyPath: 'segments.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6975103463829104100}
+    - target: {fileID: 1682336377212059249, guid: a4be095f10ba338409b75b7d6a4941cc, type: 3}
+      propertyPath: 'segments.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8576338168299663835}
     - target: {fileID: 2219461629760686915, guid: a4be095f10ba338409b75b7d6a4941cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

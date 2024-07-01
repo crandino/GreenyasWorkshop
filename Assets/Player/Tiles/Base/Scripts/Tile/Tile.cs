@@ -10,29 +10,8 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileConnectivity connectivity;
 
-        private Data data;
-
-        public class Data
-        {
-            public CubeCoord Coord { private set; get; }
-            public Node.Gate[] Gates { private set; get; }
-
-            private readonly Tile self;
-
-            public Data(Tile tile)
-            {
-                self = tile;
-
-                SetOnGrid();
-                Gates = tile.connectivity.Gates;
-            }
-
-            public void SetOnGrid()
-            {
-                Coord = HexTools.GetNearestCubeCoord(self.transform.position);
-                self.transform.position = HexTools.GetCartesianWorldPos(Coord);
-            }
-        }
+        public CubeCoord Coord { private set; get; }
+        public Node.Gate[] Gates { private set; get; }
 
         public enum Type
         {
@@ -53,28 +32,34 @@ namespace Hexalinks.Tile
 
         private void Start()
         {
+            //SetOnGrid();
+
             manipulator.Initialize();
             connectivity.Initialize();
 
-            data = new Data(this);
-            HexMap.Instance.AddTile(data);
+            HexMap.Instance.AddTile(this);
         }
 
         public void PickUp()
         {
-            manipulator.OnPickUp(data);
-            connectivity.OnPickUp(data);
+            manipulator.PickUp();
+            connectivity.DisconnectTile();
 
-            HexMap.Instance.RemoveTile(data.Coord);
+            HexMap.Instance.RemoveTile(Coord);
         }
 
         public void Release()
         {
-            manipulator.OnRelease(data);
-            connectivity.OnRelease(data);
+            manipulator.Release();
+            connectivity.ConnectTile(this);
 
-            HexMap.Instance.AddTile(data);
-            TileIterator.LookForClosedPaths();
+            HexMap.Instance.AddTile(this);
+            //TileIterator.LookForClosedPaths();
+        }
+
+        public void SetOnGrid()
+        {
+            Coord = manipulator.SetOnGrid();
         }
     }
 }

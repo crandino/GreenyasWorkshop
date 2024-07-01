@@ -1,113 +1,62 @@
 using Greenyas.Hexagon;
 using Greenyas.Input;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Hexalinks.Tile
 {
-    public class TileManipulator : TileEvent
+    public class TileManipulator : MonoBehaviour
     {
         [SerializeField]
         private Collider trigger;
 
-        // Rotation
-        private float initialRotationAngle = 0f;
-        private float targetRotationAngle = 0f;
-        private EventTimer rotationTimer = null;
-
-        // Position
-        private Vector3 verticalOffset = Vector3.up * 0.25f;
+        private TileRotation rotation;
+        private TilePosition position;
 
         private InputManager input = null;
 
-        public override void Initialize()
+        public void Initialize()
         {
-            enabled = false;
-
             input = Game.Instance.GetSystem<InputManager>();
 
-            const float EVENT_TIME = 0.3f;
-            rotationTimer = new EventTimer(EVENT_TIME, StartingRotation, OnRotation, FinishingRotation);
+            Tile tile = gameObject.GetComponent<Tile>();
+
+            rotation = new TileRotation(tile, 0.3f, RestrictRotation, AllowRotation);
+            position = new TilePosition(tile);
         }
 
-        public override void OnPickUp(Tile.Data data)
+        public void PickUp()
         {
             trigger.enabled = false;
-            enabled = true;
 
-            initialRotationAngle = targetRotationAngle = transform.rotation.eulerAngles.y;
-
-            AllowRotation();
+            //AllowRotation();
+            position.AllowMovement();
         }
 
-        public override void OnRelease(Tile.Data data)
+        public void Release()
         {
             trigger.enabled = true;
-            enabled = false;
 
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, targetRotationAngle, transform.localEulerAngles.z);
-
-            RestrictRotation();
-
-            data.SetOnGrid();
+            //RestrictRotation();
+            position.RestrictMovement();
         }
-
-        private void StartingRotation()
-        {
-            initialRotationAngle = targetRotationAngle = transform.rotation.eulerAngles.y;
-            RestrictRotation();
-        }
-
-        private void FinishingRotation()
-        {
-            AllowRotation();
-        }
-
-        private void RotateClockwise()
-        {
-            rotationTimer.Start();
-            targetRotationAngle += HexTools.ROTATION_ANGLE;
-        }
-
-        private void RotateCounterClockwise()
-        {
-            rotationTimer.Start();
-            targetRotationAngle -= HexTools.ROTATION_ANGLE;
-        }
-
-#if UNITY_EDITOR
-        public void EditorRotate(float angle)
-        {
-            targetRotationAngle += angle;
-            transform.Rotate(Vector3.up, angle);
-        }
-#endif
 
         private void AllowRotation()
         {
-            input.OnAxis.OnPositiveDelta += RotateClockwise;
-            input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
+            input.OnAxis.OnPositiveDelta += rotation.RotateClockwise;
+            input.OnAxis.OnNegativeDelta += rotation.RotateCounterClockwise;
         }
 
         private void RestrictRotation()
         {
-            input.OnAxis.OnPositiveDelta -= RotateClockwise;
-            input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
+            input.OnAxis.OnPositiveDelta -= rotation.RotateClockwise;
+            input.OnAxis.OnNegativeDelta -= rotation.RotateCounterClockwise;
         }
 
-        private void OnRotation(float progress)
+        public CubeCoord SetOnGrid()
         {
-            float angle = Mathf.LerpAngle(initialRotationAngle, targetRotationAngle, progress);
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, angle, transform.localEulerAngles.z);
-        }
-
-        private void Update()
-        {
-            rotationTimer.Step();
-
-            if (TileRaycast.CursorRaycastToBoard(out Vector3 boardCursorPos))
-                transform.position = boardCursorPos + verticalOffset;
+            CubeCoord coord = HexTools.GetNearestCubeCoord(transform.position);
+            transform.position = HexTools.GetGridCartesianWorldPos(coord);
+            return coord;
         }
     }
-
 }

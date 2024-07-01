@@ -20,7 +20,7 @@ public partial class TilePlacer : EditorWindow
     private struct Label
     {
         public TilePrefabLabel label;
-        private DragAndDropManipulator manipulator;
+        private readonly DragAndDropManipulator manipulator;
 
         public Label(TilePrefabLabel prefabPathlabel)
         {
@@ -28,12 +28,12 @@ public partial class TilePlacer : EditorWindow
             manipulator = new DragAndDropManipulator(label);
         }
 
-        public void AddManipulator()
+        public readonly void AddManipulator()
         {
             label.AddManipulator(manipulator);
         }
 
-        public void RemoveManipulator()
+        public readonly void RemoveManipulator()
         {
             label.RemoveManipulator(manipulator);
         }
@@ -62,9 +62,7 @@ public partial class TilePlacer : EditorWindow
     private void OnDisable()
     {
         foreach (var label in labels)
-        {
             label.RemoveManipulator();
-        }
 
         quickRotToogle.UnregisterValueChangedCallback(SwitchInput);
         UnregisterCallbacksOnScene();
@@ -110,11 +108,11 @@ public partial class TilePlacer : EditorWindow
 
     private void RegisterCallbacksOnScene()
     {
-        GetWindow<SceneView>().rootVisualElement.RegisterCallback<MouseDownEvent>(RotateTile, TrickleDown.TrickleDown);
+        SceneView.RegisterCallback<MouseDownEvent>(RotateTile, TrickleDown.TrickleDown);
     }
 
     private void UnregisterCallbacksOnScene()
     {
-        GetWindow<SceneView>().rootVisualElement.UnregisterCallback<MouseDownEvent>(RotateTile);
+        SceneView.UnregisterCallback<MouseDownEvent>(RotateTile);
     }
 }

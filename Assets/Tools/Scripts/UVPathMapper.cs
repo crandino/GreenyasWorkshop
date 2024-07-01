@@ -1,11 +1,9 @@
+#if UNITY_EDITOR
 using System.Linq;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 using UnityEngine.Splines;
-using Unity.Mathematics;
-using Unity.Hierarchy;
-using UnityEditor.SearchService;
 
 public class UVPathMapper : MonoBehaviour
 {
@@ -41,7 +39,7 @@ public class UVPathMapper : MonoBehaviour
         {
             Vector3 worldVertex = transform.localToWorldMatrix * new Vector4(vertices[i].x, vertices[i].y, vertices[i].z, 1);
 
-            SplineUtility.GetNearestPoint(splineContainer.Spline, vertices[i],  out float3 v, out float t, SplineUtility.PickResolutionMax);
+            SplineUtility.GetNearestPoint(splineContainer.Spline, vertices[i], out float3 v, out float t, SplineUtility.PickResolutionMax);
             float normalizedHeight = Mathf.InverseLerp(minHeight, maxHeight, vertices[i].y);
             newUVs[i] = new Vector2(Mathf.Clamp01(t), normalizedHeight * 0.5f);
         }
@@ -51,4 +49,5 @@ public class UVPathMapper : MonoBehaviour
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = mesh;
     }
-}
+} 
+#endif

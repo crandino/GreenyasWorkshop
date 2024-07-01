@@ -31,16 +31,16 @@ namespace Hexalinks.Tile
             }
         }
 
-        private readonly Dictionary<CubeCoord, Tile.Data> mapStorage = new Dictionary<CubeCoord, Tile.Data>(new CubeCoord.CoordinateComparer());
+        private readonly Dictionary<CubeCoord, Tile> mapStorage = new Dictionary<CubeCoord, Tile>(new CubeCoord.CoordinateComparer());
 
         private void Awake()
         {
             Instance = this;
         }
 
-        public void AddTile(Tile.Data tileData)
+        public void AddTile(Tile tile)
         {
-            mapStorage.Add(tileData.Coord, tileData);
+            mapStorage.Add(tile.Coord, tile);
         }
 
         public void RemoveTile(CubeCoord coord)
@@ -48,21 +48,10 @@ namespace Hexalinks.Tile
             mapStorage.Remove(coord);
         }
 
-        //public bool IsTileOn(CubeCoord coord)
-        //{
-        //    return mapStorage.ContainsKey(coord);
-        //}
-
-        public bool TryGetTile(CubeCoord coord, out Tile.Data tileData)
+        public bool TryGetTile(CubeCoord coord, out Tile tileData)
         {
             return mapStorage.TryGetValue(coord, out tileData);
         }
-
-        //public Tile[] GetAllStarterTiles()
-        //{
-        //    return mapStorage.Select(t => t.Value).
-        //                      Where(t => t as StarterTile).ToArray();
-        //}
 
         #region VISUAL_DEBUG
 #if UNITY_EDITOR
@@ -89,7 +78,7 @@ namespace Hexalinks.Tile
             {
                 for (int r = Mathf.Max(-mapSize, -q - mapSize); r <= Mathf.Min(mapSize, -q + mapSize); ++r)
                 {
-                    Vector3 hexCenter = HexTools.GetCartesianWorldPos(new CubeCoord(q, r));
+                    Vector3 hexCenter = HexTools.GetGridCartesianWorldPos(new CubeCoord(q, r));
                     FillHexagonMeshData(hexCenter);
 
                     //DrawHexagon(hexCenterPos);

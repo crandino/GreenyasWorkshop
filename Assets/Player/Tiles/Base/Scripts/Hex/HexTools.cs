@@ -9,7 +9,13 @@ namespace Greenyas.Hexagon
         public static readonly float hexagonSize = 0.5f;
         public const int ROTATION_ANGLE = 60;
 
-        public static Vector3 GetCartesianWorldPos(CubeCoord hexCoord, float planeHeightPos = 0f)
+        public static Vector3 GetGridCartesianWorldPos(Vector3 worldPos)
+        {
+            return GetGridCartesianWorldPos(GetNearestCubeCoord(worldPos));
+        }
+
+
+        public static Vector3 GetGridCartesianWorldPos(CubeCoord hexCoord, float planeHeightPos = 0f)
         {
             float x = hexagonSize * (3f / 2) * hexCoord.Q;
             float y = hexagonSize * ((Mathf.Sqrt(3f) / 2) * hexCoord.Q + Mathf.Sqrt(3f) * hexCoord.R);
