@@ -46,6 +46,7 @@ public class TileRotation : TileModifier
         progress = 0f;
         onFinishRotation();
     }
+
     protected override void OnUpdate()
     {
         progress = Mathf.Clamp01(progress + Time.deltaTime * inverseTotalTime);

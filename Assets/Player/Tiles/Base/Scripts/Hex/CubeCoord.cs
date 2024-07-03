@@ -42,7 +42,7 @@ namespace Greenyas.Hexagon
 
             public int GetHashCode(CubeCoord obj)
             {
-                return 0;
+                return obj.GetHashCode();
             }
         }
 
@@ -63,7 +63,7 @@ namespace Greenyas.Hexagon
 
         public static Vector2 GetVectorToNeighborHexOn(Side side)
         {
-            CubeCoord coord = neighborCoords[(int)side];
+            CubeCoord coord = GetToNeighborCoord(side);
 
             return new Vector2()
             {

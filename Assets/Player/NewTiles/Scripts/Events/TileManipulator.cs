@@ -28,7 +28,7 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = false;
 
-            //AllowRotation();
+            AllowRotation();
             position.AllowMovement();
         }
 
@@ -36,7 +36,7 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = true;
 
-            //RestrictRotation();
+            RestrictRotation();
             position.RestrictMovement();
         }
 

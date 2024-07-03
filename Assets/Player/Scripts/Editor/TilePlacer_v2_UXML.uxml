@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Player/Scripts/Editor/TilePlacerUSS.uss?fileID=7433441132597879392&amp;guid=de4af8b02dd725745a3442c66199608d&amp;type=3#TilePlacerUSS" />
+    <ui:VisualElement name="Background" class="background">
+        <TilePrefabOption prefab-tile-path="Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab" tile-prefab="project://database/Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab?fileID=3688050123161199303&amp;guid=794dae74a39a85947b792daf78db3c00&amp;type=3#StraightCurve" focusable="true" style="width: 50px; height: 50px; background-image: url(&quot;project://database/Assets/Player/Tiles/Flow/Straight/Icon/FlowStraigthIcon.png?fileID=2800000&amp;guid=852f2e8c1ae93be44b6709c679a3d820&amp;type=3#FlowStraigthIcon&quot;);" />
+        <ui:Foldout text="Foldout" value="true" style="-unity-background-image-tint-color: rgb(7, 7, 7); background-color: rgba(241, 167, 167, 0.4); flex-basis: auto; flex-direction: column;">
+            <ui:GroupBox style="flex-direction: row;">
+                <TilePrefabOption prefab-tile-path="Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab" tile-prefab="project://database/Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab?fileID=3688050123161199303&amp;guid=794dae74a39a85947b792daf78db3c00&amp;type=3#StraightCurve" style="width: 50px; height: 50px; background-image: url(&quot;project://database/Assets/Player/Tiles/Flow/Straight/Icon/FlowStraigthIcon.png?fileID=2800000&amp;guid=852f2e8c1ae93be44b6709c679a3d820&amp;type=3#FlowStraigthIcon&quot;);" />
+                <TilePrefabOption prefab-tile-path="Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab" tile-prefab="project://database/Assets/Player/NewTiles/FlowTiles/Straight/Prefabs/StraightCurve.prefab?fileID=3688050123161199303&amp;guid=794dae74a39a85947b792daf78db3c00&amp;type=3#StraightCurve" style="width: 50px; height: 50px; background-image: url(&quot;project://database/Assets/Player/Tiles/Flow/Straight/Icon/FlowStraigthIcon.png?fileID=2800000&amp;guid=852f2e8c1ae93be44b6709c679a3d820&amp;type=3#FlowStraigthIcon&quot;);" />
+            </ui:GroupBox>
+        </ui:Foldout>
+    </ui:VisualElement>
+</ui:UXML>

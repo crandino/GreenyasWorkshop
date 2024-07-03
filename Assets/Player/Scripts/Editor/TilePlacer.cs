@@ -1,4 +1,3 @@
-using Greenyas.Hexagon;
 using Hexalinks.Tile;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +8,7 @@ public partial class TilePlacer : EditorWindow
     [SerializeField]
     private VisualTreeAsset styleSheet;
 
-    private Toggle quickRotToogle;
+    //private Toggle quickRotToogle;
 
     [MenuItem("Window/Greenyas/Tile Placer")]
     private static void OpenTilePlacerWindow()
@@ -17,29 +16,29 @@ public partial class TilePlacer : EditorWindow
         GetWindow<TilePlacer>();
     }
 
-    private struct Label
+    private struct Option
     {
-        public TilePrefabLabel label;
-        private readonly DragAndDropManipulator manipulator;
+        public TilePrefabOption tile;
+        private readonly TilePlacerManipulator manipulator;
 
-        public Label(TilePrefabLabel prefabPathlabel)
+        public Option(TilePrefabOption tileOption)
         {
-            label = prefabPathlabel;
-            manipulator = new DragAndDropManipulator(label);
+            tile = tileOption;
+            manipulator = new TilePlacerManipulator(tile);
         }
 
         public readonly void AddManipulator()
         {
-            label.AddManipulator(manipulator);
+            tile.AddManipulator(manipulator);
         }
 
         public readonly void RemoveManipulator()
         {
-            label.RemoveManipulator(manipulator);
+            tile.RemoveManipulator(manipulator);
         }
     }
 
-    private Label[] labels;
+    private Option[] options;
 
     private void OnEnable()
     {
@@ -47,72 +46,66 @@ public partial class TilePlacer : EditorWindow
         {
             styleSheet.CloneTree(rootVisualElement);
 
-            labels = rootVisualElement.Query<TilePrefabLabel>().ForEach(prefabPathLabel => new Label(prefabPathLabel)).ToArray();
+            options = rootVisualElement.Query<TilePrefabOption>().ForEach(prefabPathLabel => new Option(prefabPathLabel)).ToArray();
 
-            foreach (var label in labels)
+            foreach (var label in options)
             {
                 label.AddManipulator();
             }
-
-            quickRotToogle = rootVisualElement.Query<Toggle>();
-            quickRotToogle.RegisterValueChangedCallback(SwitchInput);
         }
     }
 
     private void OnDisable()
     {
-        foreach (var label in labels)
+        foreach (var label in options)
             label.RemoveManipulator();
-
-        quickRotToogle.UnregisterValueChangedCallback(SwitchInput);
-        UnregisterCallbacksOnScene();
     }
 
-    private void RotateTile(MouseDownEvent evt)
-    {
-        GameObject tile = Selection.activeGameObject;
+    //private void RotateTile(MouseDownEvent evt)
+    //{
+    //    GameObject tile = Selection.activeGameObject;
 
-        if (!tile || !tile.GetComponent<Tile>())
-            return;
+    //    if (!tile || !tile.GetComponent<Tile>())
+    //        return;
 
-        if (evt.shiftKey || evt.ctrlKey)
-        {
-            evt.StopPropagation();
+    //    if (evt.shiftKey || evt.ctrlKey)
+    //    {
+    //        evt.StopPropagation();
 
-            if (evt.shiftKey)
-                RotateTile(tile.GetComponent<Tile>(), true);
-            else if (evt.ctrlKey)
-                RotateTile(tile.GetComponent<Tile>(), false);
-        }
-    }
+    //        if (evt.shiftKey)
+    //            RotateTile(tile.GetComponent<Tile>(), true);
+    //        else if (evt.ctrlKey)
+    //            RotateTile(tile.GetComponent<Tile>(), false);
+    //    }
+    //}
 
-    private void RotateTile(Tile tile, bool clockWise)
-    {
-        //if (Application.isPlaying)
-        //{
-        //    tile.DisconnectTile();
-        //    tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
-        //    tile.ConnectTile();
-        //}
-        //else
-        //    tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
-    }
+    //private void RotateTile(Tile tile, bool clockWise)
+    //{
+    //    //if (Application.isPlaying)
+    //    //{
+    //    //    tile.DisconnectTile();
+    //    //    tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
+    //    //    tile.ConnectTile();
+    //    //}
+    //    //else
+    //    //    tile.EditorRotate(clockWise ? HexTools.ROTATION_ANGLE : -HexTools.ROTATION_ANGLE);
+    //}
 
-    private void SwitchInput(ChangeEvent<bool> evt)
-    {
-        if (evt.newValue)
-            RegisterCallbacksOnScene();
-        else
-            UnregisterCallbacksOnScene();
-    }
+    //private void SwitchInput(ChangeEvent<bool> evt)
+    //{
+    //    if (evt.newValue)
+    //        RegisterCallbacksOnScene();
+    //    else
+    //        UnregisterCallbacksOnScene();
+    //}
 
-    private void RegisterCallbacksOnScene()
-    {
-        SceneView.RegisterCallback<MouseDownEvent>(RotateTile, TrickleDown.TrickleDown);
-    }
+    //private void RegisterCallbacksOnScene()
+    //{
+    //    SceneView.RegisterCallback<MouseDownEvent>(RotateTile, TrickleDown.TrickleDown);
+    //}
 
-    private void UnregisterCallbacksOnScene()
-    {
-        SceneView.UnregisterCallback<MouseDownEvent>(RotateTile);
-    }
+    //private void UnregisterCallbacksOnScene()
+    //{
+    //    SceneView.UnregisterCallback<MouseDownEvent>(RotateTile);
+    //}
 }

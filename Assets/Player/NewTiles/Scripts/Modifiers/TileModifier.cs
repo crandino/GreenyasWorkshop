@@ -30,7 +30,6 @@ public abstract class TileModifier
 #else
         coroutine = Current.StartCoroutine(Update());
 #endif
-
     }
 
     private IEnumerator Update()

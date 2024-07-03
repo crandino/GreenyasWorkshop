@@ -1,4 +1,5 @@
 using Greenyas.Hexagon;
+using Hexalinks.Tile;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,49 +8,103 @@ public partial class TilePlacer
 {
     private static VisualElement SceneView => GetWindow(typeof(SceneView)).rootVisualElement;
 
-    private class DragAndDropManipulator : PointerManipulator
-    {
-        string tilePrefabPath = string.Empty;
+    // Añadir todos los movimientos posibles
+    // Añadir un estado donde aún no se coloca la pieza
+    // Añadir algún tipo de indicador en el icono que advierte que el proceso está en marcha
+    // Con el botón Intro se coloca
+    // Con el botón Esc se cancela todo el proceso
+    // Evitar colocar piezas una encima de otras de alguna manera
 
-        public DragAndDropManipulator(TilePrefabLabel pathLabel)
+    private class TilePlacerManipulator : Manipulator
+    {
+        private readonly Tile tilePrefab = null;
+        private Tile instantiatedTile = null;
+
+        private readonly static Color manipulationActiveColor = new Color(1f, 0.984f, 0f, 0.5f);
+        private readonly static Color manipulationInactiveColor = Color.black;
+
+        public TilePlacerManipulator(TilePrefabOption tileOption)
         {
-            target = pathLabel;
-            tilePrefabPath = pathLabel.AssetPrefab;
+            target = tileOption;
+            target.focusable = true;
+            tilePrefab = tileOption.TilePrefab;
         }
 
         protected override void RegisterCallbacksOnTarget()
         {
-            target.RegisterCallback<PointerDownEvent>(OnPointerDown);
+            target.RegisterCallback<PointerDownEvent>(StartPlacement);
         }
 
         protected override void UnregisterCallbacksFromTarget()
         {
-            target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+            target.UnregisterCallback<PointerDownEvent>(StartPlacement);
         }
 
-        void OnPointerDown(PointerDownEvent _)
+        private void StartPlacement(PointerDownEvent _)
         {
-            SceneView.RegisterCallback<DragPerformEvent>(OnDragScenePerformed);
+            if (instantiatedTile != null)
+                return;
 
-            DragAndDrop.PrepareStartDrag();
-            DragAndDrop.StartDrag("Dragging");
-            //Selection.activeGameObject = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(tilePrefabPath));
-            DragAndDrop.objectReferences = new Object[] { Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(tilePrefabPath)) };
+            instantiatedTile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
+            target.RegisterCallback<KeyDownEvent>(ManipulateTile);
+            target.style.backgroundColor = manipulationActiveColor;
         }
 
-        void OnDragScenePerformed(DragPerformEvent evt)
+        public void CancelPlacement()
         {
-            DragAndDrop.AcceptDrag();
-            SceneView.UnregisterCallback<DragPerformEvent>(OnDragScenePerformed);
+            if (instantiatedTile != null)
+                DestroyImmediate(instantiatedTile.gameObject);
 
-            GameObject tile = GetCurrentDropGameObject(evt.originalMousePosition);
-            tile.transform.position = HexTools.GetGridCartesianWorldPos(tile.transform.position);
+            FinishPlacement();
         }
 
-        private GameObject GetCurrentDropGameObject(Vector2 mousePosition)
+        private void AcceptPlacement()
         {
-            GameObject gameObject = HandleUtility.PickGameObject(mousePosition, true);
-            return gameObject.transform.GetTransformRoot().gameObject;
+            instantiatedTile.SetOnGrid();
+            FinishPlacement();
         }
+
+        private void FinishPlacement()
+        {
+            target.style.backgroundColor = manipulationInactiveColor;
+            target.UnregisterCallback<KeyDownEvent>(ManipulateTile);
+            instantiatedTile = null;
+        }
+
+        private void ManipulateTile(KeyDownEvent evt)
+        {
+            evt.StopImmediatePropagation();
+
+            switch (evt.keyCode)
+            {
+                case KeyCode.Return:
+                    AcceptPlacement();
+                    break;               
+                case KeyCode.Escape: 
+                    CancelPlacement(); 
+                    break;
+                case KeyCode.A: 
+                    instantiatedTile.MoveLeft();
+                    break;
+                case KeyCode.D:
+                    instantiatedTile.MoveRight();
+                    break;
+                case KeyCode.E:
+                    instantiatedTile.transform.Rotate(Vector3.up, +HexTools.ROTATION_ANGLE);
+                    break;           
+                case KeyCode.Q:
+                    instantiatedTile.transform.Rotate(Vector3.up, -HexTools.ROTATION_ANGLE);
+                    break;
+                case KeyCode.S: 
+                    instantiatedTile.MoveDown();
+                    break;
+                case KeyCode.W: 
+                    instantiatedTile.MoveUp();
+                    break;
+                
+                default:
+                    break;
+            }
+        }      
     }
 }
