@@ -1,18 +1,13 @@
 using Greenyas.Hexagon;
 using Hexalinks.Tile;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public partial class TilePlacer
 {
-    private static VisualElement SceneView => GetWindow(typeof(SceneView)).rootVisualElement;
+    //private static VisualElement SceneView => GetWindow(typeof(SceneView)).rootVisualElement;
 
-    // Añadir todos los movimientos posibles
     // Añadir un estado donde aún no se coloca la pieza
-    // Añadir algún tipo de indicador en el icono que advierte que el proceso está en marcha
-    // Con el botón Intro se coloca
-    // Con el botón Esc se cancela todo el proceso
     // Evitar colocar piezas una encima de otras de alguna manera
 
     private class TilePlacerManipulator : Manipulator
@@ -20,8 +15,8 @@ public partial class TilePlacer
         private readonly Tile tilePrefab = null;
         private Tile instantiatedTile = null;
 
-        private readonly static Color manipulationActiveColor = new Color(1f, 0.984f, 0f, 0.5f);
-        private readonly static Color manipulationInactiveColor = Color.black;
+        private readonly static Color manipulationActiveColor = new(1f, 0.984f, 0f, 0.5f);
+        private readonly static Color manipulationInactiveColor = new(.5f, .5f, .5f, 1f);
 
         public TilePlacerManipulator(TilePrefabOption tileOption)
         {
