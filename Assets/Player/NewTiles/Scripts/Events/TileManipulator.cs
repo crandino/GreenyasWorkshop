@@ -14,13 +14,15 @@ namespace Hexalinks.Tile
 
         private InputManager input = null;
 
+        public CubeCoord Coord => position.Coord;
+
         public void Initialize()
         {
             input = Game.Instance.GetSystem<InputManager>();
 
             Tile tile = gameObject.GetComponent<Tile>();
 
-            rotation = new TileRotation(tile, 0.3f, RestrictRotation, AllowRotation);
+            rotation = new TileRotation(tile, 0.3f);
             position = new TilePosition(tile);
         }
 
@@ -28,7 +30,9 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = false;
 
-            AllowRotation();
+            input.OnAxis.OnPositiveDelta += rotation.RotateClockwise;
+            input.OnAxis.OnNegativeDelta += rotation.RotateCounterClockwise;
+
             position.AllowMovement();
         }
 
@@ -36,27 +40,10 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = true;
 
-            RestrictRotation();
-            position.RestrictMovement();
-        }
-
-        private void AllowRotation()
-        {
-            input.OnAxis.OnPositiveDelta += rotation.RotateClockwise;
-            input.OnAxis.OnNegativeDelta += rotation.RotateCounterClockwise;
-        }
-
-        private void RestrictRotation()
-        {
             input.OnAxis.OnPositiveDelta -= rotation.RotateClockwise;
             input.OnAxis.OnNegativeDelta -= rotation.RotateCounterClockwise;
-        }
 
-        public CubeCoord SetOnGrid()
-        {
-            CubeCoord coord = HexTools.GetNearestCubeCoord(transform.position);
-            transform.position = HexTools.GetGridCartesianWorldPos(coord);
-            return coord;
+            position.RestrictMovement();
         }
     }
 }

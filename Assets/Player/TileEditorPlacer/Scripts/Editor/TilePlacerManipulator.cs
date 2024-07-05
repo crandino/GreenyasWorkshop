@@ -15,13 +15,15 @@ public partial class TilePlacer
         private readonly Tile tilePrefab = null;
         private Tile instantiatedTile = null;
 
+        private TilePosition tilePos;
+        private TileRotation tileRot;
+
         private readonly static Color manipulationActiveColor = new(1f, 0.984f, 0f, 0.5f);
         private readonly static Color manipulationInactiveColor = new(.5f, .5f, .5f, 1f);
 
         public TilePlacerManipulator(TilePrefabOption tileOption)
         {
             target = tileOption;
-            target.focusable = true;
             tilePrefab = tileOption.TilePrefab;
         }
 
@@ -41,6 +43,8 @@ public partial class TilePlacer
                 return;
 
             instantiatedTile = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
+            tilePos = new TilePosition(instantiatedTile, TilePosition.PositionMode.HOVER);
+            tileRot = new TileRotation(instantiatedTile);
             target.RegisterCallback<KeyDownEvent>(ManipulateTile);
             target.style.backgroundColor = manipulationActiveColor;
         }
@@ -55,7 +59,7 @@ public partial class TilePlacer
 
         private void AcceptPlacement()
         {
-            instantiatedTile.SetOnGrid();
+            tilePos.AttachToGrid();
             FinishPlacement();
         }
 
@@ -78,23 +82,23 @@ public partial class TilePlacer
                 case KeyCode.Escape: 
                     CancelPlacement(); 
                     break;
-                case KeyCode.A: 
-                    instantiatedTile.MoveLeft();
+                case KeyCode.A:
+                    tilePos.MoveLeft();
                     break;
                 case KeyCode.D:
-                    instantiatedTile.MoveRight();
+                    tilePos.MoveRight();
                     break;
                 case KeyCode.E:
-                    instantiatedTile.transform.Rotate(Vector3.up, +HexTools.ROTATION_ANGLE);
+                    tileRot.RotateClockwise();
                     break;           
                 case KeyCode.Q:
-                    instantiatedTile.transform.Rotate(Vector3.up, -HexTools.ROTATION_ANGLE);
+                    tileRot.RotateCounterClockwise();
                     break;
-                case KeyCode.S: 
-                    instantiatedTile.MoveDown();
+                case KeyCode.S:
+                    tilePos.MoveDown();
                     break;
-                case KeyCode.W: 
-                    instantiatedTile.MoveUp();
+                case KeyCode.W:
+                    tilePos.MoveUp();
                     break;
                 
                 default:

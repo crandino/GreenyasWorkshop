@@ -1,21 +1,12 @@
 using Hexalinks.Tile;
 using System.Collections;
-#if UNITY_EDITOR
-using Unity.EditorCoroutines.Editor;
 using UnityEngine;
-#else
-using UnityEngine;
-#endif
 
 public abstract class TileModifier
 {
     public Tile Current { get; set; }
 
-#if UNITY_EDITOR
-    private EditorCoroutine coroutine;
-#else
-    private Coroutine coroutine;
-#endif
+    private Coroutine coroutine = null;
 
     protected TileModifier(Tile currentTile)
     {
@@ -25,33 +16,25 @@ public abstract class TileModifier
     protected void Start()
     {
         OnStart();
-#if UNITY_EDITOR
-        coroutine = EditorCoroutineUtility.StartCoroutineOwnerless(Update());
-#else
         coroutine = Current.StartCoroutine(Update());
-#endif
     }
 
     private IEnumerator Update()
     {
-        while (true)
-        {
-            OnUpdate();
-            yield return null;
-        }
+        yield return null;
+
+        while (OnUpdate()) yield return null;
+        Finish();
     }
 
     protected void Finish()
     {
         OnFinish();
-#if UNITY_EDITOR
-        EditorCoroutineUtility.StopCoroutine(coroutine);
-#else
-        Current.StopCoroutine(coroutine);
-#endif
+        if(coroutine != null) 
+            Current.StopCoroutine(coroutine);
     }
 
     protected virtual void OnStart() { }
-    protected abstract void OnUpdate();
+    protected virtual bool OnUpdate() { return false; }
     protected virtual void OnFinish() { }
 }

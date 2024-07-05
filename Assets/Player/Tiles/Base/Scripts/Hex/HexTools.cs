@@ -15,11 +15,11 @@ namespace Greenyas.Hexagon
         }
 
 
-        public static Vector3 GetGridCartesianWorldPos(CubeCoord hexCoord, float planeHeightPos = 0f)
+        public static Vector3 GetGridCartesianWorldPos(CubeCoord hexCoord)
         {
             float x = hexagonSize * (3f / 2) * hexCoord.Q;
             float y = hexagonSize * ((Mathf.Sqrt(3f) / 2) * hexCoord.Q + Mathf.Sqrt(3f) * hexCoord.R);
-            return new Vector3(x, planeHeightPos, y);
+            return new Vector3(x, 0f, y);
         }
 
         private class FractionalHex

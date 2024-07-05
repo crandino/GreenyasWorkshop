@@ -1,60 +1,58 @@
 using Greenyas.Hexagon;
 using Hexalinks.Tile;
-using System;
 using UnityEngine;
 
 public class TileRotation : TileModifier
 {
     // Rotation
     private float initialRotationAngle = 0f;
-    private float targetRotationAngle = 0f;
+    private float rotationAngle = 0f;
 
-    private readonly Action onStartRotation, onFinishRotation;
-
-    private float progress = 0f;
+    private float progress = 1f;
     private readonly float inverseTotalTime = 1f;
 
-    public TileRotation(Tile tile, float rotationTime = 0.5f, Action onStartRotation = null, Action onFinishRotation = null) : base(tile)
+    private bool InProgress => progress < 1f;
+
+    public TileRotation(Tile tile, float rotationTime = 0.0f) : base(tile)
     { 
         inverseTotalTime = 1f / rotationTime;
-
-        this.onStartRotation = onStartRotation;
-        this.onFinishRotation = onFinishRotation;
     }
 
     public void RotateClockwise()
     {
+        if (InProgress) return;
+
         Start();
-        targetRotationAngle = initialRotationAngle + HexTools.ROTATION_ANGLE;
+        rotationAngle = +HexTools.ROTATION_ANGLE;
     }
 
     public void RotateCounterClockwise()
     {
+        if (InProgress) return;
+
         Start();
-        targetRotationAngle = initialRotationAngle - HexTools.ROTATION_ANGLE;
+        rotationAngle = -HexTools.ROTATION_ANGLE;
     }
 
     protected override void OnStart()
     {
         progress = 0f;
-        initialRotationAngle = targetRotationAngle = Current.transform.rotation.eulerAngles.y;
-        onStartRotation();
+        initialRotationAngle = Current.transform.rotation.eulerAngles.y;
     }
 
     protected override void OnFinish()
     {
-        progress = 0f;
-        onFinishRotation();
+        float finalAngle = initialRotationAngle + rotationAngle;
+        Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, finalAngle, Current.transform.localEulerAngles.z);
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
-        progress = Mathf.Clamp01(progress + Time.deltaTime * inverseTotalTime);
+        progress = /*Mathf.Clamp01(*/progress + Time.deltaTime * inverseTotalTime;//);
 
-        float angle = Mathf.LerpAngle(initialRotationAngle, targetRotationAngle, progress);
-        Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, angle, Current.transform.localEulerAngles.z);
+        float lerpAngle = Mathf.LerpAngle(initialRotationAngle, initialRotationAngle + rotationAngle, progress);
+        Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, lerpAngle, Current.transform.localEulerAngles.z);
 
-        if (progress == 1f)
-            Finish();
+        return InProgress;
     }
 }

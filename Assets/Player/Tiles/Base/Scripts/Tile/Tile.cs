@@ -10,7 +10,7 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileConnectivity connectivity;
 
-        public CubeCoord Coord { private set; get; }
+        public CubeCoord Coord => manipulator.Coord;
         public Node.Gate[] Gates { private set; get; }
 
         public enum Type
@@ -55,46 +55,9 @@ namespace Hexalinks.Tile
             //TileIterator.LookForClosedPaths();
         }
 
-        public void SetOnGrid()
-        {
-            Coord = manipulator.SetOnGrid();
-        }
-
-#if UNITY_EDITOR
-
-        public void MoveUp()
-        {
-            Coord = HexTools.GetNearestCubeCoord(transform.position);
-
-            Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.North);
-            transform.position = HexTools.GetGridCartesianWorldPos(Coord);
-        }
-
-
-        public void MoveDown()
-        {
-            Coord = HexTools.GetNearestCubeCoord(transform.position);
-
-            Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.South);
-            transform.position = HexTools.GetGridCartesianWorldPos(Coord);
-        }
-
-        public void MoveRight()
-        {
-            Coord = HexTools.GetNearestCubeCoord(transform.position);
-
-            Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast);
-            transform.position = HexTools.GetGridCartesianWorldPos(Coord);
-        }
-
-        public void MoveLeft()
-        {
-            Coord = HexTools.GetNearestCubeCoord(transform.position);
-
-            Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest);
-            transform.position = HexTools.GetGridCartesianWorldPos(Coord);
-        }
-
-#endif
+        //public void SetOnGrid()
+        //{
+        //    Coord = manipulator.SetOnGrid();
+        //}
     }
 }

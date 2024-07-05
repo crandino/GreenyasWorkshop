@@ -19,7 +19,7 @@ namespace Greenyas.Hexagon
         }
 
         public CubeCoord(int q, int r) : this(q, r, -r - q)
-        { }
+        { }        
 
         public static CubeCoord operator +(CubeCoord coordA, CubeCoord coordB)
         {
