@@ -10,8 +10,9 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileConnectivity connectivity;
 
-        public CubeCoord Coord => manipulator.Coord;
         public Node.Gate[] Gates { private set; get; }
+
+        public CubeCoord Coord => manipulator.Coord;
 
         public enum Type
         {
@@ -32,10 +33,8 @@ namespace Hexalinks.Tile
 
         private void Start()
         {
-            manipulator.Initialize();
+            manipulator.Initialize(this);
             connectivity.Initialize();
-
-            HexMap.Instance.AddTile(this);
         }
 
         public void PickUp()
@@ -51,13 +50,8 @@ namespace Hexalinks.Tile
             manipulator.Release();
             connectivity.ConnectTile(this);
 
-            HexMap.Instance.AddTile(this);
-            //TileIterator.LookForClosedPaths();
+            HexMap.Instance.AddTile(manipulator.Coord, this);
+            TileIterator.LookForClosedPaths();
         }
-
-        //public void SetOnGrid()
-        //{
-        //    Coord = manipulator.SetOnGrid();
-        //}
     }
 }

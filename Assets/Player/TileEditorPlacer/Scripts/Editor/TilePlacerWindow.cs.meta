@@ -6,6 +6,7 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - styleSheet: {fileID: 9197481963319205126, guid: 11b8ab7a07691724396fa8799e15c7dc, type: 3}
+  - mapData: {fileID: 11400000, guid: 4b8ad4d9f6fdc504e89e4c04a1bf93d3, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

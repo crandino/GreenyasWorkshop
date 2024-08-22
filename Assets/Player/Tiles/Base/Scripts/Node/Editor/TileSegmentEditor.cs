@@ -66,7 +66,7 @@ public class TileSegmentEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.ObjectField(properties.meshRenderer);
-        properties.emissionPathIndex.intValue = EditorGUILayout.IntField("Path Emission ID", properties.emissionPathIndex.intValue);
+        //properties.emissionPathIndex.intValue = EditorGUILayout.IntField("Path Emission ID", properties.emissionPathIndex.intValue);
 
         ++EditorGUI.indentLevel;
         for (int i = 0; i < properties.nodes.Length; i++)

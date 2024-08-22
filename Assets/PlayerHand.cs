@@ -7,8 +7,8 @@ public class PlayerHand : MonoBehaviour
     [SerializeField]
     private UIDocument playerZoneUI;
 
-    [SerializeField]
-    private SerializedDictionary<Tile.Type, Sprite> tileIcons;
+    //[SerializeField]
+    //private SerializedDictionary<Tile.Type, Sprite> tileIcons;
 
     [SerializeField]
     private DeckCreator playerDeck;
@@ -38,17 +38,17 @@ public class PlayerHand : MonoBehaviour
         playerOptions = playerZoneUI.rootVisualElement.Query<Button>().ForEach(b => new PlayerOption(b)).ToArray();
     }
 
-    [ContextMenu("Get new")]
-    public void GetNewTile()
-    {
-        Sprite icon = tileIcons[deck.Draw()];
-        for (int i = 0; i < playerOptions.Length; i++)
-        {
-            if (!playerOptions[i].TileAssigned)
-            {
-                playerOptions[i].AssignImage(icon);
-                break;
-            }
-        }
-    }
+    //[ContextMenu("Get new")]
+    //public void GetNewTile()
+    //{
+    //    Sprite icon = tileIcons[deck.Draw()];
+    //    for (int i = 0; i < playerOptions.Length; i++)
+    //    {
+    //        if (!playerOptions[i].TileAssigned)
+    //        {
+    //            playerOptions[i].AssignImage(icon);
+    //            break;
+    //        }
+    //    }
+    //}
 }

@@ -18,10 +18,10 @@ namespace Hexalinks.Tile
         [SerializeField]
         private MeshRenderer meshRenderer;
 
-        [SerializeField]
-        private int emissionPathIndex;
+        //[SerializeField]
+        //private int emissionPathIndex;
 
-        private static int pathEmissionID = Shader.PropertyToID("_EmissionPathSelector");
+        //private static int pathEmissionID = Shader.PropertyToID("_EmissionPathSelector");
 
         public Gate[] Gates { private set; get; }
 
@@ -93,16 +93,16 @@ namespace Hexalinks.Tile
 
         public void Highlight()
         {
-            Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
-            values[emissionPathIndex] = 1f;
-            meshRenderer.material.SetVector(pathEmissionID, values);
+            //Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
+            //values[emissionPathIndex] = 1f;
+            //meshRenderer.material.SetVector(pathEmissionID, values);
         }
 
         public void Unhighlight()
         {
-            Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
-            values[emissionPathIndex] = 0f;
-            meshRenderer.material.SetVector(pathEmissionID, values);
+            //Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
+            //values[emissionPathIndex] = 0f;
+            //meshRenderer.material.SetVector(pathEmissionID, values);
         }
 
 #if UNITY_EDITOR

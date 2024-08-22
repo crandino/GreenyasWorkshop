@@ -1,34 +1,48 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
 
 namespace Greenyas.Hexagon
 {
+    [System.Serializable]
     public class CubeCoord
     {
-        public int R { private set; get; }
-        public int Q { private set; get; }
-        public int S { get => -R - Q; }
+        [SerializeField]
+        private int r, q, s;
+
+        public int R => r;
+        public int Q => q;
+        public int S => s;
+
+        public readonly static CubeCoord Origin = new(0, 0, 0);
 
         public CubeCoord(int q, int r, int s)
         {
             Assert.IsTrue((r + q + s) == 0, "Wrong cube coordinates. Unfulfilled (r + q + s = 0) restriction");
-            R = r;
-            Q = q;
+            this.r = r;
+            this.q = q;
+            this.s = s;
         }
 
         public CubeCoord(int q, int r) : this(q, r, -r - q)
-        { }        
+        { }
+
+        public CubeCoord(CubeCoord coord)
+        {
+            r = coord.r;
+            q = coord.q;
+            s = coord.s;
+        }
 
         public static CubeCoord operator +(CubeCoord coordA, CubeCoord coordB)
         {
-            return new CubeCoord(coordA.Q + coordB.Q, coordA.R + coordB.R, coordA.S + coordB.S);
-        }
+            coordA.r += coordB.r;
+            coordA.q += coordB.q;
+            coordA.s += coordB.s;
 
-        public static CubeCoord operator -(CubeCoord coordA, CubeCoord coordB)
-        {
-            return new CubeCoord(coordA.Q - coordB.Q, coordA.R - coordB.R, coordA.S - coordB.S);
+            return coordA;
         }
 
         public class CoordinateComparer : IEqualityComparer<CubeCoord>
@@ -42,7 +56,7 @@ namespace Greenyas.Hexagon
 
             public int GetHashCode(CubeCoord obj)
             {
-                return obj.GetHashCode();
+                return 0;
             }
         }
 
@@ -70,6 +84,19 @@ namespace Greenyas.Hexagon
                 x = HexTools.hexagonSize * (3f / 2) * coord.Q,
                 y = HexTools.hexagonSize * ((Mathf.Sqrt(3f) / 2) * coord.Q + Mathf.Sqrt(3f) * coord.R)
             };
+        }
+    }
+
+    [CustomPropertyDrawer(typeof(CubeCoord))]
+    public class CubeCoordPropertyDrawer : PropertyDrawer
+    {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            var r = property.FindPropertyRelative("r");
+            var q = property.FindPropertyRelative("q");
+            var s = property.FindPropertyRelative("s");
+
+            EditorGUI.LabelField(position, $"(R,Q,S) -> ({r.intValue},{q.intValue},{s.intValue})");
         }
     }
 

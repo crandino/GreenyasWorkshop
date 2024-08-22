@@ -16,11 +16,9 @@ namespace Hexalinks.Tile
 
         public CubeCoord Coord => position.Coord;
 
-        public void Initialize()
+        public void Initialize(Tile tile)
         {
             input = Game.Instance.GetSystem<InputManager>();
-
-            Tile tile = gameObject.GetComponent<Tile>();
 
             rotation = new TileRotation(tile, 0.3f);
             position = new TilePosition(tile);

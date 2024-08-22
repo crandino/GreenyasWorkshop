@@ -8,6 +8,8 @@ public class TilePosition : TileModifier
     private readonly static Vector3 verticalGridOffset = Vector3.zero;
     private readonly static Vector3 verticalHoverGridOffset = Vector3.up * 0.25f;
 
+    public CubeCoord Coord { get; private set; }
+
     public enum PositionMode
     {
         GRID,
@@ -26,23 +28,12 @@ public class TilePosition : TileModifier
                     verticalOffset = verticalHoverGridOffset; break;
             }
         }
-    }
+    } 
 
-    private Vector3 TilePos
+    public TilePosition(Tile tile, PositionMode positionMode = PositionMode.GRID) : base(tile)
     {
-        get
-        {
-            return HexTools.GetGridCartesianWorldPos(Coord) + verticalOffset;
-        }
-    }
-
-    public CubeCoord Coord { private set; get; }
-
-    public TilePosition(Tile tile, PositionMode initialMode = PositionMode.GRID) : base(tile)
-    {
-        Coord = HexTools.GetNearestCubeCoord(Current.transform.position);
-        Mode = initialMode;
-        Current.transform.position = TilePos;
+        Mode = positionMode;
+        SetPos(tile.transform.position);
     }
 
     public void AllowMovement()
@@ -60,7 +51,7 @@ public class TilePosition : TileModifier
     protected override bool OnUpdate()
     {
         if (TileRaycast.CursorRaycastToBoard(out Vector3 boardCursorPos))
-            Current.transform.position = boardCursorPos + verticalOffset;
+            SetPos(boardCursorPos);
 
         return true;
     }
@@ -68,34 +59,36 @@ public class TilePosition : TileModifier
     public void AttachToGrid()
     {
         Mode = PositionMode.GRID;
-        Coord = HexTools.GetNearestCubeCoord(Current.transform.position);
-        Current.transform.position = TilePos;
+        SetPos(HexTools.GetGridCartesianWorldPos(Coord));
+    }
+
+    public void SetPos(Vector3 position)
+    {
+        Vector3 finalPos = position + verticalOffset;
+        Current.transform.position = finalPos;
+        Coord = HexTools.GetNearestCubeCoord(finalPos);
     }
 
 #if UNITY_EDITOR
 
     public void MoveUp()
     {
-        Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.North);
-        Current.transform.position = TilePos;
+        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.North)));
     }
 
     public void MoveDown()
     {
-        Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.South);
-        Current.transform.position = TilePos;
+        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.South)));
     }
 
     public void MoveRight()
     {
-        Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast);
-        Current.transform.position = TilePos;
+        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast)));
     }
 
     public void MoveLeft()
     {
-        Coord += CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest);
-        Current.transform.position = TilePos;
+        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest)));
     }
 
 #endif

@@ -48,7 +48,7 @@ public class TileRotation : TileModifier
 
     protected override bool OnUpdate()
     {
-        progress = /*Mathf.Clamp01(*/progress + Time.deltaTime * inverseTotalTime;//);
+        progress = progress + Time.deltaTime * inverseTotalTime;
 
         float lerpAngle = Mathf.LerpAngle(initialRotationAngle, initialRotationAngle + rotationAngle, progress);
         Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, lerpAngle, Current.transform.localEulerAngles.z);

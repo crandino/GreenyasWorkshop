@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Greenyas.Hexagon;
 using System.Linq;
+
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
 using UnityEditor;
@@ -9,52 +10,33 @@ using UnityEditor;
 
 namespace Hexalinks.Tile
 {
-    public class HexMap : MonoBehaviour
+    public class HexMap : SingletonMonobehaviour<HexMap>
     {
         /* 
          *  More info: https://www.redblobgames.com/grids/hexagons/
          *  Orientation flat
          */
 
-        private static HexMap instance = null;
+        [SerializeField]
+        private SerializableDictionary<CubeCoord, Tile> gridData = new(new CubeCoord.CoordinateComparer());
 
-        public static HexMap Instance
+        public bool AddTile(CubeCoord coord, Tile tile)
         {
-            private set
-            {
-                instance = value;
-            }
-
-            get
-            {
-                return instance;
-            }
-        }
-
-        private readonly Dictionary<CubeCoord, Tile> mapStorage = new Dictionary<CubeCoord, Tile>(new CubeCoord.CoordinateComparer());
-
-        private void Awake()
-        {
-            Instance = this;
-        }
-
-        public void AddTile(Tile tile)
-        {
-            mapStorage.Add(tile.Coord, tile);
+            return gridData.TryAdd(coord, tile);
         }
 
         public void RemoveTile(CubeCoord coord)
         {
-            mapStorage.Remove(coord);
+            gridData.Remove(coord);
         }
 
         public bool TryGetTile(CubeCoord coord, out Tile tileData)
         {
-            return mapStorage.TryGetValue(coord, out tileData);
-        }
+            return gridData.TryGetValue(coord, out tileData);
+        }        
 
-        #region VISUAL_DEBUG
 #if UNITY_EDITOR
+        #region VISUAL_DEBUG
 
         [SerializeField]
         private int mapSize = 3;
@@ -167,9 +149,7 @@ namespace Hexalinks.Tile
             return new Vector3(hexCenter.x + HexTools.hexagonSize * Mathf.Cos(angle), hexCenter.y, hexCenter.z + HexTools.hexagonSize * Mathf.Sin(angle));
         }
 
-#endif
         #endregion
-
+#endif
     }
-
 }
