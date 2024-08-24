@@ -1,4 +1,5 @@
 using Greenyas.Hexagon;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hexalinks.Tile
@@ -10,9 +11,8 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileConnectivity connectivity;
 
-        public Node.Gate[] Gates { private set; get; }
-
         public CubeCoord Coord => manipulator.Coord;
+        //public Gate[] Gates => connectivity.Gates;
 
         public enum Type
         {
@@ -34,13 +34,13 @@ namespace Hexalinks.Tile
         private void Start()
         {
             manipulator.Initialize(this);
-            connectivity.Initialize();
+            //connectivity.Initialize();
         }
 
         public void PickUp()
         {
             manipulator.PickUp();
-            connectivity.DisconnectTile();
+            connectivity.Disconnection();
 
             HexMap.Instance.RemoveTile(Coord);
         }
@@ -48,10 +48,33 @@ namespace Hexalinks.Tile
         public void Release()
         {
             manipulator.Release();
-            connectivity.ConnectTile(this);
+            Connect();
 
-            HexMap.Instance.AddTile(manipulator.Coord, this);
+            HexMap.Instance.AddTile(Coord, this);
             TileIterator.LookForClosedPaths();
+        }
+
+        public void Connect()
+        {
+
+            // Uso TileConnectivity para buscar candidatos. Pasar el punto de partida CubeCoord de esta Tile.
+            // Devuelve lista de candidatos
+            List<Tile> candidates = connectivity.AreConnectedTiles(Coord);
+
+            // Comprobamos que las conectividades son satisfactorias entre ambas Tiles
+            // Enlazamos las Tiles
+
+            for (int i = 0; i < candidates.Count; ++i)
+            {
+                connectivity.TryConnection(candidates[i].connectivity);
+
+
+                //Gate gateFrom = Gates[i];
+                //CubeCoord neighborHexCoord = tile.Coord + CubeCoord.GetToNeighborCoord(gateFrom.EntryNode.Side);
+
+                //if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
+                //    gateFrom.Connect(neighborTileData.Gates);
+            }
         }
     }
 }

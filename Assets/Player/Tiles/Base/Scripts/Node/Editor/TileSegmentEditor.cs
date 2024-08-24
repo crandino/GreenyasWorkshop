@@ -3,61 +3,50 @@ using Hexalinks.Tile;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(TileSegment), true)]
+[CustomEditor(typeof(TileSegment))]
 public class TileSegmentEditor : Editor
 {
-    public struct PathProperties
+    public struct SegmentProperties
     {
         public SerializedProperty meshRenderer;
-        public SerializedProperty emissionPathIndex;
         
-        public NodeProperties[] nodes;
+        public GateProperties[] gates;
 
-        public struct NodeProperties
+        public struct GateProperties
         {
             public SerializedProperty hexSide;
             public SerializedProperty initialLocalSide;
-            public SerializedProperty worldDebugPos;
+            //public SerializedProperty connections;
+            //public bool connectionsFoldout;
 
-            public NodeProperties(SerializedProperty node)
+            public GateProperties(SerializedProperty gate)
             {
-                hexSide = node.FindPropertyRelative("hexSide");
-                initialLocalSide = hexSide.FindPropertyRelative("initialLocalSide");
-                worldDebugPos = node.FindPropertyRelative("localDebugPosition");
-
-                Transform transform = ((TileSegment)(node.serializedObject.targetObject)).transform;
-                SerializedProperty transformProperty = node.FindPropertyRelative("tileTransform");
-                transformProperty.objectReferenceValue = transform;
-                transformProperty = hexSide.FindPropertyRelative("tileTransform");
-                transformProperty.objectReferenceValue = transform;
+                hexSide = gate.FindPropertyRelative("node").FindPropertyRelative("hexSide");
+                initialLocalSide = hexSide.FindPropertyRelative("localSide");
+                //connections = gate.FindPropertyRelative("connections");
+                //connectionsFoldout = false;
             }
         }
 
-        public PathProperties(SerializedObject @object)
+        public SegmentProperties(SerializedObject @object)
         {
             meshRenderer = @object.FindProperty("meshRenderer");
-            emissionPathIndex = @object.FindProperty("emissionPathIndex");
 
-            SerializedProperty nodesArray = @object.FindProperty("nodes");
-            nodes = new NodeProperties[nodesArray.arraySize];
+            SerializedProperty gatesArray = @object.FindProperty("gates");
+            gates = new GateProperties[gatesArray.arraySize];
 
-            for (int i = 0; i < nodes.Length; i++)
+            for (int i = 0; i < gates.Length; i++)
             {
-                nodes[i] = new NodeProperties(nodesArray.GetArrayElementAtIndex(i));
+                gates[i] = new GateProperties(gatesArray.GetArrayElementAtIndex(i));
             }            
         }
     }
 
-    private PathProperties properties;
+    private SegmentProperties properties;
     
     private void OnEnable()
     {
-        properties = new PathProperties(serializedObject);
-        for (int i = 0; i < properties.nodes.Length; i++)
-        {
-            UpdateNode(ref properties.nodes[i]);
-        }
-
+        properties = new SegmentProperties(serializedObject);
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -66,19 +55,22 @@ public class TileSegmentEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.ObjectField(properties.meshRenderer);
-        //properties.emissionPathIndex.intValue = EditorGUILayout.IntField("Path Emission ID", properties.emissionPathIndex.intValue);
 
         ++EditorGUI.indentLevel;
-        for (int i = 0; i < properties.nodes.Length; i++)
+        for (int i = 0; i < properties.gates.Length; i++)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Node {i + 1}");
 
             ++EditorGUI.indentLevel;
-            ShowHexSideCarousel(ref properties.nodes[i]);
+            ShowHexSideCarousel(ref properties.gates[i]);
             --EditorGUI.indentLevel;
 
             EditorGUILayout.EndHorizontal();
+
+            //properties.gates[i].connectionsFoldout = EditorGUILayout.Foldout(properties.gates[i].connectionsFoldout, "Connections");
+            //if(properties.gates[i].connectionsFoldout )
+            //    EditorGUILayout.ObjectField(properties.gates[i].connections);
 
         }
         --EditorGUI.indentLevel;
@@ -87,32 +79,32 @@ public class TileSegmentEditor : Editor
             serializedObject.ApplyModifiedProperties();
     }
 
-    private void ShowHexSideCarousel(ref PathProperties.NodeProperties nodeSerialized)
+    private void ShowHexSideCarousel(ref SegmentProperties.GateProperties nodeSerialized)
     {
         if (GUILayout.Button("<"))
             PreviousOrientation(ref nodeSerialized);
-        GUILayout.Label(((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex).ToString());
+        GUILayout.Label(nodeSerialized.initialLocalSide.enumDisplayNames[nodeSerialized.initialLocalSide.enumValueIndex]);
         if (GUILayout.Button(">"))
             NextOrientation(ref nodeSerialized);
     }
 
-    private void PreviousOrientation(ref PathProperties.NodeProperties nodeSerialized)
+    private void PreviousOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
         nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, -1);
-        UpdateNode(ref nodeSerialized);
+        //UpdateNode(ref nodeSerialized);
     }
 
-    private void NextOrientation(ref PathProperties.NodeProperties nodeSerialized)
+    private void NextOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
         nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, 1);
-        UpdateNode(ref nodeSerialized);
+        //UpdateNode(ref nodeSerialized);
     }
 
-    private void UpdateNode(ref PathProperties.NodeProperties nodeSerialized)
-    {
-        Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex);
-        Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
-        nodeSerialized.worldDebugPos.vector3Value = localPosition * HexTools.hexagonSize;
-    }
+    //private void UpdateNode(ref SegmentProperties.GateProperties nodeSerialized)
+    //{
+    //    Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex);
+    //    Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
+    //    nodeSerialized.worldDebugPos.vector3Value = localPosition * HexTools.hexagonSize;
+    //}
 }
 

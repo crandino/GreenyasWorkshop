@@ -33,7 +33,13 @@ namespace Hexalinks.Tile
         public bool TryGetTile(CubeCoord coord, out Tile tileData)
         {
             return gridData.TryGetValue(coord, out tileData);
-        }        
+        }
+
+        [ContextMenu("Clear Grid")]
+        public void ClearGrid()
+        {
+            gridData.Clear();
+        }
 
 #if UNITY_EDITOR
         #region VISUAL_DEBUG

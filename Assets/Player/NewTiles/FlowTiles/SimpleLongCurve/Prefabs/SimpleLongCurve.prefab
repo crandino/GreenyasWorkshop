@@ -98,19 +98,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - hexSide:
-      initialLocalSide: 3
-      tileTransform: {fileID: 2817471991057592844}
-    localDebugPosition: {x: 0, y: 0.025, z: -0.4330127}
-    tileTransform: {fileID: 2817471991057592844}
-  - hexSide:
-      initialLocalSide: 1
-      tileTransform: {fileID: 2817471991057592844}
-    localDebugPosition: {x: 0.375, y: 0.025, z: 0.21650635}
-    tileTransform: {fileID: 2817471991057592844}
+  gates:
+  - node:
+      hexSide:
+        localSide: 3
+    segment: {fileID: 299821880885431254}
+    connections: []
+  - node:
+      hexSide:
+        localSide: 1
+    segment: {fileID: 299821880885431254}
+    connections: []
   meshRenderer: {fileID: 1818894767486782430}
-  emissionPathIndex: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &1332271828798952205
 PrefabInstance:
   m_ObjectHideFlags: 0
