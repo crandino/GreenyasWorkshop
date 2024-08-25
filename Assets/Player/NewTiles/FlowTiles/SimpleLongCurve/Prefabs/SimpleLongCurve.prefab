@@ -99,14 +99,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
-  - node:
-      hexSide:
-        localSide: 3
+  - hexSide:
+      localSide: 3
     segment: {fileID: 299821880885431254}
     connections: []
-  - node:
-      hexSide:
-        localSide: 1
+  - hexSide:
+      localSide: 1
     segment: {fileID: 299821880885431254}
     connections: []
   meshRenderer: {fileID: 1818894767486782430}

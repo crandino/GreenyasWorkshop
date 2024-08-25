@@ -16,15 +16,11 @@ public class TileSegmentEditor : Editor
         {
             public SerializedProperty hexSide;
             public SerializedProperty initialLocalSide;
-            //public SerializedProperty connections;
-            //public bool connectionsFoldout;
 
             public GateProperties(SerializedProperty gate)
             {
-                hexSide = gate.FindPropertyRelative("node").FindPropertyRelative("hexSide");
+                hexSide = gate.FindPropertyRelative("hexSide");
                 initialLocalSide = hexSide.FindPropertyRelative("localSide");
-                //connections = gate.FindPropertyRelative("connections");
-                //connectionsFoldout = false;
             }
         }
 
@@ -67,11 +63,6 @@ public class TileSegmentEditor : Editor
             --EditorGUI.indentLevel;
 
             EditorGUILayout.EndHorizontal();
-
-            //properties.gates[i].connectionsFoldout = EditorGUILayout.Foldout(properties.gates[i].connectionsFoldout, "Connections");
-            //if(properties.gates[i].connectionsFoldout )
-            //    EditorGUILayout.ObjectField(properties.gates[i].connections);
-
         }
         --EditorGUI.indentLevel;
 
@@ -91,20 +82,11 @@ public class TileSegmentEditor : Editor
     private void PreviousOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
         nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, -1);
-        //UpdateNode(ref nodeSerialized);
     }
 
     private void NextOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
         nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, 1);
-        //UpdateNode(ref nodeSerialized);
     }
-
-    //private void UpdateNode(ref SegmentProperties.GateProperties nodeSerialized)
-    //{
-    //    Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex);
-    //    Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
-    //    nodeSerialized.worldDebugPos.vector3Value = localPosition * HexTools.hexagonSize;
-    //}
 }
 

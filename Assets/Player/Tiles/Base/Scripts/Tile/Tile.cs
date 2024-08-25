@@ -34,7 +34,6 @@ namespace Hexalinks.Tile
         private void Start()
         {
             manipulator.Initialize(this);
-            //connectivity.Initialize();
         }
 
         public void PickUp()
@@ -76,5 +75,15 @@ namespace Hexalinks.Tile
                 //    gateFrom.Connect(neighborTileData.Gates);
             }
         }
+
+#if UNITY_EDITOR
+
+        private void OnDrawGizmos()
+        {
+            manipulator.DrawDebugInfo();
+            connectivity.DrawDebugInfo();
+        }
+
+#endif
     }
 }

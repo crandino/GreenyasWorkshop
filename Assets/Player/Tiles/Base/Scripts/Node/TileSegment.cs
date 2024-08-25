@@ -24,7 +24,7 @@ namespace Hexalinks.Tile
             for (int i = 0; i < gates.Length; ++i)
             {
                 Gate gateFrom = gates[i];
-                HexSide.Side worldSide = gateFrom.GetWorldSide(this);
+                HexSide.Side worldSide = gateFrom.WorldSide;
                 CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(worldSide);
 
                 if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))

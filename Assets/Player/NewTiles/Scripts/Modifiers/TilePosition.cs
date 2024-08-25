@@ -66,7 +66,7 @@ public class TilePosition : TileModifier
     {
         Vector3 finalPos = position + verticalOffset;
         Current.transform.position = finalPos;
-        Coord = HexTools.GetNearestCubeCoord(finalPos);
+        Coord = CubeCoord.GetNearestCubeCoord(finalPos);
     }
 
 #if UNITY_EDITOR

@@ -2,8 +2,8 @@ using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static Greenyas.Hexagon.HexSide;
 using UnityEngine.Assertions;
+using static Greenyas.Hexagon.HexSide;
 
 #if UNITY_EDITOR
 using Hexagon.Tile.Debug;
@@ -14,26 +14,17 @@ namespace Hexalinks.Tile
     [System.Serializable]
     public class Gate
     {
-        public Node node;
-        public TileSegment segment;
+        [SerializeField]
+        private HexSide hexSide;
+        [SerializeField]
+        private TileSegment segment;        
 
-        public Side GetWorldSide(TileSegment segment) => node.GetWorldSide(segment.transform.GetTransformUpUntil<Tile>());
+        public Side WorldSide => hexSide.GetWorldSide(segment);
 
         public Gate(TileSegment seg)
         {
             segment = seg;
-            node = new Node();
-
             connections = new List<Gate>();
-        }
-
-        [System.Serializable]
-        public class Node
-        {
-            [SerializeField]
-            private HexSide hexSide;
-
-            public Side GetWorldSide(Transform t) => hexSide.GetWorldSide(t);
         }
 
         [SerializeReference]
@@ -42,13 +33,13 @@ namespace Hexalinks.Tile
         public bool IsFacingOtherGate(Gate gateTo)
         {
             Assert.IsTrue(segment != gateTo.segment);
-            return GetWorldSide(segment).IsOpposite(gateTo.GetWorldSide(gateTo.segment));
+            return WorldSide.IsOpposite(gateTo.WorldSide);
         }
 
         public void Connect(Gate gate)
         {
             connections.Add(gate);
-            gate.Connect(this);
+            gate.connections.Add(gate);
         }
 
         public void Disconnect()
@@ -64,7 +55,7 @@ namespace Hexalinks.Tile
         {
             get
             {
-                Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn(GetWorldSide(segment));
+                Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn(WorldSide);
                 Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
                 return segment.transform.position + localPosition * HexTools.hexagonSize;
             }
@@ -82,7 +73,7 @@ namespace Hexalinks.Tile
             // Outward node conntections
             if (TileDebugOptions.Instance.showConnections)
             {
-                Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(GetWorldSide(segment));
+                Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(WorldSide);
                 Vector3 toNextTile = new Vector3(vec.x, 0f, vec.y);
                 Quaternion arrowOrientatinon = Quaternion.LookRotation(toNextTile);
 

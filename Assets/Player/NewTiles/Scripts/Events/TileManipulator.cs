@@ -1,5 +1,6 @@
 using Greenyas.Hexagon;
 using Greenyas.Input;
+using UnityEditor;
 using UnityEngine;
 
 namespace Hexalinks.Tile
@@ -43,5 +44,20 @@ namespace Hexalinks.Tile
 
             position.RestrictMovement();
         }
+
+#if UNITY_EDITOR
+        public void DrawDebugInfo()
+        {
+            CubeCoord coord = CubeCoord.GetNearestCubeCoord(transform.position);
+            
+            Handles.color = Color.yellow;
+            GUIStyle coordsTextStyle = new GUIStyle
+            {
+                fontSize = 18
+            };
+
+            Handles.Label(transform.position, $"{coord.Q},{coord.R},{coord.S}", coordsTextStyle);
+        } 
+#endif
     }
 }
