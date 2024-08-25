@@ -17,7 +17,7 @@ namespace Hexalinks.Tile
         [SerializeField]
         private HexSide hexSide;
         [SerializeField]
-        private TileSegment segment;        
+        private TileSegment segment;
 
         public Side WorldSide => hexSide.GetWorldSide(segment);
 
@@ -30,22 +30,25 @@ namespace Hexalinks.Tile
         [SerializeReference]
         private List<Gate> connections;
 
-        public bool IsFacingOtherGate(Gate gateTo)
+        private bool IsFacingOtherGate(Gate gateTo)
         {
             Assert.IsTrue(segment != gateTo.segment);
             return WorldSide.IsOpposite(gateTo.WorldSide);
         }
 
-        public void Connect(Gate gate)
+        public void TryConnect(Gate againstGate)
         {
-            connections.Add(gate);
-            gate.connections.Add(gate);
+            if (IsFacingOtherGate(againstGate))
+            {
+                connections.Add(againstGate);
+                againstGate.connections.Add(this);
+            };
         }
 
         public void Disconnect()
         {
-            foreach(var connection in connections)
-                connection.connections.Clear();
+            foreach(var conn in connections)
+                conn.connections.Clear();
 
             connections.Clear();
         }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEngine;
+using static Hexalinks.Tile.TileConnectivity;
 
 namespace Hexalinks.Tile
 {
@@ -17,41 +18,35 @@ namespace Hexalinks.Tile
         [SerializeField]
         private MeshRenderer meshRenderer;
 
-        public List<Tile> GetCandidates(CubeCoord fromCoord)
+        public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
         {
-            List<Tile> candidates = new List<Tile>();
+            List<TileQueryResult> candidates = new List<TileQueryResult>();
 
             for (int i = 0; i < gates.Length; ++i)
             {
-                Gate gateFrom = gates[i];
-                HexSide.Side worldSide = gateFrom.WorldSide;
-                CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(worldSide);
+                CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(gates[i].WorldSide);
 
                 if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
-                    candidates.Add(neighborTileData);
+                    candidates.Add(new()
+                    {
+                        tile = neighborTileData,
+                        gate = gates[i]
+                    });
             }
 
             return candidates;
-        }      
+        }  
 
-        public void TryConnection(TileSegment[] toSegments)
+        public void TryConnection(Gate againstGate)
         {
-            foreach (var from in gates)
-            {
-                foreach (var segmentTo in toSegments)
-                {
-                    from.Connect(segmentTo.gates);
-                }
-
-            }
+            foreach (var fromGate in gates)
+                fromGate.TryConnect(againstGate);
         }
 
         public void Disconnect()
         {
             foreach (var from in gates)
-            {
                 from.Disconnect();
-            }
         }
 
         public void Highlight()

@@ -16,5 +16,10 @@
                 <TilePrefabOption name="TilePrefabOption" tile-prefab="project://database/Assets/Player/Tiles/Pieces/Flow/LongCurves/Double/Prefabs/DoubleLongCurve.prefab?fileID=4716942896468114928&amp;guid=d9be179620062c943aede95269ef6cf1&amp;type=3#DoubleLongCurve" focusable="true" style="background-image: url(&quot;project://database/Assets/Player/TileEditorPlacer/UXML/Icons/LongCurve/Double.png?fileID=2800000&amp;guid=487569c32cd197c45a7f9fcdf9a2467c&amp;type=3#Double&quot;); width: 50px; height: 50px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-left-color: rgb(164, 164, 164); border-right-color: rgb(164, 164, 164); border-top-color: rgb(164, 164, 164); border-bottom-color: rgb(164, 164, 164);" />
             </ui:GroupBox>
         </ui:Foldout>
+        <ui:Foldout text="Split" value="true" style="flex-basis: auto; flex-direction: column; background-color: rgb(49, 108, 67);">
+            <ui:GroupBox name="TileGroup">
+                <TilePrefabOption name="TilePrefabOption" tile-prefab="project://database/Assets/Player/Tiles/Pieces/Split/Double/Prefabs/DoubleLongCurve.prefab?fileID=4716942896468114928&amp;guid=d6fba32dcf3d01c46a391e66e6ceaf7a&amp;type=3#DoubleLongCurve" focusable="true" style="background-image: url(&quot;project://database/Assets/Player/TileEditorPlacer/UXML/Icons/Straight/Straight.png?fileID=21300000&amp;guid=24b9a110d38827246ae1c833f54fce56&amp;type=3#Straight&quot;); width: 50px; height: 50px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-left-color: rgb(164, 164, 164); border-right-color: rgb(164, 164, 164); border-top-color: rgb(164, 164, 164); border-bottom-color: rgb(164, 164, 164); margin-left: 5px; margin-right: 5px;" />
+            </ui:GroupBox>
+        </ui:Foldout>
     </ui:VisualElement>
 </ui:UXML>

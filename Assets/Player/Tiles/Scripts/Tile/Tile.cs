@@ -38,8 +38,8 @@ namespace Hexalinks.Tile
 
         public void PickUp()
         {
-            manipulator.PickUp();
             connectivity.Disconnection();
+            manipulator.PickUp();
 
             HexMap.Instance.RemoveTile(Coord);
         }
@@ -55,24 +55,11 @@ namespace Hexalinks.Tile
 
         public void Connect()
         {
-
-            // Uso TileConnectivity para buscar candidatos. Pasar el punto de partida CubeCoord de esta Tile.
-            // Devuelve lista de candidatos
-            List<Tile> candidates = connectivity.AreConnectedTiles(Coord);
-
-            // Comprobamos que las conectividades son satisfactorias entre ambas Tiles
-            // Enlazamos las Tiles
+            List<TileConnectivity.TileQueryResult> candidates = connectivity.GetNeighborCandidates(Coord);
 
             for (int i = 0; i < candidates.Count; ++i)
             {
-                connectivity.TryConnection(candidates[i].connectivity);
-
-
-                //Gate gateFrom = Gates[i];
-                //CubeCoord neighborHexCoord = tile.Coord + CubeCoord.GetToNeighborCoord(gateFrom.EntryNode.Side);
-
-                //if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
-                //    gateFrom.Connect(neighborTileData.Gates);
+                candidates[i].tile.connectivity.TryConnection(candidates[i].gate);
             }
         }
 

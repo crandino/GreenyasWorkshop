@@ -9,9 +9,15 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileSegment[] segments = null;
 
-        public List<Tile> AreConnectedTiles(CubeCoord coord)
+        public struct TileQueryResult
         {
-            List<Tile> candidates = new List<Tile>();
+            public Tile tile;
+            public Gate gate;
+        }
+
+        public List<TileQueryResult> GetNeighborCandidates(CubeCoord coord)
+        {
+            List<TileQueryResult> candidates = new List<TileQueryResult>();
 
             foreach (var s in segments)
                 candidates.AddRange(s.GetCandidates(coord));
@@ -19,11 +25,11 @@ namespace Hexalinks.Tile
             return candidates;
         }
 
-        public void TryConnection(TileConnectivity toConnectivity)
+        public void TryConnection(Gate againstGate)
         {
             for (int i = 0; i < segments.Length; ++i)
             {
-                segments[i].TryConnection(toConnectivity.segments);
+                segments[i].TryConnection(againstGate);
             }
         }
 
@@ -45,7 +51,7 @@ namespace Hexalinks.Tile
 
         public void DrawDebugInfo()
         {
-
+            //TODO
         }
 
 #endif
