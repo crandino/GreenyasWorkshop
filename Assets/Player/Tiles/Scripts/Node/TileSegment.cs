@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
-using Greenyas.Hexagon;
 using Hexagon.Tile.Debug;
-using System.Collections.Generic;
 #endif
 
+using System.Collections.Generic;
+using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
 using static Hexalinks.Tile.TileConnectivity;

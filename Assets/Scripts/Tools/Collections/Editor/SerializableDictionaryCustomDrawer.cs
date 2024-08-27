@@ -1,101 +1,142 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
 public class SerializableDictionaryCustomDrawer : PropertyDrawer
 {
-
-    private readonly static string keysSerializedName = "keys";
-    private readonly static string valuesSerializedName = "values";
-
-    private SerializedKeyValuePair[] serializedPairs;
-
-    private struct SerializedKeyValuePair
+    private class SerializationHelper
     {
-        public SerializedProperty key, value;
-
-        public SerializedKeyValuePair(SerializedProperty key, SerializedProperty value)
+        public struct DictionaryAction
         {
-            this.key = key;
-            this.value = value;
-        }
-    }
+            public enum Type
+            {
+                Add, Remove, Clear
+            }
 
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    {
-        return (BuildSerializedKeyValuePairs(property).Length + 1) * EditorGUIUtility.singleLineHeight;
-    }
-
-    private SerializedKeyValuePair[] BuildSerializedKeyValuePairs(SerializedProperty property)
-    {
-        SerializedProperty serializedKeysProperty = property.FindPropertyRelative(keysSerializedName);
-        SerializedProperty serializedValuesProperty = property.FindPropertyRelative(valuesSerializedName);
-
-        SerializedKeyValuePair[] serializedPairs = new SerializedKeyValuePair[serializedKeysProperty.arraySize];
-
-        for (int i = 0; i < serializedKeysProperty.arraySize; ++i)
-        {
-            serializedPairs[i]= new SerializedKeyValuePair(serializedKeysProperty.GetArrayElementAtIndex(i),
-                                                           serializedValuesProperty.GetArrayElementAtIndex(i));
+            public Type type;
+            public int index;
         }
 
-        return serializedPairs;
+        private readonly Queue<DictionaryAction> actionQueue = new();
+
+        public void AddAction(DictionaryAction.Type actionType, int arrayIndex = 0)
+        {
+            actionQueue.Enqueue(new DictionaryAction()
+            {
+                type = actionType,
+                index = arrayIndex
+            });
+        }
+
+        public void PerformActions()
+        {
+            while(actionQueue.Count != 0)
+            {
+                DictionaryAction action = actionQueue.Dequeue();
+
+                switch(action.type)
+                {
+                    case (DictionaryAction.Type.Add):
+                        {
+                            keys.InsertArrayElementAtIndex(keys.arraySize);
+                            values.InsertArrayElementAtIndex(values.arraySize);
+                        }
+                        break;
+                    case (DictionaryAction.Type.Remove):
+                        {
+                            keys.DeleteArrayElementAtIndex(action.index);
+                            values.DeleteArrayElementAtIndex(action.index);
+                        }
+                        break;
+                    case (DictionaryAction.Type.Clear):
+                        {
+                            keys.ClearArray();
+                            values.ClearArray();
+                        }
+                        break;
+                }
+            }
+        }
+
+        private readonly static string keysSerializedName = "keys";
+        private readonly static string valuesSerializedName = "values";
+        private readonly static string invalidPairsSerializedName = "invalidKeyValuePairs";
+        private readonly static string invalidKeyArrayIndexSerializedName = "keyArrayIndex";
+
+        private SerializedProperty keys, values;
+        private readonly List<int> invalidKeys = new List<int>();
+
+        public int KeyCount => keys.arraySize;
+
+        public bool IsIndexInvalid(int index) => invalidKeys.Contains(index);
+
+        public void Rebuild(SerializedProperty serializableDictProperty)
+        {
+            keys = serializableDictProperty.FindPropertyRelative(keysSerializedName);
+            values = serializableDictProperty.FindPropertyRelative(valuesSerializedName);
+
+            invalidKeys.Clear();
+
+            SerializedProperty invalidKeyList = serializableDictProperty.FindPropertyRelative(invalidPairsSerializedName);
+            for (int i = 0; i < invalidKeyList.arraySize; ++i)
+                invalidKeys.Add(invalidKeyList.GetArrayElementAtIndex(i).FindPropertyRelative(invalidKeyArrayIndexSerializedName).intValue);
+        }
+
+        public (SerializedProperty, SerializedProperty) GetKeyPairSerializedEntry(int index) => (keys.GetArrayElementAtIndex(index), values.GetArrayElementAtIndex(index));
     }
+
+    private SerializationHelper helper = new SerializationHelper();
+
+    private readonly static GUIContent plusIcon = EditorGUIUtility.IconContent("Toolbar Plus", "Add entry");
+    private readonly static GUIContent removeIcon = EditorGUIUtility.IconContent("Toolbar Minus", "Remove entry");
+    private readonly static GUIContent trashIcon = EditorGUIUtility.IconContent("TreeEditor.Trash", "Clear");
+
+    private readonly static GUILayoutOption buttonWidth = GUILayout.MaxWidth(25);
+    private readonly static GUIStyle buttonStyle = new GUIStyle() { alignment = TextAnchor.MiddleRight };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        position.height = EditorGUIUtility.singleLineHeight;
+        helper.Rebuild(property);
 
-        //if (GUI.Button(position, "Clear"))
-        //{
-        //    IDictionary dict = property.boxedValue as IDictionary;
-        //    dict.Clear();
-        //    property.serializedObject.ApplyModifiedProperties();
-        //}
+        DrawHeader(label);
 
-        position.y += EditorGUIUtility.singleLineHeight;
-        
-        serializedPairs = BuildSerializedKeyValuePairs(property);
+        Color defaultBackgroundColor = GUI.backgroundColor;            
+        EditorGUI.indentLevel++;
 
-        float halfWidth = EditorGUIUtility.currentViewWidth * 0.5f;
-        position.width = halfWidth;
-
-        foreach (SerializedKeyValuePair pair in serializedPairs)
+        for(int i = 0; i < helper.KeyCount; ++i)
         {
-            position.x = 0;
-            EditorGUI.PropertyField(position, pair.key, GUIContent.none);
-            position.x += halfWidth;
-            EditorGUI.PropertyField(position, pair.value, GUIContent.none);
-            position.y += EditorGUIUtility.singleLineHeight;
+            (SerializedProperty, SerializedProperty) pair = helper.GetKeyPairSerializedEntry(i);
+
+            GUI.backgroundColor = helper.IsIndexInvalid(i) ? Color.red : defaultBackgroundColor;
+
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(pair.Item1, GUIContent.none, true);
+
+            if (GUILayout.Button(removeIcon, buttonStyle, buttonWidth))
+                helper.AddAction(SerializationHelper.DictionaryAction.Type.Remove, i);
+
+            GUILayout.EndHorizontal();
+
+            EditorGUILayout.PropertyField(pair.Item2, GUIContent.none, true);
         }
+
+        EditorGUI.indentLevel--;
+
+        helper.PerformActions();
     }
 
-    private void DrawControls(Rect position)
+    private void DrawHeader(GUIContent label)
     {
-        GUIContent icon = EditorGUIUtility.IconContent("Toolbar Plus", "Add entry");
-        GUI.Button(position, icon);
-        icon = EditorGUIUtility.IconContent("Toolbar Minus", "Remove entry");
-        GUI.Button(position, icon);
-        GUIStyle buttonStyle = GUIStyle.none;
-        //buttonStyle.CalcSize(icon)
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField(label);
 
-        
-        //GUI.Button(position, )
+        if (GUILayout.Button(plusIcon, buttonStyle, buttonWidth))
+            helper.AddAction(SerializationHelper.DictionaryAction.Type.Add);
+
+        if (GUILayout.Button(trashIcon, buttonStyle, buttonWidth))
+            helper.AddAction(SerializationHelper.DictionaryAction.Type.Clear);
+
+        GUILayout.EndHorizontal();
     }
-
-    //public override void OnInspectorGUI()
-    //{
-    //    Debug.Log("Drawing custom inspector");
-    //    EditorGUILayout.LabelField("Hola");
-
-    //    foreach (SerializedKeyValuePair pair in serializedPairs)
-    //    {
-    //        EditorGUILayout.BeginHorizontal();
-
-    //        EditorGUILayout.ObjectField(pair.key);
-    //        EditorGUILayout.ObjectField(pair.value);
-
-    //        EditorGUILayout.EndHorizontal();
-    //    }
-    //}
 }
