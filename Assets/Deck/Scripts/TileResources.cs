@@ -5,7 +5,10 @@ using UnityEngine;
 public class TileResources : ScriptableObject
 {
     [SerializeField]
-    private SerializableDictionary<Tile.Type, TileResourceLocator> resources = new SerializableDictionary<Tile.Type, TileResourceLocator>();
+    private Sprite emptyIcon;
+
+    [SerializeField]
+    private SerializableDictionary<Tile.Type, TileResourceLocator> tileTypeResources = new SerializableDictionary<Tile.Type, TileResourceLocator>();
 
     [System.Serializable]
     public struct TileResourceLocator
@@ -14,12 +17,10 @@ public class TileResources : ScriptableObject
         public Sprite sprite;
     }
 
-    [ContextMenu("Do!")]
-    private void FulfillResources()
+    public TileResourceLocator this[Tile.Type tileType]
     {
-        resources.Clear();
-
-        //resources.Add(Tile.Type.FlowStraight, new());
-        //resources.Add(Tile.Type.SplitLongCurve, new());
+        get => tileTypeResources[tileType];
     }
+
+    public Sprite EmptyIcon => emptyIcon;
 }

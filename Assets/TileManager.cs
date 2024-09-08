@@ -10,7 +10,7 @@ public class TileManager : MonoBehaviour
     private Tile[] excludeTiles;
 
     [SerializeField]
-    private DeckCreator deckCreator;
+    private DeckContent deckCreator;
 
     private void Start()
     {

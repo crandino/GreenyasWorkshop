@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Deck", menuName = "Hexagon/Deck")]
-public class DeckCreator : ScriptableObject
+[CreateAssetMenu(fileName = "Deck", menuName = "Hexagon/DeckContent")]
+public class DeckContent : ScriptableObject
 {
     [System.Serializable]
     private struct TileEntry
@@ -14,9 +14,9 @@ public class DeckCreator : ScriptableObject
     }
 
     [SerializeField]
-    private TileEntry[] deckContent;
+    private TileEntry[] content;
 
-    public Deck Create()
+    public Deck CreateDeck()
     {
         Deck newDeck = new Deck(this);
         newDeck.Shuffle();
@@ -30,12 +30,12 @@ public class DeckCreator : ScriptableObject
 
         public bool Empty => discardIndex >= deck.Length;
 
-        public Deck(DeckCreator creator)
+        public Deck(DeckContent creator)
         {
             List<Tile.Type> newDeck = new List<Tile.Type>();
 
-            for (int i = 0; i < creator.deckContent.Length; i++)
-                newDeck.AddRange(Enumerable.Repeat(creator.deckContent[i].tileType, creator.deckContent[i].amount));
+            for (int i = 0; i < creator.content.Length; i++)
+                newDeck.AddRange(Enumerable.Repeat(creator.content[i].tileType, creator.content[i].amount));
 
             deck = newDeck.ToArray();
         }

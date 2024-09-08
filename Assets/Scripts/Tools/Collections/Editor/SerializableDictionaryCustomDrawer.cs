@@ -86,7 +86,7 @@ public class SerializableDictionaryCustomDrawer : PropertyDrawer
         public (SerializedProperty, SerializedProperty) GetKeyPairSerializedEntry(int index) => (keys.GetArrayElementAtIndex(index), values.GetArrayElementAtIndex(index));
     }
 
-    private SerializationHelper helper = new SerializationHelper();
+    private readonly SerializationHelper helper = new SerializationHelper();
 
     private readonly static GUIContent plusIcon = EditorGUIUtility.IconContent("Toolbar Plus", "Add entry");
     private readonly static GUIContent removeIcon = EditorGUIUtility.IconContent("Toolbar Minus", "Remove entry");
@@ -101,10 +101,10 @@ public class SerializableDictionaryCustomDrawer : PropertyDrawer
 
         DrawHeader(label);
 
-        Color defaultBackgroundColor = GUI.backgroundColor;            
+        Color defaultBackgroundColor = GUI.backgroundColor;
         EditorGUI.indentLevel++;
 
-        for(int i = 0; i < helper.KeyCount; ++i)
+        for (int i = 0; i < helper.KeyCount; ++i)
         {
             (SerializedProperty, SerializedProperty) pair = helper.GetKeyPairSerializedEntry(i);
 
@@ -128,7 +128,7 @@ public class SerializableDictionaryCustomDrawer : PropertyDrawer
 
     private void DrawHeader(GUIContent label)
     {
-        GUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(label);
 
         if (GUILayout.Button(plusIcon, buttonStyle, buttonWidth))
@@ -137,6 +137,6 @@ public class SerializableDictionaryCustomDrawer : PropertyDrawer
         if (GUILayout.Button(trashIcon, buttonStyle, buttonWidth))
             helper.AddAction(SerializationHelper.DictionaryAction.Type.Clear);
 
-        GUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
     }
 }

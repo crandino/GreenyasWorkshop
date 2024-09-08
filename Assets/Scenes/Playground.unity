@@ -1775,6 +1775,7 @@ MonoBehaviour:
     - {fileID: 1843112120}
     - {fileID: 821729930}
     - {fileID: 202414972}
+    invalidKeyValuePairs: []
   mapSize: 3
   lineWidth: 0.04
   meshFilter: {fileID: 797058103}
@@ -1836,11 +1837,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1544924228}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfde871a8be1af14ca198551026fdd89, type: 3}
+  m_Script: {fileID: 11500000, guid: c24e76ef30800624e92d4730299beccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerZoneUI: {fileID: 1544924229}
-  playerDeck: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
+  playerHandUI: {fileID: 1544924229}
+  deckContent: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
+  resources: {fileID: 11400000, guid: 5a5aff486960d434d84936a191105b6b, type: 2}
 --- !u!1 &1843112114
 GameObject:
   m_ObjectHideFlags: 0

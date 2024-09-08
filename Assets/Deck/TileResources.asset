@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced1a97babeb84245a1c5357cf526e44, type: 3}
   m_Name: TileResources
   m_EditorClassIdentifier: 
-  resources:
-    keys: 
-    values: []
+  emptyIcon: {fileID: 21300000, guid: add782cb169a75a47bc01d4bd7900f92, type: 3}
+  tileTypeResources:
+    keys: 00000000
+    values:
+    - tile: {fileID: 4716942896468114928, guid: 56c650825f5241141ae2388fe812f4d2, type: 3}
+      sprite: {fileID: 21300000, guid: 24b9a110d38827246ae1c833f54fce56, type: 3}
     invalidKeyValuePairs: []

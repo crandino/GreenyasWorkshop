@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ddb6c15f54425646950b576dee9d3b2, type: 3}
-  m_Name: Deck
+  m_Name: DebugDeck
   m_EditorClassIdentifier: 
-  deckContent:
+  content:
   - tileType: 0
-    amount: 2
-  - tileType: 9
-    amount: 1
-  - tileType: 3
-    amount: 2
-  - tileType: 7
-    amount: 1
+    amount: 4
+  - tileType: 1
+    amount: 0
+  - tileType: 2
+    amount: 0

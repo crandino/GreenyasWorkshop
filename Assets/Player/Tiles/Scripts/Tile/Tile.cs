@@ -12,14 +12,9 @@ namespace Hexalinks.Tile
         private TileConnectivity connectivity;
 
         public CubeCoord Coord => manipulator.Coord;
-        //public Gate[] Gates => connectivity.Gates;
 
         public enum Type
         {
-            StarterSimple,
-            StarterDouble,
-            StarterTriple,
-
             FlowStraight,
             FlowSimpleShortCurve,
             FlowSimpleLongCurve,
@@ -32,6 +27,11 @@ namespace Hexalinks.Tile
         }
 
         private void Start()
+        {
+            Initialize();
+        }
+
+        public void Initialize()
         {
             manipulator.Initialize(this);
         }
