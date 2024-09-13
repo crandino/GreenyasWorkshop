@@ -5,14 +5,17 @@ namespace Greenyas.Input
         private PlayerActions actions = null;
 
         public InputDeltaCallback OnAxis;
-        public InputButtonCallback OnSelect;
+
+        public InputButtonCallback TilePlacement;
+        public InputButtonCallback TilePlacementCancellation;
 
         protected override bool TryInitSystem()
         {
             actions = new PlayerActions();
             actions.Enable();
 
-            OnSelect = new InputButtonCallback(actions.InGame.Selection);
+            TilePlacement = new InputButtonCallback(actions.InGame.TilePlacement);
+            TilePlacementCancellation = new InputButtonCallback(actions.InGame.CancelTilePlacement);
             OnAxis = new InputDeltaCallback(actions.InGame.RotatePiece);
 
             return true;

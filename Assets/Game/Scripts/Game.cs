@@ -29,7 +29,7 @@ public class Game : MonoBehaviour
     private void InitializeSubSystems()
     {
         RegisterSubSystem<InputManager>();
-        RegisterSubSystem<TileSelector>();
+        RegisterSubSystem<TilePlacement>();
     }
 
     private void RegisterSubSystem<T>() where T : SubSystem, new()
