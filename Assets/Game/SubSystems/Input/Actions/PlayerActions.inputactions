@@ -6,7 +6,7 @@
             "id": "efbf25df-eb57-4b89-a638-f08faa3c87e4",
             "actions": [
                 {
-                    "name": "Selection",
+                    "name": "TilePlacement",
                     "type": "Button",
                     "id": "41b182b0-4e38-4a31-9f60-4652c45aed0f",
                     "expectedControlType": "Button",
@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "CancelTilePlacement",
+                    "type": "Button",
+                    "id": "36cabe02-515d-433f-a9fc-6d5f2769682b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -32,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Selection",
+                    "action": "TilePlacement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -44,6 +53,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RotatePiece",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6f4da62-2b51-4f15-8634-859ee49fc4c4",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CancelTilePlacement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

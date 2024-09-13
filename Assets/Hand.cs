@@ -1,4 +1,5 @@
 using Hexalinks.Tile;
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static TileResources;
@@ -7,7 +8,7 @@ public class Hand : MonoBehaviour
 {
     private class HandOption
     {
-        private Button button;
+        private readonly Button button;
         private TileResourceLocator tileResourceLocator;
 
         public HandOption(Button button)
@@ -18,20 +19,28 @@ public class Hand : MonoBehaviour
         public void AssignTile(TileResourceLocator locator)
         {
             tileResourceLocator = locator;
-
             button.iconImage = Background.FromSprite(locator.sprite);
-            button.clicked += LoadTile;
+           
         }
 
-        private void LoadTile()
+        private Tile LoadTile()
         {
-            button.iconImage = Background.FromSprite(Hand.emptyIcon);
+            button.iconImage = Background.FromSprite(emptyIcon);
+            return GameObject.Instantiate<Tile>(tileResourceLocator.tile);
+        }
 
-            Tile tile = GameObject.Instantiate<Tile>(tileResourceLocator.tile);
-            tile.Initialize();
-            tile.PickUp();
+        public void ActivateSelection(Action<Tile> onTileSelection)
+        {
+            button.clicked += () =>
+            {
+                Tile tile = LoadTile();
+                onTileSelection(tile);
+            };
+        }
 
-            button.clickable = null;
+        public void DeactivateSelection()
+        {
+            button.clickable = null;       
         }
     }
 
@@ -50,20 +59,37 @@ public class Hand : MonoBehaviour
     private bool active = false;
     public static Sprite emptyIcon;
 
+    public event Action<Tile> OnTileSelected;
+
     private void Start()
     {
-        Initialize(deckContent);
         emptyIcon = resources.EmptyIcon;
     }
 
-    public void Initialize(DeckContent content)
+    public void Initialize()
     {
-        deck = content.CreateDeck();
+        deck = deckContent.CreateDeck();
         playerOptions = playerHandUI.rootVisualElement.Query<Button>().ForEach(b =>
         {
-            HandOption handOption = new HandOption(b);
+            HandOption handOption = new(b);
             handOption.AssignTile(resources[deck.Draw()]);
             return handOption;
         }).ToArray();
+    }
+
+    public void ActivateSelection(Action<Tile> onTileSelection)
+    {
+        foreach (HandOption option in playerOptions)
+        {
+            option.ActivateSelection(onTileSelection);
+        }
+    }
+
+    public void DeactivateSelection()
+    {
+        foreach (HandOption option in playerOptions)
+        {
+            option.DeactivateSelection();
+        }
     }
 }
