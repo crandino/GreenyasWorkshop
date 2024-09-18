@@ -11,11 +11,3 @@ public class TurnManager : MonoBehaviour
         handInitTurnStep.Begin();        
     }
 }
-
-public class DeckDrawingTurnStep : TurnStep
-{
-    public override void Begin()
-    {
-
-    }
-}

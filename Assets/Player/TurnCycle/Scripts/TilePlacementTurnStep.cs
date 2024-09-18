@@ -2,28 +2,14 @@ public class TilePlacementTurnStep : ForkTurnStep
 {
     private TilePlacement tilePlacement;
 
-    protected override void Awake()
+    protected override void Start()
     {
         tilePlacement = Game.Instance.GetSystem<TilePlacement>();
-        tilePlacement.OnSuccessPlacement += OnTilePlacement;
-        tilePlacement.OnFailurePlacement += OnCancelTilePlacement;
+        tilePlacement.OnSuccessPlacement += Next;
+        tilePlacement.OnFailurePlacement += Previous;
     }
 
     public override void Begin()
-    {
-        tilePlacement.Start(null);
-    }
-
-    private void OnTilePlacement()
-    {
-        Next();
-        tilePlacement.Finish();
-    }
-
-    private void OnCancelTilePlacement()
-    {
-        Next();
-        tilePlacement.Finish();
-    }
+    { }   
 }
 

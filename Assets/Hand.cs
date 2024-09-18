@@ -1,5 +1,6 @@
 using Hexalinks.Tile;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static TileResources;
@@ -11,16 +12,23 @@ public class Hand : MonoBehaviour
         private readonly Button button;
         private TileResourceLocator tileResourceLocator;
 
+        public bool Empty => button.iconImage == Background.FromSprite(emptyIcon);
+
         public HandOption(Button button)
         {
             this.button = button;
         }
 
-        public void AssignTile(TileResourceLocator locator)
+        public void Set(TileResourceLocator locator)
         {
             tileResourceLocator = locator;
             button.iconImage = Background.FromSprite(locator.sprite);
-           
+        }
+
+        public void Reset()
+        {
+            if(Empty)
+                button.iconImage = Background.FromSprite(tileResourceLocator.sprite);
         }
 
         private Tile LoadTile()
@@ -56,10 +64,7 @@ public class Hand : MonoBehaviour
     [SerializeField]
     private TileResources resources;
 
-    private bool active = false;
     public static Sprite emptyIcon;
-
-    public event Action<Tile> OnTileSelected;
 
     private void Start()
     {
@@ -72,7 +77,7 @@ public class Hand : MonoBehaviour
         playerOptions = playerHandUI.rootVisualElement.Query<Button>().ForEach(b =>
         {
             HandOption handOption = new(b);
-            handOption.AssignTile(resources[deck.Draw()]);
+            handOption.Set(resources[deck.Draw()]);
             return handOption;
         }).ToArray();
     }
@@ -81,6 +86,7 @@ public class Hand : MonoBehaviour
     {
         foreach (HandOption option in playerOptions)
         {
+            option.Reset();
             option.ActivateSelection(onTileSelection);
         }
     }
@@ -91,5 +97,11 @@ public class Hand : MonoBehaviour
         {
             option.DeactivateSelection();
         }
+    }
+
+    public void Draw()
+    {
+        HandOption handOption = playerOptions.First(o => o.Empty);
+        handOption.Set(resources[deck.Draw()]);
     }
 }

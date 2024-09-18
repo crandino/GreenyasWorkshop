@@ -44,8 +44,8 @@ public class TilePosition : TileModifier
 
     public void RestrictMovement()
     {
-        Finish();
         AttachToGrid();
+        Finish();
     }
 
     protected override bool OnUpdate()

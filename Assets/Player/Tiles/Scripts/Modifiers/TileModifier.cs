@@ -15,6 +15,8 @@ public abstract class TileModifier
 
     protected void Start()
     {
+        Debug.Log("Start " + Current.GetHashCode());
+
         OnStart();
         coroutine = Current.StartCoroutine(Update());
     }
@@ -29,6 +31,7 @@ public abstract class TileModifier
 
     protected void Finish()
     {
+        Debug.Log("Finish " + Current.GetHashCode());
         OnFinish();
         if(coroutine != null) 
             Current.StopCoroutine(coroutine);

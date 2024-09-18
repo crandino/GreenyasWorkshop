@@ -16,6 +16,8 @@ public class TileSelectionTurnStep : TurnStep
         tile.Initialize();
         tile.PickUp();
 
+        Game.Instance.GetSystem<TilePlacement>().Start(tile);
+
         Next();
     }
 

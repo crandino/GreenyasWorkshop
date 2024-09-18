@@ -26,13 +26,14 @@ namespace Hexalinks.Tile
             SplitLongCurve
         }
 
-        private void Start()
-        {
-            Initialize();
-        }
+        //private void Start()
+        //{
+        //    Initialize();
+        //}
 
         public void Initialize()
         {
+            Debug.Log("Init");
             manipulator.Initialize(this);
         }
 

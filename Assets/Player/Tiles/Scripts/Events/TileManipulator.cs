@@ -13,14 +13,10 @@ namespace Hexalinks.Tile
         private TileRotation rotation;
         private TilePosition position;
 
-        private InputManager input = null;
-
         public CubeCoord Coord => position.Coord;
 
         public void Initialize(Tile tile)
         {
-            input = Game.Instance.GetSystem<InputManager>();
-
             rotation = new TileRotation(tile, 0.3f);
             position = new TilePosition(tile);
         }
@@ -29,9 +25,7 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = false;
 
-            input.OnAxis.OnPositiveDelta += rotation.RotateClockwise;
-            input.OnAxis.OnNegativeDelta += rotation.RotateCounterClockwise;
-
+            rotation.AllowRotation();
             position.AllowMovement();
         }
 
@@ -39,9 +33,7 @@ namespace Hexalinks.Tile
         {
             trigger.enabled = true;
 
-            input.OnAxis.OnPositiveDelta -= rotation.RotateClockwise;
-            input.OnAxis.OnNegativeDelta -= rotation.RotateCounterClockwise;
-
+            rotation.RestrictRotation();
             position.RestrictMovement();
         }
 

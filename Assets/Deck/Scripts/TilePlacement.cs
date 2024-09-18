@@ -1,6 +1,7 @@
 using Greenyas.Input;
 using Hexalinks.Tile;
 using System;
+using UnityEngine;
 
 public class TilePlacement : Game.SubSystem
 {
@@ -13,7 +14,6 @@ public class TilePlacement : Game.SubSystem
     protected override bool TryInitSystem()
     {
         input = Game.Instance.GetSystem<InputManager>();
-        //input.OnSelect.OnButtonPressed += PickUpTile;
         return true;
     }
 
@@ -33,14 +33,16 @@ public class TilePlacement : Game.SubSystem
             OnSuccessPlacement();
 
             currentSelectedTile.Release();
-            currentSelectedTile = null;
+            Finish();
         }
     }
 
     private void CancelTile()
     {
+        GameObject.Destroy(currentSelectedTile.gameObject);
+
         OnFailurePlacement();
-        currentSelectedTile = null;
+        Finish();
     }
 
     public void Start(Tile tile)
@@ -51,11 +53,11 @@ public class TilePlacement : Game.SubSystem
         input.TilePlacementCancellation.OnButtonPressed += CancelTile;
     }  
 
-    public void Finish()
+    private void Finish()
     {
+        currentSelectedTile = null;
+
         input.TilePlacement.OnButtonPressed -= TryReleaseTile;
         input.TilePlacementCancellation.OnButtonPressed -= CancelTile;
-
-        currentSelectedTile = null;
     }
 }

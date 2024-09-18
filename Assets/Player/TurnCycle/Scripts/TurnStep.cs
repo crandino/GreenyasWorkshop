@@ -11,11 +11,9 @@ public abstract class TurnStep : MonoBehaviour
         nextStep.Begin();
     }
 
-    protected virtual void Awake() { }
+    protected virtual void Start() { }
     protected virtual void End() { }
-
     public abstract void Begin();
-
 }
 
 public abstract class ForkTurnStep : TurnStep
@@ -29,3 +27,5 @@ public abstract class ForkTurnStep : TurnStep
         previousStep.Begin();
     }
 }
+
+

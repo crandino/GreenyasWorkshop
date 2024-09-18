@@ -1,4 +1,5 @@
 using Greenyas.Hexagon;
+using Greenyas.Input;
 using Hexalinks.Tile;
 using UnityEngine;
 
@@ -13,12 +14,32 @@ public class TileRotation : TileModifier
 
     private bool InProgress => progress < 1f;
 
+    private static InputManager input;
+
     public TileRotation(Tile tile, float rotationTime = 0.0f) : base(tile)
     { 
         inverseTotalTime = 1f / rotationTime;
+        input = Game.Instance.GetSystem<InputManager>();
     }
 
-    public void RotateClockwise()
+    public void AllowRotation()
+    {
+        input.OnAxis.OnPositiveDelta += RotateClockwise;
+        input.OnAxis.OnNegativeDelta += RotateCounterClockwise;
+    }
+
+    public void RestrictRotation()
+    {
+        input.OnAxis.OnPositiveDelta -= RotateClockwise;
+        input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
+    }
+
+#if UNITY_EDITOR
+    public
+#else
+    private
+#endif      
+    void RotateClockwise()
     {
         if (InProgress) return;
 
@@ -26,7 +47,12 @@ public class TileRotation : TileModifier
         rotationAngle = +HexTools.ROTATION_ANGLE;
     }
 
-    public void RotateCounterClockwise()
+#if UNITY_EDITOR
+    public
+#else
+    private
+#endif 
+    void RotateCounterClockwise()
     {
         if (InProgress) return;
 
