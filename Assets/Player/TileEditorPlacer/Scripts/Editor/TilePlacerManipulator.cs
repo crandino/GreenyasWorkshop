@@ -1,5 +1,4 @@
 using Hexalinks.Tile;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,8 +9,8 @@ public class TilePlacerManipulator : Manipulator
 
     private Tile instantiatedTile = null;
 
-    private TilePosition tilePos;
-    private TileRotation tileRot;
+    private EditorTilePosition tilePos;
+    private EditorTileRotation tileRot;
 
     private readonly static Color manipulationActiveColor = new(1f, 0.984f, 0f, 0.5f);
     private readonly static Color manipulationInactiveColor = new(.5f, .5f, .5f, 1f);
@@ -37,8 +36,8 @@ public class TilePlacerManipulator : Manipulator
             return;
 
         instantiatedTile = Object.Instantiate(((TilePrefabOption)target).TilePrefab, Vector3.zero, Quaternion.identity);
-        tilePos = new TilePosition(instantiatedTile, TilePosition.PositionMode.HOVER);
-        tileRot = new TileRotation(instantiatedTile);
+        tilePos = new EditorTilePosition(instantiatedTile.Coordinates, TilePosition.PositionMode.HOVER);
+        tileRot = new EditorTileRotation(instantiatedTile.Coordinates);
 
         target.RegisterCallback<KeyDownEvent>(ManipulateTile);
         target.style.backgroundColor = manipulationActiveColor;
@@ -55,7 +54,7 @@ public class TilePlacerManipulator : Manipulator
     private void AcceptPlacement()
     {
         tilePos.AttachToGrid();
-        GameObject.FindAnyObjectByType<HexMap>().AddTile(tilePos.Coord, instantiatedTile);
+        GameObject.FindAnyObjectByType<HexMap>().AddTile(instantiatedTile);
 
         FinishPlacement();
     }

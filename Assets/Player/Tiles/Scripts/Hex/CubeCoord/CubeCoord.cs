@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
@@ -9,14 +8,14 @@ namespace Greenyas.Hexagon
     //https://www.redblobgames.com/grids/hexagons/
 
     [System.Serializable]
-    public class CubeCoord
+    public struct CubeCoord
     {
         [SerializeField]
         private int r, q, s;
 
-        public int Q => q;
-        public int R => r;
-        public int S => s;
+        public readonly int Q => q;
+        public readonly int R => r;
+        public readonly int S => s;
 
         public readonly static CubeCoord Origin = new(0, 0, 0);
 

@@ -4,21 +4,19 @@ using UnityEngine;
 
 public abstract class TileModifier
 {
-    public Tile Current { get; set; }
+    public TileCoordinates Coordinates { private set; get; }
 
     private Coroutine coroutine = null;
 
-    protected TileModifier(Tile currentTile)
+    protected TileModifier(TileCoordinates currentTile)
     {
-        Current = currentTile;
+        Coordinates = currentTile;
     }
 
     protected void Start()
     {
-        Debug.Log("Start " + Current.GetHashCode());
-
         OnStart();
-        coroutine = Current.StartCoroutine(Update());
+        coroutine = CoroutineManager.Start(Update());
     }
 
     private IEnumerator Update()
@@ -31,10 +29,9 @@ public abstract class TileModifier
 
     protected void Finish()
     {
-        Debug.Log("Finish " + Current.GetHashCode());
         OnFinish();
         if(coroutine != null) 
-            Current.StopCoroutine(coroutine);
+            CoroutineManager.Stop(coroutine);
     }
 
     protected virtual void OnStart() { }

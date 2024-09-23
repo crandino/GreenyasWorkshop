@@ -11,7 +11,10 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileConnectivity connectivity;
 
-        public CubeCoord Coord => manipulator.Coord;
+        [SerializeField]
+        private TileCoordinates coordinates;
+
+        public CubeCoord Coord => coordinates.Coord;       
 
         public enum Type
         {
@@ -24,17 +27,11 @@ namespace Hexalinks.Tile
             FlowTripleShortCurve,
 
             SplitLongCurve
-        }
-
-        //private void Start()
-        //{
-        //    Initialize();
-        //}
+        }        
 
         public void Initialize()
         {
-            Debug.Log("Init");
-            manipulator.Initialize(this);
+            manipulator.Initialize(coordinates);
         }
 
         public void PickUp()
@@ -48,9 +45,8 @@ namespace Hexalinks.Tile
         public void Release()
         {
             manipulator.Release();
-            Connect();
 
-            HexMap.Instance.AddTile(Coord, this);
+            HexMap.Instance.AddTile(this);
             TileIterator.LookForClosedPaths();
         }
 
@@ -65,6 +61,12 @@ namespace Hexalinks.Tile
         }
 
 #if UNITY_EDITOR
+        public TileCoordinates Coordinates => coordinates;       
+
+        private void OnValidate()
+        {
+            coordinates = new TileCoordinates(transform);
+        }   
 
         private void OnDrawGizmos()
         {

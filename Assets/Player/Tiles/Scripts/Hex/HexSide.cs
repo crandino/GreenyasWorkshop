@@ -42,15 +42,15 @@ namespace Greenyas.Hexagon
 
         public Side GetWorldSide(TileSegment segment) => Convertor.GetWorldSide(localSide, segment.transform);
 
-        public void RotateClockwise()
-        {
-            localSide = GetWorldSideAfterRotStep(localSide, 1);
-        }
+        //public void RotateClockwise()
+        //{
+        //    localSide = GetWorldSideAfterRotStep(localSide, 1);
+        //}
 
-        public void RotateCounterClockwise()
-        {
-            localSide = GetWorldSideAfterRotStep(localSide, -1);
-        }
+        //public void RotateCounterClockwise()
+        //{
+        //    localSide = GetWorldSideAfterRotStep(localSide, -1);
+        //}
 
         public static Side GetWorldSideAfterRotStep(Side localSide, int rotationSteps = 0)
         {

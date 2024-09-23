@@ -1,6 +1,5 @@
 using Greenyas.Hexagon;
 using Greenyas.Input;
-using Hexalinks.Tile;
 using UnityEngine;
 
 public class TileRotation : TileModifier
@@ -10,16 +9,24 @@ public class TileRotation : TileModifier
     private float rotationAngle = 0f;
 
     private float progress = 1f;
-    private readonly float inverseTotalTime = 1f;
+    private float inverseTotalTime = 1f;
 
     private bool InProgress => progress < 1f;
 
     private static InputManager input;
 
-    public TileRotation(Tile tile, float rotationTime = 0.0f) : base(tile)
-    { 
-        inverseTotalTime = 1f / rotationTime;
+    protected TileRotation(TileCoordinates coordinates) : base(coordinates)
+    { }
+
+    public TileRotation(TileCoordinates coordinates, float rotationTime) : this(coordinates)
+    {
+        SetTotalTime(rotationTime);
         input = Game.Instance.GetSystem<InputManager>();
+    }
+
+    protected void SetTotalTime(float rotationTotalTime)
+    {
+        inverseTotalTime = 1f / rotationTotalTime;
     }
 
     public void AllowRotation()
@@ -33,13 +40,8 @@ public class TileRotation : TileModifier
         input.OnAxis.OnPositiveDelta -= RotateClockwise;
         input.OnAxis.OnNegativeDelta -= RotateCounterClockwise;
     }
-
-#if UNITY_EDITOR
-    public
-#else
-    private
-#endif      
-    void RotateClockwise()
+  
+    private void RotateClockwise()
     {
         if (InProgress) return;
 
@@ -47,12 +49,7 @@ public class TileRotation : TileModifier
         rotationAngle = +HexTools.ROTATION_ANGLE;
     }
 
-#if UNITY_EDITOR
-    public
-#else
-    private
-#endif 
-    void RotateCounterClockwise()
+    private void RotateCounterClockwise()
     {
         if (InProgress) return;
 
@@ -63,13 +60,13 @@ public class TileRotation : TileModifier
     protected override void OnStart()
     {
         progress = 0f;
-        initialRotationAngle = Current.transform.rotation.eulerAngles.y;
+        initialRotationAngle = Coordinates.RotationAngle;
     }
 
     protected override void OnFinish()
     {
         float finalAngle = initialRotationAngle + rotationAngle;
-        Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, finalAngle, Current.transform.localEulerAngles.z);
+        Coordinates.RotationAngle = finalAngle;
     }
 
     protected override bool OnUpdate()
@@ -77,7 +74,7 @@ public class TileRotation : TileModifier
         progress = progress + Time.deltaTime * inverseTotalTime;
 
         float lerpAngle = Mathf.LerpAngle(initialRotationAngle, initialRotationAngle + rotationAngle, progress);
-        Current.transform.localEulerAngles = new Vector3(Current.transform.localEulerAngles.x, lerpAngle, Current.transform.localEulerAngles.z);
+        Coordinates.RotationAngle = lerpAngle;
 
         return InProgress;
     }

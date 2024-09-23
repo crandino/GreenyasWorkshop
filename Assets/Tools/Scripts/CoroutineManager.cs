@@ -5,14 +5,33 @@ public class CoroutineManager : MonoBehaviour
 {
     private static CoroutineManager instance = null;
 
-    public static void Start(IEnumerator coroutine)
+    private static CoroutineManager Instance
     {
-        TryInitialize();
-        instance.StartCoroutine(coroutine);
+        get
+        {
+            TryInitialize();
+            return instance;
+        }
+        set
+        {
+            instance = value;
+        }
+    }
+
+    public static Coroutine Start(IEnumerator coroutine)
+    {
+        return Instance.StartCoroutine(coroutine);
+    }
+
+    public static void Stop(Coroutine coroutine)
+    {
+        Instance.StopCoroutine(coroutine);
     }
 
     private void OnDestroy()
     {
+        if (instance != null)
+            Destroy(instance.gameObject);
         instance = null;
     }
 

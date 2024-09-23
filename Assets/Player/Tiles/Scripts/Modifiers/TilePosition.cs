@@ -8,8 +8,6 @@ public class TilePosition : TileModifier
     private readonly static Vector3 verticalGridOffset = Vector3.zero;
     private readonly static Vector3 verticalHoverGridOffset = Vector3.up * 0.25f;
 
-    public CubeCoord Coord { get; private set; }
-
     public enum PositionMode
     {
         GRID,
@@ -28,12 +26,11 @@ public class TilePosition : TileModifier
                     verticalOffset = verticalHoverGridOffset; break;
             }
         }
-    } 
+    }
 
-    public TilePosition(Tile tile, PositionMode positionMode = PositionMode.GRID) : base(tile)
+    public TilePosition(TileCoordinates coordinates, PositionMode positionMode = PositionMode.GRID) : base(coordinates)
     {
-        Mode = positionMode;
-        SetPos(tile.transform.position);
+        SetPos(coordinates.Position);
     }
 
     public void AllowMovement()
@@ -59,37 +56,12 @@ public class TilePosition : TileModifier
     public void AttachToGrid()
     {
         Mode = PositionMode.GRID;
-        SetPos(HexTools.GetGridCartesianWorldPos(Coord));
+        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
     }
 
     public void SetPos(Vector3 position)
     {
         Vector3 finalPos = position + verticalOffset;
-        Current.transform.position = finalPos;
-        Coord = CubeCoord.GetNearestCubeCoord(finalPos);
+        Coordinates.Position = finalPos;
     }
-
-#if UNITY_EDITOR
-
-    public void MoveUp()
-    {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.North)));
-    }
-
-    public void MoveDown()
-    {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.South)));
-    }
-
-    public void MoveRight()
-    {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast)));
-    }
-
-    public void MoveLeft()
-    {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest)));
-    }
-
-#endif
 }

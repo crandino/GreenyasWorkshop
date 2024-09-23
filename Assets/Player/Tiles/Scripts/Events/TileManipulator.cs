@@ -1,5 +1,4 @@
 using Greenyas.Hexagon;
-using Greenyas.Input;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,12 +12,10 @@ namespace Hexalinks.Tile
         private TileRotation rotation;
         private TilePosition position;
 
-        public CubeCoord Coord => position.Coord;
-
-        public void Initialize(Tile tile)
+        public void Initialize(TileCoordinates coordinates)
         {
-            rotation = new TileRotation(tile, 0.3f);
-            position = new TilePosition(tile);
+            rotation = new TileRotation(coordinates, 0.3f);
+            position = new TilePosition(coordinates);
         }
 
         public void PickUp()

@@ -20,9 +20,14 @@ namespace Hexalinks.Tile
         [SerializeField]
         private SerializableDictionary<CubeCoord, Tile> gridData = new(new CubeCoord.CoordinateComparer());
 
-        public bool AddTile(CubeCoord coord, Tile tile)
+        public bool AddTile(Tile tile)
         {
-            return gridData.TryAdd(coord, tile);
+            if (gridData.TryAdd(tile.Coord, tile))
+            {
+                tile.Connect();
+                return true;
+            }
+            return false;
         }
 
         public void RemoveTile(CubeCoord coord)
