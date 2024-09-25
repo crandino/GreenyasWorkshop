@@ -48,17 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gates:
   - hexSide:
-      localSide: 3
-    segment: {fileID: 2192202749216004497}
-    connections: []
-  - hexSide:
       localSide: 0
     segment: {fileID: 2192202749216004497}
-    connections: []
-  meshRenderer: {fileID: 6315761402648141}
-  references:
-    version: 2
-    RefIds: []
+  - hexSide:
+      localSide: 3
+    segment: {fileID: 2192202749216004497}
 --- !u!23 &6315761402648141
 MeshRenderer:
   m_ObjectHideFlags: 0

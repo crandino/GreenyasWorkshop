@@ -22,12 +22,7 @@ namespace Hexalinks.Tile
 
         public bool AddTile(Tile tile)
         {
-            if (gridData.TryAdd(tile.Coord, tile))
-            {
-                tile.Connect();
-                return true;
-            }
-            return false;
+            return gridData.TryAdd(tile.Coord, tile);
         }
 
         public void RemoveTile(CubeCoord coord)
@@ -38,6 +33,14 @@ namespace Hexalinks.Tile
         public bool TryGetTile(CubeCoord coord, out Tile tileData)
         {
             return gridData.TryGetValue(coord, out tileData);
+        }
+
+        public void ConnectAll()
+        {
+            foreach(var tile in gridData.Values)
+            {
+                tile.Connect();
+            }
         }
 
         [ContextMenu("Clear Grid")]

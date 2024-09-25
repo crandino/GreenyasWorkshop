@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using Hexagon.Tile.Debug;
@@ -15,20 +17,37 @@ namespace Hexalinks.Tile
     public class Gate
     {
         [SerializeField]
-        private HexSide hexSide;
+        private HexSide hexSide = new();
         [SerializeField]
         private TileSegment segment;
 
+        [SerializeField]
+        private Gate inwardGate = null;
+
+        //[SerializeReference]
+        private readonly List<Gate> outwardGates = new List<Gate>();
+
         public Side WorldSide => hexSide.GetWorldSide(segment);
 
-        public Gate(TileSegment seg)
+        public void TryConnect(Gate againstGate)
         {
-            segment = seg;
-            connections = new List<Gate>();
+            // There's any previous connection between those gates
+            Assert.IsTrue(!outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0);
+
+            if (IsFacingOtherGate(againstGate))
+            {
+                outwardGates.Add(againstGate);
+                againstGate.outwardGates.Add(this);
+            };
         }
 
-        [SerializeReference]
-        private List<Gate> connections;
+        public void Disconnect()
+        {
+            foreach (var conn in outwardGates)
+                conn.outwardGates.Clear();
+
+            outwardGates.Clear();
+        }
 
         private bool IsFacingOtherGate(Gate gateTo)
         {
@@ -36,24 +55,50 @@ namespace Hexalinks.Tile
             return WorldSide.IsOpposite(gateTo.WorldSide);
         }
 
-        public void TryConnect(Gate againstGate)
+        public readonly struct ExposedGate
         {
-            if (IsFacingOtherGate(againstGate))
+            private readonly Gate gate;
+
+            public ExposedGate[] OutwardGates => gate.outwardGates.Select(g => new ExposedGate(g)).ToArray();
+
+            public ExposedGate(Gate gate)
             {
-                connections.Add(againstGate);
-                againstGate.connections.Add(this);
-            };
-        }
+                this.gate = gate;
+            }
 
-        public void Disconnect()
-        {
-            foreach(var conn in connections)
-                conn.connections.Clear();
+            public ExposedGate[] GoThrough()
+            {
+                Assert.IsTrue(gate.inwardGate != null);
+                return gate.inwardGate.outwardGates.Select(g => new ExposedGate(g)).ToArray();
+            }
 
-            connections.Clear();
+            public bool IsFiller => gate.inwardGate == null;
         }
 
 #if UNITY_EDITOR
+
+        public static Gate[] CreateUnlinkedGate(TileSegment segment)
+        {
+            return new Gate[]
+            {
+                new()
+                {
+                    segment = segment,
+                    inwardGate = null
+                }
+            };
+        }
+
+        public static Gate[] CreateLinkedGates(TileSegment segment)
+        {
+            Gate[] gates = new Gate[2];
+            gates[0] = new Gate() { segment = segment };
+            gates[1] = new Gate() { segment = segment };
+            gates[0].inwardGate = gates[1];
+            gates[1].inwardGate = gates[0];
+            return gates;
+        }
+
         public Vector3 WorldDebugPos
         {
             get
@@ -64,8 +109,12 @@ namespace Hexalinks.Tile
             }
         }
 
-        public void OnDrawGizmos()
+        public void DrawDebugInfo()
         {
+            // Safeguard for lazy initialization
+            if (segment == null)
+                return;
+
             // Node position for debug purposes
             if (TileDebugOptions.Instance.showNodes)
             {
@@ -82,8 +131,8 @@ namespace Hexalinks.Tile
 
                 GUIStyle textStyle = new GUIStyle();
                 textStyle.fontSize = 18;
-                Handles.color = textStyle.normal.textColor = connections.Count != 0 ? Color.green : Color.red;
-                Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{connections.Count}", textStyle);
+                Handles.color = textStyle.normal.textColor = outwardGates.Count != 0 ? Color.green : Color.red;
+                Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{outwardGates.Count}", textStyle);
 
                 Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, EventType.Repaint);
             }

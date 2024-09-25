@@ -8,7 +8,7 @@ public class TileSegmentEditor : Editor
 {
     public struct SegmentProperties
     {
-        public SerializedProperty meshRenderer;
+        //public SerializedProperty meshRenderer;
         
         public GateProperties[] gates;
 
@@ -26,7 +26,7 @@ public class TileSegmentEditor : Editor
 
         public SegmentProperties(SerializedObject @object)
         {
-            meshRenderer = @object.FindProperty("meshRenderer");
+            //meshRenderer = @object.FindProperty("meshRenderer");
 
             SerializedProperty gatesArray = @object.FindProperty("gates");
             gates = new GateProperties[gatesArray.arraySize];
@@ -50,13 +50,13 @@ public class TileSegmentEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.ObjectField(properties.meshRenderer);
+        //EditorGUILayout.ObjectField(properties.meshRenderer);
 
         ++EditorGUI.indentLevel;
         for (int i = 0; i < properties.gates.Length; i++)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Node {i + 1}");
+            EditorGUILayout.LabelField($"Gate {i + 1}");
 
             ++EditorGUI.indentLevel;
             ShowHexSideCarousel(ref properties.gates[i]);

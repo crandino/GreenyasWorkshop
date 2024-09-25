@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content:
   - tileType: 0
-    amount: 4
+    amount: 3
   - tileType: 1
     amount: 0
   - tileType: 2
     amount: 0
+  - tileType: 8
+    amount: 1

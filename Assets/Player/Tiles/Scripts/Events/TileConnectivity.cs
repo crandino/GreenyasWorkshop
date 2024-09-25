@@ -1,5 +1,6 @@
 using Greenyas.Hexagon;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Hexalinks.Tile
@@ -8,6 +9,8 @@ namespace Hexalinks.Tile
     {
         [SerializeField]
         private TileSegment[] segments = null;
+        
+        public Gate.ExposedGate[] Gates => segments.SelectMany(x => x.Gates).ToArray();
 
         public struct TileQueryResult
         {
@@ -49,13 +52,22 @@ namespace Hexalinks.Tile
             segments = GetComponentsInChildren<TileSegment>();
         }
 
-        public void DrawDebugInfo()
+        public void InitializeSegments(int numOfGates)
         {
-            //TODO
+            GetSegments();
+            foreach(TileSegment s in segments)
+            {
+                s.InitializeGates(numOfGates);
+            }
         }
 
+        public void DrawDebugInfo()
+        {
+            foreach (TileSegment s in segments)
+            {
+                s.DrawDebugInfo();
+            }
+        }
 #endif
-
-
     }
 }

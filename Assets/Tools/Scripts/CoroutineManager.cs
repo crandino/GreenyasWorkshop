@@ -38,6 +38,10 @@ public class CoroutineManager : MonoBehaviour
     private static void TryInitialize()
     {
         if (instance == null)
+        {
             instance = new GameObject("CoroutineManager").AddComponent<CoroutineManager>();
+            instance.gameObject.isStatic = true;
+            instance.hideFlags = HideFlags.NotEditable;
+        }
     }    
 }

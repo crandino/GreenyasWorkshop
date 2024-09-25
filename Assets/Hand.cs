@@ -101,6 +101,9 @@ public class Hand : MonoBehaviour
 
     public void Draw()
     {
+        if (deck.Empty)
+            return;
+        
         HandOption handOption = playerOptions.First(o => o.Empty);
         handOption.Set(resources[deck.Draw()]);
     }

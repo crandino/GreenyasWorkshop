@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emptyIcon: {fileID: 21300000, guid: add782cb169a75a47bc01d4bd7900f92, type: 3}
   tileTypeResources:
-    keys: 00000000
+    keys: 0000000008000000
     values:
     - tile: {fileID: 4716942896468114928, guid: 56c650825f5241141ae2388fe812f4d2, type: 3}
       sprite: {fileID: 21300000, guid: 24b9a110d38827246ae1c833f54fce56, type: 3}
+    - tile: {fileID: 4932948370042721311, guid: e08227be1b2e7f34c9e5c7e99bee415a, type: 3}
+      sprite: {fileID: 21300000, guid: 8bd512dfaf12e4986a89ef2ba4dcf3f4, type: 3}
     invalidKeyValuePairs: []

@@ -7,16 +7,17 @@ using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
 using static Hexalinks.Tile.TileConnectivity;
+using UnityEngine.Assertions;
+using System.Linq;
 
 namespace Hexalinks.Tile
 {
     public class TileSegment : MonoBehaviour
     {
         [SerializeField]
-        protected Gate[] gates = new Gate[2];
-
-        [SerializeField]
-        private MeshRenderer meshRenderer;
+        private Gate[] gates;  
+        
+        public Gate.ExposedGate[] Gates => gates.Select(g => new Gate.ExposedGate(g)).ToArray();
 
         public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
         {
@@ -35,7 +36,7 @@ namespace Hexalinks.Tile
             }
 
             return candidates;
-        }  
+        }
 
         public void TryConnection(Gate againstGate)
         {
@@ -63,32 +64,31 @@ namespace Hexalinks.Tile
             //meshRenderer.material.SetVector(pathEmissionID, values);
         }
 
-       
+
 
 #if UNITY_EDITOR
-        private void OnDrawGizmos()
+        public void DrawDebugInfo()
         {
-            // Safeguard to not render anything before initialization
-            if (meshRenderer == null)
-                return;
-
-            if (TileDebugOptions.Instance.showSegments)
+            if (TileDebugOptions.Instance.showSegments && gates.Length == 2)
             {
                 Handles.color = CustomColors.darkOrange;
                 Handles.DrawLine(gates[0].WorldDebugPos, gates[1].WorldDebugPos, 2f);
             }
 
             for (int i = 0; i < gates.Length; i++)
-                gates[i].OnDrawGizmos();
+                gates[i].DrawDebugInfo();
         }
 
-        private void Reset()
+        public void InitializeGates(int numOfGates)
         {
-            meshRenderer = GetComponent<MeshRenderer>();
+            Assert.IsTrue(numOfGates >= 1 && numOfGates <= 2);
 
-            for (int i = 0; i < gates.Length; ++i)
+            switch (numOfGates)
             {
-                gates[i] = new Gate(this);
+                case (1): gates = Gate.CreateUnlinkedGate(this); break;
+                case (2): gates = Gate.CreateLinkedGates(this); break;
+                default:
+                    break;
             }
         }
 #endif

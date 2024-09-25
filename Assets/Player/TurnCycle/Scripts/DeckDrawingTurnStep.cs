@@ -10,6 +10,7 @@ public class DeckDrawingTurnStep : TurnStep
     public override void Begin()
     {
         // TODO Drawing from empty deck doesn't crash
+
         hand.Draw();
         Next();
     }

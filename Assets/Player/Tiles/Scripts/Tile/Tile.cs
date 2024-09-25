@@ -9,10 +9,10 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileManipulator manipulator;
         [SerializeField]
-        private TileConnectivity connectivity;
+        protected TileConnectivity connectivity;
 
         [SerializeField]
-        private TileCoordinates coordinates;
+        protected TileCoordinates coordinates;
 
         public CubeCoord Coord => coordinates.Coord;       
 
@@ -26,7 +26,9 @@ namespace Hexalinks.Tile
             FlowDoubleLongCurve,
             FlowTripleShortCurve,
 
-            SplitLongCurve
+            SplitLongCurve,
+
+            FillerSimple
         }        
 
         public void Initialize()
@@ -36,10 +38,10 @@ namespace Hexalinks.Tile
 
         public void PickUp()
         {
-            connectivity.Disconnection();
+            //connectivity.Disconnection();
             manipulator.PickUp();
 
-            HexMap.Instance.RemoveTile(Coord);
+            //HexMap.Instance.RemoveTile(Coord);
         }
 
         public void Release()
@@ -47,7 +49,9 @@ namespace Hexalinks.Tile
             manipulator.Release();
 
             HexMap.Instance.AddTile(this);
-            TileIterator.LookForClosedPaths();
+
+            if(this as TileFiller)
+                TileIterator.ExplorePathsFrom((TileFiller)this);
         }
 
         public void Connect()
@@ -55,9 +59,7 @@ namespace Hexalinks.Tile
             List<TileConnectivity.TileQueryResult> candidates = connectivity.GetNeighborCandidates(Coord);
 
             for (int i = 0; i < candidates.Count; ++i)
-            {
                 candidates[i].tile.connectivity.TryConnection(candidates[i].gate);
-            }
         }
 
 #if UNITY_EDITOR
@@ -65,8 +67,22 @@ namespace Hexalinks.Tile
 
         private void OnValidate()
         {
+            manipulator = GetComponent<TileManipulator>();
+            connectivity = GetComponent<TileConnectivity>();
+
             coordinates = new TileCoordinates(transform);
-        }   
+        }
+
+        [ContextMenu("Setup")]
+        public virtual void Setup()
+        {
+            InternalSetup();
+        }
+
+        protected virtual void InternalSetup()
+        {
+            connectivity.InitializeSegments(2);
+        }
 
         private void OnDrawGizmos()
         {

@@ -5,6 +5,8 @@ using UnityEngine.Assertions;
 using UnityEngine;
 using Hexalinks.Tile;
 
+using Gate = Hexalinks.Tile.Gate.ExposedGate;
+
 public static class TileIterator
 {
     private class StepTracker<T>
@@ -89,43 +91,46 @@ public static class TileIterator
         //PathStorage.ShowCompletedPaths();
     }
 
-    private static void ExplorePathsFrom(Tile tile)
+    public static void ExplorePathsFrom(TileFiller filler)
     {
-        //StepTracker<Gate> tracker = new StepTracker<Gate>();
-        //HashSet<Gate> visited = new HashSet<Gate>();
+        StepTracker<Gate> tracker = new StepTracker<Gate>();
+        HashSet<Gate> visited = new HashSet<Gate>();
 
-        //List<Gate> gates = tile.GetAllGates();
+        Gate[] gates = filler.Gates;
 
-        //for (int i = 0; i < gates.Count; i++)
-        //{
-        //    tracker.AddStep(gates[i].Node.Connections.ToArray());
+        for (int i = 0; i < gates.Length; i++)
+        {
+            tracker.AddStep(gates[i].OutwardGates);
 
-        //    while (tracker.MoveNext())
-        //    {
-        //        Gate currentGate = tracker.GetCurrentStep();
-        //        if (visited.Contains(currentGate))
-        //        {
-        //            Debug.Log($"Function exits with {currentGate.Segment} and {visited.Count}");
-        //            break;
-        //        }
+            while (tracker.MoveNext())
+            {
+                Gate currentGate = tracker.GetCurrentStep();
+                if (visited.Contains(currentGate))
+                {
+                    Debug.Log($"Function exits with {visited.Count} tiles visited");
+                    break;
+                }
 
-        //        visited.Add(currentGate);
-        //        if (currentGate.Segment.IsStarter)
-        //        {
-        //            TileSegment[] path = tracker.GetEvaluatedSteps().
-        //                                 Select(g => g.Segment).
-        //                                 Append(gates[i].Segment).ToArray();
+                visited.Add(currentGate);
+                if (currentGate.IsFiller)
+                {
 
-        //            PathStorage.AddPath(path);
-        //        }
-        //        else
-        //        {
-        //            Gate[] nextGates = currentGate.GoThrough().Connections.ToArray();
-        //            tracker.AddStep(nextGates);
-        //        }
-        //    }
-        //}
+                    Debug.Log($"Function exits with {visited.Count} tiles visited");
 
-        //Gate.Pool.Release(gates);
+                    //TileSegment[] path = tracker.GetEvaluatedSteps().
+                    //                     Select(g => g.Segment).
+                    //                     Append(gates[i].Segment).ToArray();
+
+                    //PathStorage.AddPath(path);
+                }
+                else
+                {
+                    Gate[] nextGates = currentGate.GoThrough();
+                    tracker.AddStep(nextGates);
+                }
+            }
+        }
+
+        // Gate.Pool.Release(gates);
     }
 }
