@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 2192202749216004497}
+  - component: {fileID: 5964918104615931904}
+  - component: {fileID: 5254106543370647923}
+  - component: {fileID: 6038892171487363637}
   - component: {fileID: 6315761402648141}
   - component: {fileID: 3950301000532436366}
   m_Layer: 6
@@ -34,7 +36,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2192202749216004497
+--- !u!114 &5964918104615931904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,12 +49,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
-  - hexSide:
+  - segment: {fileID: 5964918104615931904}
+    hexSide:
       localSide: 0
-    segment: {fileID: 2192202749216004497}
-  - hexSide:
+    outwardGates: []
+  - segment: {fileID: 5964918104615931904}
+    hexSide:
       localSide: 3
-    segment: {fileID: 2192202749216004497}
+    outwardGates: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &5254106543370647923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceChange: 0
+  highligther: {fileID: 6038892171487363637}
+--- !u!114 &6038892171487363637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daf97e4aef458144af9e413bfff6586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderer: {fileID: 6315761402648141}
 --- !u!23 &6315761402648141
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -120,7 +154,7 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 2192202749216004497}
+      objectReference: {fileID: 5964918104615931904}
     - target: {fileID: 3175736382684188824, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

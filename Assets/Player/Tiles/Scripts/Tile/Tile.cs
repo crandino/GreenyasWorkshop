@@ -14,7 +14,8 @@ namespace Hexalinks.Tile
         [SerializeField]
         protected TileCoordinates coordinates;
 
-        public CubeCoord Coord => coordinates.Coord;       
+        public CubeCoord Coord => coordinates.Coord;
+        public Gate.ExposedGate[] Gates => connectivity.Gates;
 
         public enum Type
         {
@@ -49,9 +50,9 @@ namespace Hexalinks.Tile
             manipulator.Release();
 
             HexMap.Instance.AddTile(this);
+            Connect();
 
-            if(this as TileFiller)
-                TileIterator.ExplorePathsFrom((TileFiller)this);
+            TileIterator.ExplorePathsFrom(this);
         }
 
         public void Connect()
@@ -73,16 +74,16 @@ namespace Hexalinks.Tile
             coordinates = new TileCoordinates(transform);
         }
 
-        [ContextMenu("Setup")]
-        public virtual void Setup()
-        {
-            InternalSetup();
-        }
+        //[ContextMenu("Setup")]
+        //public virtual void Setup()
+        //{
+        //    InternalSetup();
+        //}
 
-        protected virtual void InternalSetup()
-        {
-            connectivity.InitializeSegments(2);
-        }
+        //protected virtual void InternalSetup()
+        //{
+        //    connectivity.InitializeSegments(2);
+        //}
 
         private void OnDrawGizmos()
         {

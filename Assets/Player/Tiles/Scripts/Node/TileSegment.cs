@@ -7,7 +7,6 @@ using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
 using static Hexalinks.Tile.TileConnectivity;
-using UnityEngine.Assertions;
 using System.Linq;
 
 namespace Hexalinks.Tile
@@ -15,9 +14,11 @@ namespace Hexalinks.Tile
     public class TileSegment : MonoBehaviour
     {
         [SerializeField]
-        private Gate[] gates;  
+        private Gate[] gates;
+
+        public bool IsLooped => gates[0].WorldSide == gates[1].WorldSide;
         
-        public Gate.ExposedGate[] Gates => gates.Select(g => new Gate.ExposedGate(g)).ToArray();
+        public Gate.ExposedGate[] Gates => IsLooped ? new []{ new Gate.ExposedGate(gates[0]) } : gates.Select(g => new Gate.ExposedGate(g)).ToArray();
 
         public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
         {
@@ -50,26 +51,18 @@ namespace Hexalinks.Tile
                 from.Disconnect();
         }
 
-        public void Highlight()
+        public Gate GoThrough(Gate enterGate)
         {
-            //Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
-            //values[emissionPathIndex] = 1f;
-            //meshRenderer.material.SetVector(pathEmissionID, values);
+            return gates.Where(g => g != enterGate).First();
         }
-
-        public void Unhighlight()
-        {
-            //Vector4 values = meshRenderer.material.GetVector(pathEmissionID);
-            //values[emissionPathIndex] = 0f;
-            //meshRenderer.material.SetVector(pathEmissionID, values);
-        }
-
-
 
 #if UNITY_EDITOR
+
+        public bool AreGatesInitialized => gates != null && gates.Length != 0;
+
         public void DrawDebugInfo()
         {
-            if (TileDebugOptions.Instance.showSegments && gates.Length == 2)
+            if (TileDebugOptions.Instance.showSegments && AreGatesInitialized)
             {
                 Handles.color = CustomColors.darkOrange;
                 Handles.DrawLine(gates[0].WorldDebugPos, gates[1].WorldDebugPos, 2f);
@@ -79,17 +72,20 @@ namespace Hexalinks.Tile
                 gates[i].DrawDebugInfo();
         }
 
-        public void InitializeGates(int numOfGates)
+        private void OnValidate()
         {
-            Assert.IsTrue(numOfGates >= 1 && numOfGates <= 2);
+            if (AreGatesInitialized)
+                return;
 
-            switch (numOfGates)
-            {
-                case (1): gates = Gate.CreateUnlinkedGate(this); break;
-                case (2): gates = Gate.CreateLinkedGates(this); break;
-                default:
-                    break;
-            }
+            InitializeGates();
+        }
+
+        [ContextMenu("Initialize gates")]
+        private void InitializeGates()
+        {
+            gates = new Gate[2];
+            gates[0] = new Gate(this);
+            gates[1] = new Gate(this);
         }
 #endif
     }

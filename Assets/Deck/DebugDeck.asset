@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content:
   - tileType: 0
-    amount: 3
+    amount: 2
   - tileType: 1
     amount: 0
   - tileType: 2

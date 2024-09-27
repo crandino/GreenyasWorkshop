@@ -1,10 +1,10 @@
 using Greenyas.Hexagon;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
-using System.Linq;
 
 
 #if UNITY_EDITOR
@@ -17,22 +17,25 @@ namespace Hexalinks.Tile
     public class Gate
     {
         [SerializeField]
-        private HexSide hexSide = new();
-        [SerializeField]
         private TileSegment segment;
-
         [SerializeField]
-        private Gate inwardGate = null;
+        private HexSide hexSide = new();
 
-        //[SerializeReference]
-        private readonly List<Gate> outwardGates = new List<Gate>();
+        [SerializeReference]
+        private List<Gate> outwardGates = new List<Gate>();
+
+        public Gate(TileSegment segment)
+        {
+            this.segment = segment;
+        }
 
         public Side WorldSide => hexSide.GetWorldSide(segment);
 
         public void TryConnect(Gate againstGate)
         {
             // There's any previous connection between those gates
-            Assert.IsTrue(!outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0);
+            if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
+                return;
 
             if (IsFacingOtherGate(againstGate))
             {
@@ -55,9 +58,17 @@ namespace Hexalinks.Tile
             return WorldSide.IsOpposite(gateTo.WorldSide);
         }
 
+        private Gate GoThrough()
+        {
+            return segment.GoThrough(this);
+        }
+
         public readonly struct ExposedGate
         {
-            private readonly Gate gate;
+            public readonly Gate gate;
+
+            public bool IsOutterConnected => gate.outwardGates.Count > 0;
+            public bool IsLooped => gate.segment.IsLooped;
 
             public ExposedGate[] OutwardGates => gate.outwardGates.Select(g => new ExposedGate(g)).ToArray();
 
@@ -66,38 +77,20 @@ namespace Hexalinks.Tile
                 this.gate = gate;
             }
 
-            public ExposedGate[] GoThrough()
+            public ExposedGate GoThrough()
             {
-                Assert.IsTrue(gate.inwardGate != null);
-                return gate.inwardGate.outwardGates.Select(g => new ExposedGate(g)).ToArray();
+                return new ExposedGate(gate.GoThrough());
+            } 
+            
+            public void Log()
+            {
+                Debug.Log($"Segment on tile {gate.segment.transform.parent.gameObject.name}"); 
             }
 
-            public bool IsFiller => gate.inwardGate == null;
+            public TileSegment Segment => gate.segment;
         }
 
 #if UNITY_EDITOR
-
-        public static Gate[] CreateUnlinkedGate(TileSegment segment)
-        {
-            return new Gate[]
-            {
-                new()
-                {
-                    segment = segment,
-                    inwardGate = null
-                }
-            };
-        }
-
-        public static Gate[] CreateLinkedGates(TileSegment segment)
-        {
-            Gate[] gates = new Gate[2];
-            gates[0] = new Gate() { segment = segment };
-            gates[1] = new Gate() { segment = segment };
-            gates[0].inwardGate = gates[1];
-            gates[1].inwardGate = gates[0];
-            return gates;
-        }
 
         public Vector3 WorldDebugPos
         {
@@ -111,9 +104,9 @@ namespace Hexalinks.Tile
 
         public void DrawDebugInfo()
         {
-            // Safeguard for lazy initialization
-            if (segment == null)
-                return;
+            //// Safeguard for lazy initialization
+            //if (segment == null)
+            //    return;
 
             // Node position for debug purposes
             if (TileDebugOptions.Instance.showNodes)
@@ -123,7 +116,7 @@ namespace Hexalinks.Tile
             }
 
             // Outward node conntections
-            if (TileDebugOptions.Instance.showConnections)
+            if (TileDebugOptions.Instance.showConnections && Application.isPlaying)
             {
                 Vector2 vec = CubeCoord.GetVectorToNeighborHexOn(WorldSide);
                 Vector3 toNextTile = new Vector3(vec.x, 0f, vec.y);

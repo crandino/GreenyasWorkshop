@@ -6,6 +6,7 @@ using UnityEngine;
 using Hexalinks.Tile;
 
 using Gate = Hexalinks.Tile.Gate.ExposedGate;
+using static Hexalinks.Tile.TileSegment;
 
 public static class TileIterator
 {
@@ -77,60 +78,75 @@ public static class TileIterator
         {
             IterationStep<T>[] steps = new IterationStep<T>[iteratedStack.Count];
             iteratedStack.CopyTo(steps, 0);
-            return steps.Select(s => (T)s.Current).ToArray();
+            return steps.Select(s => (T)s.Current).Reverse().ToArray();
         }
-    }
+    }   
 
-    public static void LookForClosedPaths()
+    public static void ExplorePathsFrom(Tile startingTile)
     {
-        //Tile[] starterTiles = HexMap.Instance.GetAllStarterTiles();
+        StepTracker<Gate> gateTracker = new StepTracker<Gate>();
+        PathStorage.Clear();
+        //HashSet<Gate> visited = new HashSet<Gate>();
 
-        //for (int i = 0; i < starterTiles.Length; i++)
-        //    ExplorePathsFrom(starterTiles[i]);
-        
-        //PathStorage.ShowCompletedPaths();
-    }
+        Gate[] initialGates = startingTile.Gates;
 
-    public static void ExplorePathsFrom(TileFiller filler)
-    {
-        StepTracker<Gate> tracker = new StepTracker<Gate>();
-        HashSet<Gate> visited = new HashSet<Gate>();
-
-        Gate[] gates = filler.Gates;
-
-        for (int i = 0; i < gates.Length; i++)
+        for (int i = 0; i < initialGates.Length; i++)
         {
-            tracker.AddStep(gates[i].OutwardGates);
+            //Gate initialGate = initialGates[i];
+            gateTracker.AddStep(initialGates);
 
-            while (tracker.MoveNext())
+            while (gateTracker.MoveNext())
             {
-                Gate currentGate = tracker.GetCurrentStep();
-                if (visited.Contains(currentGate))
+                Gate currentGate = gateTracker.GetCurrentStep();
+                gateTracker.AddStep(currentGate.GoThrough().OutwardGates);
+
+                if(!(currentGate.GoThrough().IsOutterConnected || currentGate.IsLooped))
                 {
-                    Debug.Log($"Function exits with {visited.Count} tiles visited");
-                    break;
+                    PathStorage.Path path = new(gateTracker.GetEvaluatedSteps().
+                                         Select(g => g.Segment)
+                                        .ToArray());
+
+                    //PathStorage.Add(path);
+
+                    path.Log();
+                    path.TriggerContamination();
                 }
 
-                visited.Add(currentGate);
-                if (currentGate.IsFiller)
-                {
+                //if (visited.Contains(currentGate))
+                //{
+                //    Debug.Log($"Function exits with {visited.Count} tiles visited");
+                //    break;
+                //}
 
-                    Debug.Log($"Function exits with {visited.Count} tiles visited");
+                //visited.Add(currentGate);
 
-                    //TileSegment[] path = tracker.GetEvaluatedSteps().
-                    //                     Select(g => g.Segment).
-                    //                     Append(gates[i].Segment).ToArray();
+                //Gate oppositeGate = currentGate.GoThrough();
 
-                    //PathStorage.AddPath(path);
-                }
-                else
-                {
-                    Gate[] nextGates = currentGate.GoThrough();
-                    tracker.AddStep(nextGates);
-                }
+                //if (currentGate.GoThrough().IsOutterConnected)
+                //{
+                //    gateTracker.AddStep(currentGate.GoThrough().OutwardGates);
+
+                //    //Debug.Log($"Function exits with {visited.Count} tiles visited");
+
+
+
+                //    //PathStorage.AddPath(path);
+                //}
+                //else
+                //{
+
+                //}
+
+
+                //PathStorage.Path.CreatePath(initialGate, currentGate);
             }
-        }
 
-        // Gate.Pool.Release(gates);
+            //TileSegment[] path = gateTracker.GetEvaluatedSteps().
+            //                             Select(g => g.Segment)
+            //                            .ToArray();
+
+            //foreach (var p in path)
+            //    Debug.Log(p.transform.parent.gameObject.name);
+        }
     }
 }
