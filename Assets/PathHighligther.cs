@@ -16,8 +16,6 @@ public class PathHighligther : MonoBehaviour
     {
         renderer.material.SetFloat(pathProgressID, 1.0f);
         renderer.material.SetColor(playerColorID, color);
-
-       // renderer.SetPropertyBlock(materialPropertyBlock);
     }
 
     public void Unhighlight(Color color)

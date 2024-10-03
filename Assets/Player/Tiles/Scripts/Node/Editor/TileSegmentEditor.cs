@@ -8,8 +8,6 @@ public class TileSegmentEditor : Editor
 {
     public struct SegmentProperties
     {
-        //public SerializedProperty meshRenderer;
-        
         public GateProperties[] gates;
 
         public struct GateProperties
@@ -26,8 +24,6 @@ public class TileSegmentEditor : Editor
 
         public SegmentProperties(SerializedObject @object)
         {
-            //meshRenderer = @object.FindProperty("meshRenderer");
-
             SerializedProperty gatesArray = @object.FindProperty("gates");
             gates = new GateProperties[gatesArray.arraySize];
 
@@ -81,12 +77,12 @@ public class TileSegmentEditor : Editor
 
     private void PreviousOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
-        nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, -1);
+        nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.Convertor.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, -1);
     }
 
     private void NextOrientation(ref SegmentProperties.GateProperties nodeSerialized)
     {
-        nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, 1);
+        nodeSerialized.initialLocalSide.enumValueIndex = (int)HexSide.Convertor.GetWorldSideAfterRotStep((HexSide.Side)nodeSerialized.initialLocalSide.enumValueIndex, 1);
     }
 }
 

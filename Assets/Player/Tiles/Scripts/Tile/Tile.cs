@@ -1,6 +1,7 @@
 using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEngine;
+using Hexalinks.PathFinder;
 
 namespace Hexalinks.Tile
 {
@@ -15,7 +16,7 @@ namespace Hexalinks.Tile
         protected TileCoordinates coordinates;
 
         public CubeCoord Coord => coordinates.Coord;
-        public Gate.ExposedGate[] Gates => connectivity.Gates;
+        public Gate.ExposedGate[] StartingGates => connectivity.StartingGates;
 
         public enum Type
         {
@@ -52,7 +53,7 @@ namespace Hexalinks.Tile
             HexMap.Instance.AddTile(this);
             Connect();
 
-            TileIterator.ExplorePathsFrom(this);
+            PathIterator.ExplorePathsFrom(this);
         }
 
         public void Connect()
@@ -74,23 +75,11 @@ namespace Hexalinks.Tile
             coordinates = new TileCoordinates(transform);
         }
 
-        //[ContextMenu("Setup")]
-        //public virtual void Setup()
-        //{
-        //    InternalSetup();
-        //}
-
-        //protected virtual void InternalSetup()
-        //{
-        //    connectivity.InitializeSegments(2);
-        //}
-
         private void OnDrawGizmos()
         {
             manipulator.DrawDebugInfo();
-            connectivity.DrawDebugInfo();
+            //connectivity.DrawDebugInfo();
         }
-
 #endif
     }
 }

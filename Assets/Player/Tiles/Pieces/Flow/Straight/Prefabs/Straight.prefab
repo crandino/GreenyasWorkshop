@@ -9,11 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 5964918104615931904}
+  - component: {fileID: 855448087009069288}
   - component: {fileID: 5254106543370647923}
   - component: {fileID: 6038892171487363637}
   - component: {fileID: 6315761402648141}
   - component: {fileID: 3950301000532436366}
+  - component: {fileID: 5947327033978087052}
+  - component: {fileID: 5973991970629046641}
   m_Layer: 6
   m_Name: Segment_1
   m_TagString: Untagged
@@ -36,7 +38,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5964918104615931904
+--- !u!114 &855448087009069288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,21 +47,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7276678055054480768}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gates:
-  - segment: {fileID: 5964918104615931904}
-    hexSide:
-      localSide: 0
-    outwardGates: []
-  - segment: {fileID: 5964918104615931904}
-    hexSide:
-      localSide: 3
-    outwardGates: []
-  references:
-    version: 2
-    RefIds: []
+  sideGates:
+  - {fileID: 5947327033978087052}
+  - {fileID: 5973991970629046641}
 --- !u!114 &5254106543370647923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +132,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7276678055054480768}
   m_Mesh: {fileID: 4300000, guid: e55f928090f43b148852c2ff179e01f1, type: 2}
+--- !u!114 &5947327033978087052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 0
+--- !u!114 &5973991970629046641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 3
 --- !u!1001 &2828225911198047407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -154,7 +177,7 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 5964918104615931904}
+      objectReference: {fileID: 855448087009069288}
     - target: {fileID: 3175736382684188824, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

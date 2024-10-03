@@ -12,7 +12,7 @@ namespace Greenyas.Hexagon
 
         public static HexSide.Side GetOpposite(this HexSide.Side side)
         {
-            return (HexSide.Side)(((int)side + 3) % HexSide.TOTAL_SIDES);
+            return (HexSide.Side)(((int)side + 3) % HexSide.TOTAL_SIDES) + (int)HexSide.Side.North;
         }
     } 
 }

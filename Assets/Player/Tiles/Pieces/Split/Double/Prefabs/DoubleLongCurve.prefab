@@ -9,11 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1962697707849010308}
-  - component: {fileID: 3218553012824745153}
   - component: {fileID: 4187780296355390279}
   - component: {fileID: 2723985039484676081}
   - component: {fileID: 5065764436508599755}
   - component: {fileID: 7727680296808979607}
+  - component: {fileID: 640278709570074929}
+  - component: {fileID: 6916991951741468597}
+  - component: {fileID: 7797891488430969101}
   m_Layer: 6
   m_Name: Segment_2
   m_TagString: Untagged
@@ -36,30 +38,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3218553012824745153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4869383292949262976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gates:
-  - segment: {fileID: 3218553012824745153}
-    hexSide:
-      localSide: 1
-    outwardGates: []
-  - segment: {fileID: 3218553012824745153}
-    hexSide:
-      localSide: 3
-    outwardGates: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &4187780296355390279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +117,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4869383292949262976}
   m_Mesh: {fileID: 4300000, guid: 981773c063833b84485035e23ebb4dea, type: 2}
+--- !u!114 &640278709570074929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4869383292949262976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sideGates:
+  - {fileID: 6916991951741468597}
+  - {fileID: 7797891488430969101}
+--- !u!114 &6916991951741468597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4869383292949262976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 1
+--- !u!114 &7797891488430969101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4869383292949262976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 3
 --- !u!1 &7276678055054480768
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,11 +171,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 1257339295311692487}
   - component: {fileID: 6064079126141603156}
   - component: {fileID: 8067472085467789121}
   - component: {fileID: 6315761402648141}
   - component: {fileID: 3950301000532436366}
+  - component: {fileID: 4172658262996798292}
+  - component: {fileID: 185651802859597516}
+  - component: {fileID: 1780676940764100562}
   m_Layer: 6
   m_Name: Segment_1
   m_TagString: Untagged
@@ -175,30 +200,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1257339295311692487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gates:
-  - segment: {fileID: 1257339295311692487}
-    hexSide:
-      localSide: 3
-    outwardGates: []
-  - segment: {fileID: 1257339295311692487}
-    hexSide:
-      localSide: 5
-    outwardGates: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &6064079126141603156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,6 +279,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7276678055054480768}
   m_Mesh: {fileID: 4300000, guid: d3ef29841aa7eab478c28aea888deb12, type: 2}
+--- !u!114 &4172658262996798292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sideGates:
+  - {fileID: 185651802859597516}
+  - {fileID: 1780676940764100562}
+--- !u!114 &185651802859597516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 3
+--- !u!114 &1780676940764100562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 5
 --- !u!1001 &2828225911198047407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -293,11 +339,11 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 1257339295311692487}
+      objectReference: {fileID: 4172658262996798292}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[1]'
       value: 
-      objectReference: {fileID: 3218553012824745153}
+      objectReference: {fileID: 640278709570074929}
     - target: {fileID: 3175736382684188824, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

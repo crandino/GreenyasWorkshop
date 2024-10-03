@@ -1,92 +1,70 @@
-#if UNITY_EDITOR
-using Hexagon.Tile.Debug;
-#endif
-
-using System.Collections.Generic;
 using Greenyas.Hexagon;
-using UnityEditor;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Hexalinks.Tile.TileConnectivity;
-using System.Linq;
 
 namespace Hexalinks.Tile
 {
-    public class TileSegment : MonoBehaviour
+    public abstract class TileSegment : MonoBehaviour
     {
-        [SerializeField]
-        private Gate[] gates;
+        public virtual bool CanBeCrossed => true;
 
-        public bool IsLooped => gates[0].WorldSide == gates[1].WorldSide;
-        
-        public Gate.ExposedGate[] Gates => IsLooped ? new []{ new Gate.ExposedGate(gates[0]) } : gates.Select(g => new Gate.ExposedGate(g)).ToArray();
+        public abstract Gate[] AllGates { get; }
+
+        public Gate.ExposedGate[] ExposedGates => AllGates.ToExposedGates();
+
+        protected abstract SideGate[] SideGates { get; }
 
         public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
         {
             List<TileQueryResult> candidates = new List<TileQueryResult>();
 
-            for (int i = 0; i < gates.Length; ++i)
+            for (int i = 0; i < SideGates.Length; ++i)
             {
-                CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(gates[i].WorldSide);
+                CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(SideGates[i].WorldSide);
 
                 if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
                     candidates.Add(new()
                     {
                         tile = neighborTileData,
-                        gate = gates[i]
+                        gate = SideGates[i]
                     });
             }
 
             return candidates;
         }
 
-        public void TryConnection(Gate againstGate)
+        public void TryConnection(SideGate againstGate)
         {
-            foreach (var fromGate in gates)
+            foreach (var fromGate in SideGates)
                 fromGate.TryConnect(againstGate);
         }
 
         public void Disconnect()
         {
-            foreach (var from in gates)
+            foreach (var from in AllGates)
                 from.Disconnect();
         }
 
-        public Gate GoThrough(Gate enterGate)
-        {
-            return gates.Where(g => g != enterGate).First();
-        }
+        public abstract Gate GoThrough(Gate enterGate);
 
 #if UNITY_EDITOR
 
-        public bool AreGatesInitialized => gates != null && gates.Length != 0;
-
-        public void DrawDebugInfo()
+        protected virtual void OnDrawGizmos()
         {
-            if (TileDebugOptions.Instance.showSegments && AreGatesInitialized)
-            {
-                Handles.color = CustomColors.darkOrange;
-                Handles.DrawLine(gates[0].WorldDebugPos, gates[1].WorldDebugPos, 2f);
-            }
-
-            for (int i = 0; i < gates.Length; i++)
-                gates[i].DrawDebugInfo();
+            for (int i = 0; i < AllGates.Length; i++)
+                AllGates[i].DrawDebugInfo();
         }
 
-        private void OnValidate()
-        {
-            if (AreGatesInitialized)
-                return;
 
-            InitializeGates();
+        private void Reset()
+        {
+            if(AllGates.Length == 0 || AllGates.Any(g => g == null))
+                InitializeGates();
         }
 
-        [ContextMenu("Initialize gates")]
-        private void InitializeGates()
-        {
-            gates = new Gate[2];
-            gates[0] = new Gate(this);
-            gates[1] = new Gate(this);
-        }
+        protected abstract void InitializeGates();
 #endif
     }
 

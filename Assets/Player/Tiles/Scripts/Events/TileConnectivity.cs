@@ -2,7 +2,6 @@ using Greenyas.Hexagon;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Hexalinks.Tile.TileSegment;
 
 namespace Hexalinks.Tile
 {
@@ -11,12 +10,12 @@ namespace Hexalinks.Tile
         [SerializeField]
         private TileSegment[] segments = null;
 
-        public Gate.ExposedGate[] Gates => segments.SelectMany(s => s.Gates).ToArray();
+        public Gate.ExposedGate[] StartingGates => segments.Where(s => s is TerminalSegment).SelectMany(s => s.ExposedGates).ToArray();
 
         public struct TileQueryResult
         {
             public Tile tile;
-            public Gate gate;
+            public SideGate gate;
         }
 
         public List<TileQueryResult> GetNeighborCandidates(CubeCoord coord)
@@ -29,7 +28,7 @@ namespace Hexalinks.Tile
             return candidates;
         }
 
-        public void TryConnection(Gate againstGate)
+        public void TryConnection(SideGate againstGate)
         {
             for (int i = 0; i < segments.Length; ++i)
             {
@@ -62,13 +61,13 @@ namespace Hexalinks.Tile
         //    }
         //}
 
-        public void DrawDebugInfo()
-        {
-            foreach (TileSegment s in segments)
-            {
-                s.DrawDebugInfo();
-            }
-        }
+        //public void DrawDebugInfo()
+        //{
+        //    foreach (TileSegment s in segments)
+        //    {
+        //        s.DrawDebugInfo();
+        //    }
+        //}
 #endif
     }
 }
