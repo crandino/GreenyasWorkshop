@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CoroutineManager : MonoBehaviour
@@ -27,6 +28,16 @@ public class CoroutineManager : MonoBehaviour
     {
         Instance.StopCoroutine(coroutine);
     }
+
+    //public static void Start(IEnumerator coroutine)
+    //{
+    //    Instance.StartCoroutine(Core(coroutine));
+    //}
+
+    //public static void Core(IEnumerator coroutine)
+    //{
+    //    yield return coroutine;
+    //}
 
     private void OnDestroy()
     {

@@ -6,7 +6,8 @@ Shader "Custom/UVFiller"
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
-        _PathSelectionColor ("Color", Color) = (1,1,1,1)
+        _ForegroundColor ("Foreground Color", Color) = (0,0,0,1)
+        _BackgroundColor ("Background Color", Color) = (0,0,0,1)
         _PathProgress ("Progress", Range(0,1)) = 0.5
 
     }
@@ -24,7 +25,8 @@ Shader "Custom/UVFiller"
 
         sampler2D _MainTex;
 
-        fixed4 _PathSelectionColor;
+        fixed4 _ForegroundColor;
+        fixed4 _BackgroundColor;
         fixed _PathProgress;
 
         struct Input
@@ -49,8 +51,8 @@ Shader "Custom/UVFiller"
             
             //fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _PathSelectionColor;
 
-            fixed p = step(_PathProgress, IN.uv_MainTex);
-            fixed4 c = lerp(_PathSelectionColor, fixed4(0,0,0,1), p );
+            fixed p = step(_PathProgress, IN.uv_MainTex.x);
+            fixed4 c = lerp(_ForegroundColor, _BackgroundColor, p );
             // c = fixed4(IN.uv_MainTex.x, 0, 0, 1);
 
             o.Albedo = c.rgb;

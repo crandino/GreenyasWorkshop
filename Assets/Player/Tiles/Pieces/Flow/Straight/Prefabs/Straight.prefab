@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 6038892171487363637}
   - component: {fileID: 6315761402648141}
   - component: {fileID: 3950301000532436366}
-  - component: {fileID: 5947327033978087052}
-  - component: {fileID: 5973991970629046641}
+  - component: {fileID: 6575901544814067886}
+  - component: {fileID: 2847625353533994675}
   m_Layer: 6
   m_Name: Segment_1
   m_TagString: Untagged
@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sideGates:
-  - {fileID: 5947327033978087052}
-  - {fileID: 5973991970629046641}
+  gates:
+  - {fileID: 6575901544814067886}
+  - {fileID: 2847625353533994675}
 --- !u!114 &5254106543370647923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,22 +132,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7276678055054480768}
   m_Mesh: {fileID: 4300000, guid: e55f928090f43b148852c2ff179e01f1, type: 2}
---- !u!114 &5947327033978087052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outwardGates: []
-  hexSide:
-    localSide: 0
---- !u!114 &5973991970629046641
+--- !u!114 &6575901544814067886
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,6 +147,21 @@ MonoBehaviour:
   outwardGates: []
   hexSide:
     localSide: 3
+--- !u!114 &2847625353533994675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outwardGates: []
+  hexSide:
+    localSide: 0
 --- !u!1001 &2828225911198047407
 PrefabInstance:
   m_ObjectHideFlags: 0

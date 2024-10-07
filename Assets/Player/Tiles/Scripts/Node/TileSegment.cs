@@ -49,6 +49,8 @@ namespace Hexalinks.Tile
 
         public abstract Gate GoThrough(Gate enterGate);
 
+        public bool IsOriginalDirection(Gate enterGate) => AllGates[0] == enterGate;
+
 #if UNITY_EDITOR
 
         protected virtual void OnDrawGizmos()
@@ -57,14 +59,24 @@ namespace Hexalinks.Tile
                 AllGates[i].DrawDebugInfo();
         }
 
-
-        private void Reset()
+        protected Gate CreateGate()
         {
-            if(AllGates.Length == 0 || AllGates.Any(g => g == null))
-                InitializeGates();
+            return gameObject.AddComponent<Gate>();
         }
 
-        protected abstract void InitializeGates();
+        protected SideGate CreateSideGate()
+        {
+            return gameObject.AddComponent<SideGate>();
+        }
+
+
+        //private void Reset()
+        //{
+        //    if(AllGates.Length == 0 || AllGates.Any(g => g == null))
+        //        InitializeGates();
+        //}
+
+        //protected abstract void InitializeGates();
 #endif
     }
 

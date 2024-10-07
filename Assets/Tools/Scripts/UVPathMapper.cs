@@ -49,5 +49,11 @@ public class UVPathMapper : MonoBehaviour
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = mesh;
     }
+
+    [ContextMenu("Get Length")]
+    private void GetSplineLength()
+    {
+        Debug.Log(splineContainer.Spline.GetLength());
+    }
 } 
 #endif

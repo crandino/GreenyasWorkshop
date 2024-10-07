@@ -11,9 +11,6 @@ namespace Hexalinks.Tile
     [System.Serializable]
     public class Gate : MonoBehaviour
     {
-        //[SerializeField]
-        //protected TileSegment segment;
-
         [SerializeReference]
         protected List<Gate> outwardGates = new List<Gate>();
 
@@ -32,10 +29,15 @@ namespace Hexalinks.Tile
             private readonly Gate gate;
 
             public readonly ExposedGate[] OutwardGates => gate.outwardGates.ToExposedGates();
+            public readonly PlayerOwnership Ownership { get; }
+
+            public readonly bool ForwardTraversalDir { get; }
 
             public ExposedGate(Gate gate)
             {
                 this.gate = gate;
+                Ownership = gate.Segment.GetComponent<PlayerOwnership>();
+                ForwardTraversalDir = gate.Segment.IsOriginalDirection(gate);
             }
 
             public bool GoThrough(out ExposedGate[] connectedGates)
@@ -52,8 +54,6 @@ namespace Hexalinks.Tile
             {
                 Debug.Log($"Segment on tile {gate.Segment.transform.parent.gameObject.name}");
             }
-
-            public TileSegment Segment => gate.Segment;
         }
 
 #if UNITY_EDITOR

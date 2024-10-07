@@ -1,8 +1,11 @@
+using Cysharp.Threading.Tasks;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using static OwnershipPropagation;
 
-[RequireComponent(typeof(PathHighligther))]
 public class PlayerOwnership : MonoBehaviour
 {
     [SerializeField]
@@ -30,7 +33,7 @@ public class PlayerOwnership : MonoBehaviour
         PlayerTwo
     }
 
-    public Ownership Owner { private set; get; } = Ownership.None;
+    public Ownership Owner { private set; get; } = Ownership.None;    
 
     private void Awake()
     {
@@ -38,12 +41,69 @@ public class PlayerOwnership : MonoBehaviour
             InstantOwnerChange(Ownership.PlayerOne);
     }
 
+    private PropagationData data;
+
+    public void Prepare(PropagationData data)
+    {
+        this.data = data;
+        highligther.Configure(playerColors[data.newOwner], data.forwardTraversalDirection);
+    }
+
     public void InstantOwnerChange(Ownership newOwnership)
     {
         Owner = newOwnership;
-        highligther.Highlight(playerColors[Owner]);
+        highligther.Highlight(playerColors[newOwnership]);
 
         OnOwnershipChange?.Invoke();
+    }
+
+    private static IEnumerator EmptyTask()
+    {
+        yield return null;
+    }
+
+    // TODO 
+    /*
+     
+    - Limpiar todo el código comentado.
+    - Colocar nombres variables correctamente en el PathStorage.
+    - Quizá, separar en varios archivos toda la clase PathStorage
+    - Añadir en los prefabs, las distancias de los segmentos
+    - Probar con una colorist de más salidas
+    - Añadir una colorist al final y buscar la manera de que vuelva a arrancar todo de nuevo
+    */
+
+
+    public async UniTask OwnerChange(Ownership newOwnership/*, Action onOwnershipChangeEnds*/)
+    {
+        if (Owner == data.newOwner)
+        {
+            //onOwnershipChangeEnds();
+            //return UniTask.RunOnThreadPool<IEnumerator>(EmptyTask);
+            return;
+        }
+
+        Owner = newOwnership;
+
+        //highligther.Configure(playerColors[Owner], true);
+
+        await highligther.UpdateHighlight();
+        //await UniTask.SwitchToMainThread();
+
+        //{
+        //    /*CoroutineManager.Start(*/
+        //    highligther.UpdateHighlight(playerColors[Owner]);
+        //});
+
+        return /*task*/;
+
+        //CoroutineManager.Start(highligther.UpdateHighlight(playerColors[Owner], onOwnershipChangeEnds));
+    }  
+
+    private IEnumerator InitU()
+    {
+        Debug.Log("Yeah! I'm here!");
+        yield return null;
     }
 
     private void Reset()

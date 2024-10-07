@@ -7,8 +7,6 @@ namespace Hexalinks.PathFinder
 {
     public static class PathIterator
     {
-       
-
         public static void ExplorePathsFrom(Tile.Tile startingTile)
         {
             TileStepTracker<Gate> gateTracker = new TileStepTracker<Gate>();
@@ -32,14 +30,17 @@ namespace Hexalinks.PathFinder
                         gateTracker.AddStep(nextGates);
                     else
                     {
-                        PathStorage.Path path = new(gateTracker.GetEvaluatedSteps().
-                                             Select(g => g.Segment)
+                        PathStorage.Path path = new(gateTracker.GetEvaluatedSteps()
                                             .ToArray());
                         path.Log();
                         //path.TriggerContamination();
+
+                        PathStorage.Add(path);
+                        //return;
                     }
                 }
             }
+            PathStorage.UnifyPaths();
         }
     } 
 }
