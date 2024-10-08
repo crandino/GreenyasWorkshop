@@ -55,12 +55,7 @@ public class PlayerOwnership : MonoBehaviour
         highligther.Highlight(playerColors[newOwnership]);
 
         OnOwnershipChange?.Invoke();
-    }
-
-    private static IEnumerator EmptyTask()
-    {
-        yield return null;
-    }
+    }   
 
     // TODO 
     /*
@@ -74,42 +69,23 @@ public class PlayerOwnership : MonoBehaviour
     */
 
 
-    public async UniTask OwnerChange(Ownership newOwnership/*, Action onOwnershipChangeEnds*/)
+    public async UniTask OwnerChange(Ownership newOwnership)
     {
         if (Owner == data.newOwner)
-        {
-            //onOwnershipChangeEnds();
-            //return UniTask.RunOnThreadPool<IEnumerator>(EmptyTask);
             return;
-        }
 
         Owner = newOwnership;
-
-        //highligther.Configure(playerColors[Owner], true);
-
         await highligther.UpdateHighlight();
-        //await UniTask.SwitchToMainThread();
 
-        //{
-        //    /*CoroutineManager.Start(*/
-        //    highligther.UpdateHighlight(playerColors[Owner]);
-        //});
-
-        return /*task*/;
-
-        //CoroutineManager.Start(highligther.UpdateHighlight(playerColors[Owner], onOwnershipChangeEnds));
-    }  
-
-    private IEnumerator InitU()
-    {
-        Debug.Log("Yeah! I'm here!");
-        yield return null;
+        return;
     }
+#if UNITY_EDITOR
 
     private void Reset()
     {
         highligther = GetComponent<PathHighligther>();
-    }
+    } 
+#endif
 
     public static class OwnershipCounter
     {

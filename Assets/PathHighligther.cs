@@ -8,8 +8,8 @@ public class PathHighligther : MonoBehaviour
     [SerializeField]
     new private MeshRenderer renderer;
 
-    [SerializeField]
-    private float time = 1.0f;
+    //[SerializeField]
+    //private float time = 1.0f;
 
     [SerializeField]
     private float segmentLength = 0.866f;
@@ -63,8 +63,6 @@ public class PathHighligther : MonoBehaviour
 
     public IEnumerator UpdateHighlight(/*Color color, Action onHighlightEnds*/)
     {
-        Debug.Log("Nobody loves me!");
-
         const float highlightSpeed = 0.866f; 
 
         float currentTime = 0;
@@ -73,8 +71,6 @@ public class PathHighligther : MonoBehaviour
         float normalizedTime = currentTime * inverseTime;
 
         float GetNormalizedTime(bool direction) => direction ? normalizedTime : 1f - normalizedTime;
-
-        //renderer.material.SetColor(playerColorID, color);
 
         while (normalizedTime < 1f)
         {
@@ -85,7 +81,6 @@ public class PathHighligther : MonoBehaviour
         }
 
         renderer.material.SetFloat(pathProgressID, Mathf.Clamp01(GetNormalizedTime(direction)));
-        //onHighlightEnds();
     }
 
     private void Reset()

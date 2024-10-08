@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 4268738635960844131}
-  time: 1
+  segmentLength: 0.7753
 --- !u!23 &4268738635960844131
 MeshRenderer:
   m_ObjectHideFlags: 0
