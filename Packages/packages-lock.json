@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.tripolygon.umodeler-x": {
-      "version": "file:com.tripolygon.umodeler-x-1.0.0-basic/com.tripolygon.umodeler-x-1.0.0-basic.tgz",
+      "version": "file:com.tripolygon.umodeler-x-1.0.1-basic/com.tripolygon.umodeler-x-1.0.1-basic.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}

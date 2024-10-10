@@ -1,8 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using UnityEngine;
 using static OwnershipPropagation;
 
@@ -14,7 +13,7 @@ public class PlayerOwnership : MonoBehaviour
     [SerializeField]
     private PathHighligther highligther;
 
-    public event Action OnOwnershipChange;
+    //public event Action OnOwnershipChange;
 
     private static readonly Dictionary<Ownership, Color> playerColors = new Dictionary<Ownership, Color>
     (
@@ -33,7 +32,7 @@ public class PlayerOwnership : MonoBehaviour
         PlayerTwo
     }
 
-    public Ownership Owner { private set; get; } = Ownership.None;    
+    public Ownership Owner { protected set; get; } = Ownership.None;    
 
     private void Awake()
     {
@@ -41,7 +40,7 @@ public class PlayerOwnership : MonoBehaviour
             InstantOwnerChange(Ownership.PlayerOne);
     }
 
-    private PropagationData data;
+    protected PropagationData data;
 
     public void Prepare(PropagationData data)
     {
@@ -54,7 +53,7 @@ public class PlayerOwnership : MonoBehaviour
         Owner = newOwnership;
         highligther.Highlight(playerColors[newOwnership]);
 
-        OnOwnershipChange?.Invoke();
+        //OnOwnershipChange?.Invoke();
     }   
 
     // TODO 
@@ -63,18 +62,17 @@ public class PlayerOwnership : MonoBehaviour
     - Limpiar todo el código comentado.
     - Colocar nombres variables correctamente en el PathStorage.
     - Quizá, separar en varios archivos toda la clase PathStorage
-    - Añadir en los prefabs, las distancias de los segmentos
     - Probar con una colorist de más salidas
     - Añadir una colorist al final y buscar la manera de que vuelva a arrancar todo de nuevo
+
     */
 
-
-    public async UniTask OwnerChange(Ownership newOwnership)
+    public virtual async UniTask GraduallyOwnerChange()
     {
         if (Owner == data.newOwner)
             return;
 
-        Owner = newOwnership;
+        Owner = data.newOwner;
         await highligther.UpdateHighlight();
 
         return;
@@ -89,28 +87,23 @@ public class PlayerOwnership : MonoBehaviour
 
     public static class OwnershipCounter
     {
-        private static readonly Dictionary<Ownership, int> ownershipCount = new Dictionary<Ownership, int>
-        (
-        new[]
+        public static bool IsWinnerOwner(PlayerOwnership[] playerOwnerships, out Ownership winner)
         {
-            new KeyValuePair<Ownership, int>(Ownership.None, 0),
-            new KeyValuePair<Ownership, int>(Ownership.PlayerOne, 0),
-            new KeyValuePair<Ownership, int>(Ownership.PlayerTwo, 0)
-        });
+            winner = Ownership.None;
 
-        public static void Calculate(PlayerOwnership[] playerOwnerships)
-        {
-            Clear();
+            int[] ownershipCount = Enumerable.Repeat(0, 3).ToArray();
 
             foreach (var ownership in playerOwnerships)
-                ownershipCount[ownership.Owner]++;
-        }
+                ownershipCount[(int)ownership.Owner]++;
 
-        private static void Clear()
-        {
-            ownershipCount[Ownership.PlayerTwo] = 0;
-            ownershipCount[Ownership.PlayerOne] = 0;
-            ownershipCount[Ownership.None] = 0;
+            int winnerOwnership = ownershipCount.Max();
+            bool tie = ownershipCount.Skip(1).Count(o => o == winnerOwnership) != 1;
+
+            if (!tie)
+                winner = (Ownership)Array.LastIndexOf(ownershipCount, winnerOwnership);
+
+            return !tie && winner != Ownership.None;
+
         }
     }
 }

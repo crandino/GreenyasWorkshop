@@ -1,15 +1,12 @@
+using System;
 using System.Collections;
 using UnityEngine;
-
 
 [RequireComponent(typeof(MeshRenderer))]
 public class PathHighligther : MonoBehaviour
 {
     [SerializeField]
     new private MeshRenderer renderer;
-
-    //[SerializeField]
-    //private float time = 1.0f;
 
     [SerializeField]
     private float segmentLength = 0.866f;
@@ -61,26 +58,20 @@ public class PathHighligther : MonoBehaviour
     //    renderer.material.SetColor(playerColorID, color);
     //}
 
-    public IEnumerator UpdateHighlight(/*Color color, Action onHighlightEnds*/)
+    public IEnumerator UpdateHighlight()
     {
-        const float highlightSpeed = 0.866f; 
+        const float highlightSpeed = 0.866f * 2;
 
-        float currentTime = 0;
-        float inverseTime = 1f / (segmentLength / highlightSpeed);
+        NormalizedTimer timer = new(segmentLength / highlightSpeed, !direction);
 
-        float normalizedTime = currentTime * inverseTime;
-
-        float GetNormalizedTime(bool direction) => direction ? normalizedTime : 1f - normalizedTime;
-
-        while (normalizedTime < 1f)
+        while (!timer.IsCompleted)
         {
-            renderer.material.SetFloat(pathProgressID, GetNormalizedTime(direction));
-            currentTime += Time.deltaTime;
-            normalizedTime = currentTime * inverseTime;
+            renderer.material.SetFloat(pathProgressID, timer.Time);
+            timer.Step(Time.deltaTime);
             yield return null;
         }
 
-        renderer.material.SetFloat(pathProgressID, Mathf.Clamp01(GetNormalizedTime(direction)));
+        renderer.material.SetFloat(pathProgressID, Mathf.Clamp01(timer.Time));
     }
 
     private void Reset()
@@ -89,4 +80,35 @@ public class PathHighligther : MonoBehaviour
     }
 
 
+}
+
+public class NormalizedTimer
+{
+    private readonly float inverseTime;
+    private float currentTime = 0f;
+    private float NormalizedTime => currentTime * inverseTime;
+
+    private readonly Func<float> GetNormalized;
+
+    public float Time => GetNormalized();
+    public bool IsCompleted => GetNormalizedTime() >= 1.0f;
+
+    public NormalizedTimer(float totalTime, bool inverse = false)
+    {
+        inverseTime = 1f / totalTime;
+        GetNormalized = inverse ? GetInverseNormalizedTime : GetNormalizedTime;
+    }
+
+    public void Reset()
+    {
+        currentTime = 0f;
+    }
+
+    private float GetNormalizedTime() => NormalizedTime;
+    private float GetInverseNormalizedTime() => 1f - (NormalizedTime);
+
+    public void Step(float deltaTime)
+    {
+        currentTime += deltaTime;
+    }
 }

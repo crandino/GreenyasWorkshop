@@ -1,6 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Hexalinks.PathFinder;
+using Hexalinks.Tile;
 using UnityEngine;
 
 public class InitialPlayerOwnership : PlayerOwnership
@@ -8,14 +8,26 @@ public class InitialPlayerOwnership : PlayerOwnership
     [SerializeField]
     private PlayerOwnership[] childrenOwnership;
 
-    private void Start()
+    private bool UpdateOwnership()
     {
-        foreach (var owner in childrenOwnership)
-            owner.OnOwnershipChange += UpdateOwnership;
+        if (OwnershipCounter.IsWinnerOwner(childrenOwnership, out Ownership winner))
+        {
+            data = new OwnershipPropagation.PropagationData(winner, true);
+            return true;
+        }
+        return false;
     }
 
-    private void UpdateOwnership()
+    public override async UniTask GraduallyOwnerChange()
     {
-        OwnershipCounter.Calculate(childrenOwnership);
+        if (!UpdateOwnership() || Owner == data.newOwner)
+            return;
+
+        await base.GraduallyOwnerChange();
+
+        Tile parentTile = transform.GetTransformUpUntil<Tile>().GetComponent<Tile>();
+
+        PathStorage.InitNewPropagation();
+        PathIterator.FindPathsFrom(parentTile);
     }
 }

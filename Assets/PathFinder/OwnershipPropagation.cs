@@ -1,10 +1,9 @@
-using Hexalinks.PathFinder;
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using static Hexalinks.PathFinder.PathStorage;
 using Cysharp.Threading.Tasks;
-using System.Collections;
+using Hexalinks.PathFinder;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static Hexalinks.PathFinder.PathStorage;
 
 public static class OwnershipPropagation
 {
@@ -31,9 +30,7 @@ public static class OwnershipPropagation
     public static void Start(PathStorage.UnifiedPath path)
     {
         currentPath = path;
-        //linkSteps = path.Links.Length;
-
-        owner = currentPath.unifiedPath[0][0].ownership.Owner;
+        owner = currentPath.unifiedPath[0][0].Ownership.Owner;
 
         PreparePropagation();
         TriggerPropagation();
@@ -41,34 +38,29 @@ public static class OwnershipPropagation
 
     private async static void TriggerPropagation()
     {
-        await UniTask.SwitchToMainThread();
-
-        for (int i = 0; i < currentPath.unifiedPath.Count; ++i)
+        foreach(Path.PathLink[] pathLinks in currentPath.unifiedPath)
         {
-            Path.PathLink[] current = currentPath.unifiedPath[i];
+            //Path.PathLink[] current = currentPath.unifiedPath[i];
+
+            //string log = "";
+            //foreach(var x in currentPath.unifiedPath)
+            //{
+            //    x.Select(x => log += x.Ownership.transform.parent.name);
+            //}
+
+            //Debug.Log(log);
 
             List<UniTask> tasks = new();
 
-            foreach (var c in current)
+            foreach (Path.PathLink c in pathLinks)
             {
-                tasks.Add(c.ownership.OwnerChange(owner));
+                //Debug.Log(c.Ownership.transform.parent.name);
+                tasks.Add(c.Ownership.GraduallyOwnerChange());
             }
 
             await UniTask.SwitchToMainThread();
             await UniTask.WhenAll(tasks);
         }       
-
-        //List<Task> tasks = new();
-
-        //foreach(var c in current)
-        //{
-        //    tasks.Add(c.ownership.OwnerChange(owner));
-        //}
-
-        //await Task.WhenAll(tasks);
-        ////current.ownership.OwnerChange(owner, TriggerPropagation);
-        ////Task task = new Task(() => { });
-        ////Task.en
     }
 
     private static void PreparePropagation()
@@ -76,7 +68,7 @@ public static class OwnershipPropagation
         foreach(var p in currentPath.unifiedPath)
         {
             foreach(var c in p)
-                c.ownership.Prepare(new PropagationData(owner, c.entryGate.ForwardTraversalDir));
+                c.Ownership.Prepare(new PropagationData(owner, c.entryGate.ForwardTraversalDir));
 
         }
     }

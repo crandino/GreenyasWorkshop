@@ -1,10 +1,9 @@
+using Greenyas.Hexagon;
 using Hexalinks.Tile;
-using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Tripolygon.UModeler.Models;
-using Tripolygon.UModelerX.Runtime.MessagePack.Resolvers;
 using UnityEngine;
 using static Hexalinks.PathFinder.PathStorage.Path;
 
@@ -12,9 +11,80 @@ namespace Hexalinks.PathFinder
 {
     public static class PathStorage
     {
-        private static List<Path> paths = new List<Path>();
+        private class PropagationStep
+        {
+            public int id;
+            public List<Path> paths;
+            public UnifiedPath unifiedPath;
 
-        public struct UnifiedPath
+            public PropagationStep(int id)
+            {
+                this.id = id;
+                paths = new List<Path>();
+            }
+
+            public UnifiedPath UnifyPaths()
+            {
+                unifiedPath = new(paths);
+                return unifiedPath;
+            }
+        }
+
+        private readonly static List<PropagationStep> steps = new List<PropagationStep>();
+        private static PropagationStep current = null;
+
+        private static List<uint> oldPathsHashes = new();
+
+        public static void InitNewPropagation(bool fullReset = false)
+        {
+            if (fullReset)
+                ResetPropagationSteps();
+
+            current = new PropagationStep(steps.Count);
+            steps.Add(current);
+        }
+
+        private static void ResetPropagationSteps()
+        {
+            steps.Clear();
+            current = null;
+        }
+
+        public static void Add(Path newPath)
+        {
+            if(!oldPathsHashes.Contains(newPath.HashID))
+            {
+                current.paths.Add(newPath);
+                oldPathsHashes.Add(newPath.HashID);
+                newPath.Log();
+            }
+        }
+
+        public static void StartPropagation()
+        {
+            //RemoveIdenticalPaths();
+            OwnershipPropagation.Start(current.UnifyPaths());
+        }
+
+        //private static void RemoveIdenticalPaths()
+        //{
+        //    foreach(PropagationStep step in steps)
+        //    {
+        //        if (step.id == current.id)
+        //            continue;
+
+        //        for(int i = step.paths.Count - 1; i >= 0; i--)
+        //        {
+        //            for (int j = current.paths.Count - 1; j >= 0; j--)
+        //            {
+        //                if (step.paths[i].HashID == current.paths[j].HashID)
+        //                    current.paths.RemoveAt(j);
+        //            }
+        //        }
+        //    }
+        //}
+
+        public class UnifiedPath
         {
             public List<PathLink[]> unifiedPath;
 
@@ -26,8 +96,7 @@ namespace Hexalinks.PathFinder
                 for (int i = 0; i < upath.Length; ++i)
                 {
                     upath[i] = new List<PathLink>();
-                }
-                    
+                }                    
 
                 for (int i = 0; i < paths.Count; ++i)
                 {
@@ -38,111 +107,37 @@ namespace Hexalinks.PathFinder
                 }
 
                 unifiedPath = new List<PathLink[]>();
-                unifiedPath = upath.Select(p => p.Distinct(new ProductComparer()).ToArray()).ToList();
+                unifiedPath = upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
             }
 
-            class ProductComparer : IEqualityComparer<PathLink>
+            class PathLinkComparer : IEqualityComparer<PathLink>
             {
-                // Products are equal if their names and product numbers are equal.
                 public bool Equals(PathLink x, PathLink y)
                 {
-                    return x.ownership == y.ownership;
-                    
-                    ////Check whether the compared objects reference the same data.
-                    //if (Object.ReferenceEquals(x, y)) return true;
-
-                    ////Check whether any of the compared objects is null.
-                    //if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
-                    //    return false;
-
-                    ////Check whether the products' properties are equal.
-                    //return x.Code == y.Code && x.Name == y.Name;
+                    return x.Ownership == y.Ownership;              
                 }
-
-                // If Equals() returns true for a pair of objects
-                // then GetHashCode() must return the same value for these objects.
 
                 public int GetHashCode(PathLink product)
                 {
-                    return product.ownership.GetHashCode();
-
-                    ////Check whether the object is null
-                    //if (Object.ReferenceEquals(product, null)) return 0;
-
-                    ////Get hash code for the Name field if it is not null.
-                    //int hashProductName = product.Name == null ? 0 : product.Name.GetHashCode();
-
-                    ////Get hash code for the Code field.
-                    //int hashProductCode = product.Code.GetHashCode();
-
-                    ////Calculate the hash code for the product.
-                    //return hashProductName ^ hashProductCode;
+                    return product.Ownership.GetHashCode();
                 }
             }
-
-
         }
 
-        public static void Clear()
-        {
-            paths.Clear();
-        }
 
-        public static void Add(Path newPath)
+        public class Path
         {
-            paths.Add(newPath);
-        }
-
-        public static void UnifyPaths()
-        {
-            UnifiedPath path = new UnifiedPath(paths);
-            OwnershipPropagation.Start(path);
-        }
-
-        public class Path : IEnumerable<PathLink>
-        {
-            private readonly PathEnumerator enumerator;
+            public uint HashID { private set; get; } = 0;
 
             public readonly struct PathLink 
             {
                 public readonly Gate.ExposedGate entryGate;
-                public readonly PlayerOwnership ownership;
+                public readonly PlayerOwnership Ownership => entryGate.Ownership;
 
                 public PathLink(Gate.ExposedGate gate)
                 {
                     entryGate = gate;
-                    ownership = gate.Ownership;
                 }               
-            }
-
-            class PathEnumerator : IEnumerator<PathLink>
-            {
-                private readonly Path path;
-                private int iterIndex = -1;
-
-                public PathEnumerator(Path path)
-                {
-                    this.path = path;
-                }
-
-                public PathLink Current => path.Links[iterIndex];
-
-                object IEnumerator.Current => path.Links[iterIndex];
-
-                public void Dispose()
-                {
-                    throw new System.NotImplementedException();
-                }
-
-                public bool MoveNext()
-                {
-                    return ++iterIndex < path.Links.Length;                   
-                }
-
-                public void Reset()
-                {
-                    iterIndex = -1;
-                }
             }
 
             public PathLink[] Links { private set; get; }
@@ -150,45 +145,25 @@ namespace Hexalinks.PathFinder
             public Path(Gate.ExposedGate[] gates)
             {
                 Links = gates.Select(s => new PathLink(s)).ToArray();
-                enumerator = new PathEnumerator(this);
+                Array.ForEach(Links, link =>
+                {
+                    CubeCoord coord = link.Ownership.transform.GetTransformUpUntil<Tile.Tile>().GetComponent<Tile.Tile>().Coord;
+                    HashID += (uint)((coord.Q * coord.Q) + (coord.Q * coord.Q) * 3 +
+                                     (coord.R * coord.R) * 13 + (coord.R * coord.R) * 4+ 
+                                     (coord.S * coord.S) * 7 + (coord.S * coord.S) * 2);
+                });
             }
-
-            //public void TriggerContamination()
-            //{
-
-                
-
-            //    //OwnershipPropagation.Start(this);
-
-            //    //PlayerOwnership.Ownership initialOwner = pathLinks[0].ownership.Owner;
-
-            //    //foreach (var link in pathLinks)
-            //    //{
-            //    //    link.ownership.OwnerChange(initialOwner);
-            //    //}
-            //}
-
-  
 
             public void Log()
             {
                 int counter = 1;
+                string text = $"Path ID: {HashID}\n";
 
                 foreach (var link in Links)
-                {
-                    Debug.Log($"{counter++} - {link.ownership.transform.parent.name}:{link.ownership.name}");
-                }
-            }
+                    text += $"{counter++} - {link.Ownership.transform.parent.name}:{link.Ownership.name}\n";
 
-            public IEnumerator<PathLink> GetEnumerator()
-            {
-                return enumerator;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return enumerator;
-            }           
+                Debug.Log(text);
+            }      
         }
     }
 

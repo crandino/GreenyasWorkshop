@@ -66,6 +66,13 @@ public class TilePlacerManipulator : Manipulator
         instantiatedTile = null;
     }
 
+    private void ChangeOwner(PlayerOwnership.Ownership owner)
+    {
+        var ownership = instantiatedTile.GetComponentInChildren<InitialPlayerOwnership>();
+        if(ownership != null)
+            ownership.InstantOwnerChange(owner);
+    }
+
     private void ManipulateTile(KeyDownEvent evt)
     {
         evt.StopImmediatePropagation();
@@ -96,7 +103,15 @@ public class TilePlacerManipulator : Manipulator
             case KeyCode.W:
                 tilePos.MoveUp();
                 break;
-
+            case KeyCode.Alpha0:
+                ChangeOwner(PlayerOwnership.Ownership.None);
+                break;
+            case KeyCode.Alpha1:
+                ChangeOwner(PlayerOwnership.Ownership.PlayerOne);
+                break;
+            case KeyCode.Alpha2:
+                ChangeOwner(PlayerOwnership.Ownership.PlayerTwo);
+                break;
             default:
                 break;
         }

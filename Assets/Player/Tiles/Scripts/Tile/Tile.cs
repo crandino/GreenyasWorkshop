@@ -53,7 +53,8 @@ namespace Hexalinks.Tile
             HexMap.Instance.AddTile(this);
             Connect();
 
-            PathIterator.ExplorePathsFrom(this);
+            PathStorage.InitNewPropagation(true);
+            PathIterator.FindPathsFrom(this);
         }
 
         public void Connect()
