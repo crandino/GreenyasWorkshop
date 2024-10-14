@@ -13,8 +13,6 @@ public class PlayerOwnership : MonoBehaviour
     [SerializeField]
     private PathHighligther highligther;
 
-    //public event Action OnOwnershipChange;
-
     private static readonly Dictionary<Ownership, Color> playerColors = new Dictionary<Ownership, Color>
     (
         new[]

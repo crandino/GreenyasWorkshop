@@ -1,3 +1,4 @@
+using Hexalinks.Tile;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,15 +14,15 @@ public class TilePlacerWindow : EditorWindow
         GetWindow<TilePlacerWindow>();
     }
 
-    private struct Option
+    private readonly struct Option
     {
-        public TilePrefabOption tile;
-        private readonly TilePlacerManipulator manipulator;
+        private readonly TilePrefabOption tile;
+        private readonly TilePrefabOptionManipulator manipulator;
 
         public Option(TilePrefabOption tileOption)
         {
             tile = tileOption;
-            manipulator = new TilePlacerManipulator(tile);
+            manipulator = new TilePrefabOptionManipulator(tile);
         }
 
         public readonly void AddManipulator()
@@ -50,11 +51,40 @@ public class TilePlacerWindow : EditorWindow
                 label.AddManipulator();
             }
         }
+
+        RegisterCallbackOnScene();
     }
+
+    private void RegisterCallbackOnScene()
+    {
+        Selection.selectionChanged += ChangeTileSelection;
+    }
+
+    private void UnregisterCallbackOnScene()
+    {
+        Selection.selectionChanged -= ChangeTileSelection;
+    }
+
+    private void ChangeTileSelection()
+    {
+        Tile tile = null;
+        if (Selection.activeGameObject != null)
+        {
+            tile = Selection.activeGameObject.GetComponent<Tile>();
+
+            if (tile != null && TileEditorManipulator.IsAvailable(tile))
+                TileEditorManipulator.Set(tile, GetWindow<SceneView>().rootVisualElement, TilePosition.PositionMode.GRID);
+            else
+                TileEditorManipulator.Unset();
+        }
+    }
+
 
     private void OnDisable()
     {
         foreach (var label in options)
             label.RemoveManipulator();
+
+        UnregisterCallbackOnScene();
     }
 }

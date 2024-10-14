@@ -1,28 +1,48 @@
 using Greenyas.Hexagon;
-using Hexalinks.Tile;
 
 public class EditorTilePosition : TilePosition
 {
+
+    public bool Editable
+    {
+        set
+        {
+            if (value)
+                Mode = PositionMode.HOVER;
+            else
+                Mode = PositionMode.GRID;
+        }
+        get
+        {
+            return Mode == PositionMode.HOVER;
+        }
+    }
+
     public EditorTilePosition(TileCoordinates coordinates, PositionMode positionMode = PositionMode.GRID) : base(coordinates, positionMode)
-    { }
+    {
+    }
 
     public void MoveUp()
     {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.North)));
+        if(Editable)
+            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.North)));
     }
 
     public void MoveDown()
     {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.South)));
+        if (Editable)
+            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.South)));
     }
 
     public void MoveRight()
     {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast)));
+        if (Editable)
+            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthEast)));
     }
 
     public void MoveLeft()
     {
-        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest)));
+        if (Editable)
+            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Coord + CubeCoord.GetToNeighborCoord(HexSide.Side.NorthWest)));
     }
 }

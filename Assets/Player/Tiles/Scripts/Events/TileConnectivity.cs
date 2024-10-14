@@ -28,7 +28,7 @@ namespace Hexalinks.Tile
             return candidates;
         }
 
-        public void TryConnection(SideGate againstGate)
+        public void TryConnect(SideGate againstGate)
         {
             for (int i = 0; i < segments.Length; ++i)
             {
@@ -36,7 +36,7 @@ namespace Hexalinks.Tile
             }
         }
 
-        public void Disconnection()
+        public void Disconnect()
         {
             for (int i = 0; i < segments.Length; ++i)
             {

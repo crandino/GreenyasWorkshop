@@ -62,7 +62,12 @@ namespace Hexalinks.Tile
             List<TileConnectivity.TileQueryResult> candidates = connectivity.GetNeighborCandidates(Coord);
 
             for (int i = 0; i < candidates.Count; ++i)
-                candidates[i].tile.connectivity.TryConnection(candidates[i].gate);
+                candidates[i].tile.connectivity.TryConnect(candidates[i].gate);
+        }
+
+        public void Disconnect()
+        {
+            connectivity.Disconnect();
         }
 
 #if UNITY_EDITOR

@@ -1,10 +1,9 @@
 using Greenyas.Hexagon;
-using Hexalinks.Tile;
 using UnityEngine;
 
 public class TilePosition : TileModifier
 {
-    private Vector3 verticalOffset = Vector3.up * 0.25f;
+    private Vector3 verticalOffset = verticalGridOffset;
     private readonly static Vector3 verticalGridOffset = Vector3.zero;
     private readonly static Vector3 verticalHoverGridOffset = Vector3.up * 0.25f;
 
@@ -25,12 +24,22 @@ public class TilePosition : TileModifier
                 case(PositionMode.HOVER):
                     verticalOffset = verticalHoverGridOffset; break;
             }
+
+            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
         }
+
+#if UNITY_EDITOR
+        protected get
+        {
+            return verticalOffset == verticalGridOffset ? PositionMode.GRID : PositionMode.HOVER;
+        } 
+#endif
     }
 
     public TilePosition(TileCoordinates coordinates, PositionMode positionMode = PositionMode.GRID) : base(coordinates)
     {
-        SetPos(coordinates.Position);
+        Mode = positionMode;
+        //SetPos(coordinates.Position);
     }
 
     public void AllowMovement()
@@ -56,7 +65,7 @@ public class TilePosition : TileModifier
     public void AttachToGrid()
     {
         Mode = PositionMode.GRID;
-        SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
+        //SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
     }
 
     public void SetPos(Vector3 position)
