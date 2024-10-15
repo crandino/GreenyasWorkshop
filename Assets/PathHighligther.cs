@@ -17,13 +17,30 @@ public class PathHighligther : MonoBehaviour
 
     private bool direction = true;
 
+    private Material PathFiller
+    {
+        get
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                Material mat = new(renderer.sharedMaterial);
+                renderer.material = mat;
+                return mat;
+            }
+#endif
+
+            return renderer.material;
+        }
+    }
+
     private Color CurrentColor
     {
         get
         {
-            if (renderer.material.GetFloat(pathProgressID) > 0.5f)
-                return renderer.material.GetColor(foregroundPlayerColorID);
-            return renderer.material.GetColor(backgroundPlayerColorID);
+            if (PathFiller.GetFloat(pathProgressID) > 0.5f)
+                return PathFiller.GetColor(foregroundPlayerColorID);
+            return PathFiller.GetColor(backgroundPlayerColorID);
         }
     }   
 
@@ -31,24 +48,24 @@ public class PathHighligther : MonoBehaviour
     {
         this.direction = direction;
 
-        if(direction)
+        if (direction)
         {
-            renderer.material.SetColor(backgroundPlayerColorID, CurrentColor);
-            renderer.material.SetColor(foregroundPlayerColorID, newColor);
-            renderer.material.SetFloat(pathProgressID, 0f);
+            PathFiller.SetColor(backgroundPlayerColorID, CurrentColor);
+            PathFiller.SetColor(foregroundPlayerColorID, newColor);
+            PathFiller.SetFloat(pathProgressID, 0f);
         }
         else
         {
-            renderer.material.SetColor(foregroundPlayerColorID, CurrentColor);
-            renderer.material.SetColor(backgroundPlayerColorID, newColor);
-            renderer.material.SetFloat(pathProgressID, 1f);
+            PathFiller.SetColor(foregroundPlayerColorID, CurrentColor);
+            PathFiller.SetColor(backgroundPlayerColorID, newColor);
+            PathFiller.SetFloat(pathProgressID, 1f);
         }
     }
 
     public void Highlight(Color color)
     {
         Configure(color);
-        renderer.material.SetFloat(pathProgressID, 1f);
+        PathFiller.SetFloat(pathProgressID, 1f);
     }
 
 

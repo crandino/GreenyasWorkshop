@@ -50,20 +50,7 @@ public class PlayerOwnership : MonoBehaviour
     {
         Owner = newOwnership;
         highligther.Highlight(playerColors[newOwnership]);
-
-        //OnOwnershipChange?.Invoke();
     }   
-
-    // TODO 
-    /*
-     
-    - Limpiar todo el código comentado.
-    - Colocar nombres variables correctamente en el PathStorage.
-    - Quizá, separar en varios archivos toda la clase PathStorage
-    - Probar con una colorist de más salidas
-    - Añadir una colorist al final y buscar la manera de que vuelva a arrancar todo de nuevo
-
-    */
 
     public virtual async UniTask GraduallyOwnerChange()
     {

@@ -24,7 +24,7 @@ namespace Hexalinks.Tile
             outwardGates.Clear();
         }
 
-        public readonly struct ExposedGate
+        public readonly struct ExposedGate : Tile.IHashable
         {
             private readonly Gate gate;
 
@@ -32,6 +32,8 @@ namespace Hexalinks.Tile
             public readonly PlayerOwnership Ownership { get; }
 
             public readonly bool ForwardTraversalDir { get; }
+
+            public uint Hash => gate.Segment.Hash;
 
             public ExposedGate(Gate gate)
             {

@@ -10,7 +10,7 @@ public static class TileEditorManipulator
     private readonly static Label selectedTileTextField;
 
     private static Tile tile = null;
-    private static VisualElement callbackPlaceholder;
+    private static VisualElement callbackPlaceholder = null;
 
     private static EditorTilePosition tilePos;
     private static EditorTileRotation tileRot;
@@ -38,10 +38,12 @@ public static class TileEditorManipulator
 
     public static void Unset()
     {
-        tile = null;
         selectedTileTextField.text = "None";
-        callbackPlaceholder.UnregisterCallback<KeyDownEvent>(ManipulateTile);
+        callbackPlaceholder?.UnregisterCallback<KeyDownEvent>(ManipulateTile);
+        
         Selection.activeObject = null;
+        callbackPlaceholder = null;
+        tile = null;
     }
 
     private static void ManipulateTile(KeyDownEvent evt)
@@ -79,18 +81,27 @@ public static class TileEditorManipulator
             case KeyCode.W:
                 tilePos.MoveUp();
                 break;
-            //case KeyCode.Alpha0:
-            //    ChangeOwner(PlayerOwnership.Ownership.None);
-            //    break;
-            //case KeyCode.Alpha1:
-            //    ChangeOwner(PlayerOwnership.Ownership.PlayerOne);
-            //    break;
-            //case KeyCode.Alpha2:
-            //    ChangeOwner(PlayerOwnership.Ownership.PlayerTwo);
-            //    break;
+            case KeyCode.Alpha0:
+                ChangeOwner(PlayerOwnership.Ownership.None);
+                break;
+            case KeyCode.Alpha1:
+                ChangeOwner(PlayerOwnership.Ownership.PlayerOne);
+                break;
+            case KeyCode.Alpha2:
+                ChangeOwner(PlayerOwnership.Ownership.PlayerTwo);
+                break;
             default:
                 //Debug.Log("Clicking");
                 break;
+        }
+    }
+
+    private static void ChangeOwner(PlayerOwnership.Ownership ownership)
+    {
+        PlayerOwnership[] playerOwnerships = tile.GetComponentsInChildren<PlayerOwnership>();
+        foreach(var p in playerOwnerships)
+        {
+            p.InstantOwnerChange(ownership);
         }
     }
 

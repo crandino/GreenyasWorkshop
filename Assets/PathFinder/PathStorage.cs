@@ -15,7 +15,6 @@ namespace Hexalinks.PathFinder
         {
             public int id;
             public List<Path> paths;
-            public UnifiedPath unifiedPath;
 
             public PropagationStep(int id)
             {
@@ -23,10 +22,41 @@ namespace Hexalinks.PathFinder
                 paths = new List<Path>();
             }
 
-            public UnifiedPath UnifyPaths()
+            public List<PathLink[]> UnifyPaths()
             {
-                unifiedPath = new(paths);
-                return unifiedPath;
+                if (paths.Count == 0)
+                    return null;
+
+                int longestPath = paths.Max(p => p.Links.Length);
+                List<PathLink>[] upath = new List<PathLink>[longestPath];
+
+                for (int i = 0; i < upath.Length; ++i)
+                {
+                    upath[i] = new List<PathLink>();
+                }
+
+                for (int i = 0; i < paths.Count; ++i)
+                {
+                    for (int j = 0; j < paths[i].Links.Length; ++j)
+                    {
+                        upath[j].Add(paths[i].Links[j]);
+                    }
+                }
+
+                return upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
+            }
+
+            class PathLinkComparer : IEqualityComparer<PathLink>
+            {
+                public bool Equals(PathLink x, PathLink y)
+                {
+                    return x.Ownership == y.Ownership;
+                }
+
+                public int GetHashCode(PathLink product)
+                {
+                    return product.Ownership.GetHashCode();
+                }
             }
         }
 
@@ -62,68 +92,11 @@ namespace Hexalinks.PathFinder
 
         public static void StartPropagation()
         {
-            //RemoveIdenticalPaths();
-            OwnershipPropagation.Start(current.UnifyPaths());
+            List<PathLink[]> unifiedPath = current.UnifyPaths();
+
+            if(unifiedPath != null)
+                OwnershipPropagation.Start(unifiedPath);
         }
-
-        //private static void RemoveIdenticalPaths()
-        //{
-        //    foreach(PropagationStep step in steps)
-        //    {
-        //        if (step.id == current.id)
-        //            continue;
-
-        //        for(int i = step.paths.Count - 1; i >= 0; i--)
-        //        {
-        //            for (int j = current.paths.Count - 1; j >= 0; j--)
-        //            {
-        //                if (step.paths[i].HashID == current.paths[j].HashID)
-        //                    current.paths.RemoveAt(j);
-        //            }
-        //        }
-        //    }
-        //}
-
-        public class UnifiedPath
-        {
-            public List<PathLink[]> unifiedPath;
-
-            public UnifiedPath(List<Path> paths)
-            {
-                int longestPath = paths.Max(p => p.Links.Length);
-                List<PathLink>[] upath = new List<PathLink>[longestPath];
-
-                for (int i = 0; i < upath.Length; ++i)
-                {
-                    upath[i] = new List<PathLink>();
-                }                    
-
-                for (int i = 0; i < paths.Count; ++i)
-                {
-                    for (int j = 0; j < paths[i].Links.Length; ++j)
-                    {
-                        upath[j].Add(paths[i].Links[j]);
-                    }
-                }
-
-                unifiedPath = new List<PathLink[]>();
-                unifiedPath = upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
-            }
-
-            class PathLinkComparer : IEqualityComparer<PathLink>
-            {
-                public bool Equals(PathLink x, PathLink y)
-                {
-                    return x.Ownership == y.Ownership;              
-                }
-
-                public int GetHashCode(PathLink product)
-                {
-                    return product.Ownership.GetHashCode();
-                }
-            }
-        }
-
 
         public class Path
         {
@@ -147,10 +120,7 @@ namespace Hexalinks.PathFinder
                 Links = gates.Select(s => new PathLink(s)).ToArray();
                 Array.ForEach(Links, link =>
                 {
-                    CubeCoord coord = link.Ownership.transform.GetTransformUpUntil<Tile.Tile>().GetComponent<Tile.Tile>().Coord;
-                    HashID += (uint)((coord.Q * coord.Q) + (coord.Q * coord.Q) * 3 +
-                                     (coord.R * coord.R) * 13 + (coord.R * coord.R) * 4+ 
-                                     (coord.S * coord.S) * 7 + (coord.S * coord.S) * 2);
+                    HashID += link.entryGate.Hash;
                 });
             }
 

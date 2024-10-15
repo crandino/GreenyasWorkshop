@@ -2,10 +2,11 @@ using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEngine;
 using Hexalinks.PathFinder;
+using static Hexalinks.Tile.Tile;
 
 namespace Hexalinks.Tile
 {
-    public class Tile : MonoBehaviour
+    public class Tile : MonoBehaviour, IHashable
     {
         [SerializeField]
         private TileManipulator manipulator;
@@ -70,8 +71,14 @@ namespace Hexalinks.Tile
             connectivity.Disconnect();
         }
 
+        public uint Hash => (uint)((Coord.Q * Coord.Q) + (Coord.Q * Coord.Q) * 3 +
+                                   (Coord.R * Coord.R) * 13 + (Coord.R * Coord.R) * 4 +
+                                   (Coord.S * Coord.S) * 7 + (Coord.S * Coord.S) * 2);
+
 #if UNITY_EDITOR
-        public TileCoordinates Coordinates => coordinates;       
+        public TileCoordinates Coordinates => coordinates;
+
+      
 
         private void OnValidate()
         {
@@ -87,5 +94,10 @@ namespace Hexalinks.Tile
             //connectivity.DrawDebugInfo();
         }
 #endif
+
+        public interface IHashable
+        {
+            public uint Hash { get; }
+        }
     }
 }
