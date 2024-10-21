@@ -44,7 +44,10 @@ namespace Hexalinks.Tile
             if (TileDebugOptions.Instance.showSegments)
             {
                 Handles.color = CustomColors.darkOrange;
-                Handles.DrawLine(AllGates[0].WorldDebugPos, AllGates[1].WorldDebugPos, 2f);
+                Vector3 arrowDir = (AllGates[1].WorldDebugPos - AllGates[0].WorldDebugPos);
+
+                Handles.color = CustomColors.purple;
+                Handles.ArrowHandleCap(0, AllGates[0].WorldDebugPos, Quaternion.LookRotation(arrowDir.normalized, Vector3.up), arrowDir.magnitude * 0.9f, EventType.Repaint);
             }
         }
 #endif

@@ -8,9 +8,6 @@ using static OwnershipPropagation;
 public class PlayerOwnership : MonoBehaviour
 {
     [SerializeField]
-    private bool forceChange = false;
-
-    [SerializeField]
     private PathHighligther highligther;
 
     private static readonly Dictionary<Ownership, Color> playerColors = new Dictionary<Ownership, Color>
@@ -30,45 +27,32 @@ public class PlayerOwnership : MonoBehaviour
         PlayerTwo
     }
 
-    public Ownership Owner { protected set; get; } = Ownership.None;    
+    [SerializeField]
+    protected Ownership owner = Ownership.None;
 
-    private void Awake()
-    {
-        if (forceChange)
-            InstantOwnerChange(Ownership.PlayerOne);
-    }
+    public Ownership Owner => owner;
 
     protected PropagationData data;
 
-    public void Prepare(PropagationData data)
-    {
-        this.data = data;
-        highligther.Configure(playerColors[data.newOwner], data.forwardTraversalDirection);
-    }
-
     public void InstantOwnerChange(Ownership newOwnership)
     {
-        Owner = newOwnership;
+        owner = newOwnership;
         highligther.Highlight(playerColors[newOwnership]);
-    }   
+    }
 
-    public virtual async UniTask GraduallyOwnerChange()
+    public virtual async UniTask GraduallyOwnerChange(PropagationData data)
     {
-        if (Owner == data.newOwner)
+        if (owner == data.newOwner)
             return;
 
-        Owner = data.newOwner;
-        await highligther.UpdateHighlight();
+        if (highligther.PreHighlight(playerColors[data.newOwner], data.forwardTraversalDirection))
+        {
+            owner = data.newOwner;
+            await highligther.UpdateHighlight();
+        }
 
         return;
     }
-#if UNITY_EDITOR
-
-    private void Reset()
-    {
-        highligther = GetComponent<PathHighligther>();
-    } 
-#endif
 
     public static class OwnershipCounter
     {
@@ -79,7 +63,7 @@ public class PlayerOwnership : MonoBehaviour
             int[] ownershipCount = Enumerable.Repeat(0, 3).ToArray();
 
             foreach (var ownership in playerOwnerships)
-                ownershipCount[(int)ownership.Owner]++;
+                ownershipCount[(int)ownership.owner]++;
 
             int winnerOwnership = ownershipCount.Max();
             bool tie = ownershipCount.Skip(1).Count(o => o == winnerOwnership) != 1;
@@ -91,4 +75,11 @@ public class PlayerOwnership : MonoBehaviour
 
         }
     }
+
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        highligther = GetComponent<PathHighligther>();
+    }
+#endif
 }

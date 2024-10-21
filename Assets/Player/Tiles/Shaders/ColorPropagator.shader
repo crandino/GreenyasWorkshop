@@ -1,4 +1,4 @@
-Shader "Custom/UVFiller"
+Shader "Custom/ColorPropagator"
 {
     Properties
     {
@@ -6,9 +6,13 @@ Shader "Custom/UVFiller"
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
-        _ForegroundColor ("Foreground Color", Color) = (0,0,0,1)
         _BackgroundColor ("Background Color", Color) = (0,0,0,1)
-        _PathProgress ("Progress", Range(0,1)) = 0.5
+
+        _ForwardForegroundColor ("Forward Foreground Color", Color) = (0,0,0,1)
+        _ForwardPathProgress ("Forward Progress", Range(0,1)) = 0.0
+
+        _BackwardForegroundColor ("Backward Foreground Color", Color) = (0,0,0,1)
+        _BackwardPathProgress ("Backward Progress", Range(0,1)) = 1.0
 
     }
     SubShader
@@ -25,9 +29,13 @@ Shader "Custom/UVFiller"
 
         sampler2D _MainTex;
 
-        fixed4 _ForegroundColor;
         fixed4 _BackgroundColor;
-        fixed _PathProgress;
+
+        fixed4 _ForwardForegroundColor;
+        fixed _ForwardPathProgress;
+
+        fixed4 _BackwardForegroundColor;
+        fixed _BackwardPathProgress;
 
         struct Input
         {
@@ -47,19 +55,20 @@ Shader "Custom/UVFiller"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            // Albedo comes from a texture tinted by color
+            fixed forwardStep = step(IN.uv_MainTex.x, _ForwardPathProgress);
+            fixed4 forwardColor = lerp(_BackgroundColor, _ForwardForegroundColor, forwardStep);
             
-            //fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _PathSelectionColor;
+            fixed backwardStep = 1 - step(IN.uv_MainTex.x, 1 - _BackwardPathProgress);
+            fixed4 backwardColor = lerp(_BackgroundColor, _BackwardForegroundColor, backwardStep);
 
-            fixed p = step(_PathProgress, IN.uv_MainTex.x);
-            fixed4 c = lerp(_ForegroundColor, _BackgroundColor, p );
-            // c = fixed4(IN.uv_MainTex.x, 0, 0, 1);
+            fixed4 finalColor = lerp(backwardColor, forwardColor, step(backwardStep, forwardStep));
 
-            o.Albedo = c.rgb;
+            o.Albedo = finalColor.rgb;
+
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
+            o.Alpha = 1;
         }
         ENDCG
     }

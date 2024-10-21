@@ -11,13 +11,18 @@ public class PathHighligther : MonoBehaviour
     [SerializeField]
     private float segmentLength = 0.866f;
 
-    private readonly static int foregroundPlayerColorID = Shader.PropertyToID("_ForegroundColor");
     private readonly static int backgroundPlayerColorID = Shader.PropertyToID("_BackgroundColor");
-    private readonly static int pathProgressID = Shader.PropertyToID("_PathProgress");
+    private readonly static int forwardPlayerColorID = Shader.PropertyToID("_ForwardForegroundColor");
+    private readonly static int backwardPlayerColorID = Shader.PropertyToID("_BackwardForegroundColor");
 
-    private bool direction = true;
+    private readonly static int forwardPathProgressID = Shader.PropertyToID("_ForwardPathProgress");
+    private readonly static int backwardPathProgressID = Shader.PropertyToID("_BackwardPathProgress");
 
-    private Material PathFiller
+    private bool? forwardDirection = null;
+
+    const float PROPAGATION_SPEED = 0.866f * 2;
+
+    private Material ColorPropagator
     {
         get
         {
@@ -38,36 +43,61 @@ public class PathHighligther : MonoBehaviour
     {
         get
         {
-            if (PathFiller.GetFloat(pathProgressID) > 0.5f)
-                return PathFiller.GetColor(foregroundPlayerColorID);
-            return PathFiller.GetColor(backgroundPlayerColorID);
+            if (ColorPropagator.GetFloat(forwardPathProgressID) > 0.5f)
+                return ColorPropagator.GetColor(forwardPlayerColorID);
+            return ColorPropagator.GetColor(backwardPlayerColorID);
         }
     }   
 
-    public void Configure(Color newColor, bool direction = true)
+    public bool PreHighlight(Color newColor, bool? forwardDir = true)
     {
-        this.direction = direction;
+        if (timer != null && !timer.IsCompleted)
+            return false;
 
-        if (direction)
+        timer = new(segmentLength / PROPAGATION_SPEED);
+        this.forwardDirection = forwardDir;        
+
+        Color currentColor = CurrentColor;
+        ColorPropagator.SetColor(backgroundPlayerColorID, currentColor);
+
+        if(forwardDir.HasValue)
         {
-            PathFiller.SetColor(backgroundPlayerColorID, CurrentColor);
-            PathFiller.SetColor(foregroundPlayerColorID, newColor);
-            PathFiller.SetFloat(pathProgressID, 0f);
+            if (forwardDir.Value)
+            {
+                ColorPropagator.SetColor(forwardPlayerColorID, newColor);
+                ColorPropagator.SetColor(backwardPlayerColorID, currentColor);
+            }
+            else
+            {
+                ColorPropagator.SetColor(forwardPlayerColorID, currentColor);
+                ColorPropagator.SetColor(backwardPlayerColorID, newColor);
+            }
         }
         else
         {
-            PathFiller.SetColor(foregroundPlayerColorID, CurrentColor);
-            PathFiller.SetColor(backgroundPlayerColorID, newColor);
-            PathFiller.SetFloat(pathProgressID, 1f);
+            ColorPropagator.SetColor(forwardPlayerColorID, newColor);
+            ColorPropagator.SetColor(backwardPlayerColorID, newColor);
         }
+
+        ColorPropagator.SetFloat(forwardPathProgressID, 0f);
+        ColorPropagator.SetFloat(backwardPathProgressID, 0f);
+        return true;
+
+        // TODO: 
+        /*
+         *  Poner orden. El bool? cambiarlo por un enum (no queda claro)
+         *  La gestión de los paths y el historial de caminos, automatizarlo más
+         *  Crear extensiones para modificar varios parámetros a la vez en los renderers
+         *  Utilizar el TimerNormalized es la mejor opción
+         *  Crear mejores namespaces
+         */
     }
 
     public void Highlight(Color color)
     {
-        Configure(color);
-        PathFiller.SetFloat(pathProgressID, 1f);
+        PreHighlight(color);
+        ColorPropagator.SetFloat(forwardPathProgressID, 1f);
     }
-
 
     //public void Unhighlight(Color color)
     //{
@@ -75,28 +105,30 @@ public class PathHighligther : MonoBehaviour
     //    renderer.material.SetColor(playerColorID, color);
     //}
 
+    private NormalizedTimer timer = null;
+
     public IEnumerator UpdateHighlight()
     {
-        const float highlightSpeed = 0.866f * 2;
-
-        NormalizedTimer timer = new(segmentLength / highlightSpeed, !direction);
+        int[] progressID = forwardDirection.HasValue ? ( forwardDirection.Value ? new[] { forwardPathProgressID } : new[] { backwardPathProgressID }) : new int[] { forwardPathProgressID, backwardPathProgressID };
 
         while (!timer.IsCompleted)
         {
-            renderer.material.SetFloat(pathProgressID, timer.Time);
+            foreach(var p in progressID)
+                renderer.material.SetFloat(p, timer.Time);
             timer.Step(Time.deltaTime);
             yield return null;
         }
 
-        renderer.material.SetFloat(pathProgressID, Mathf.Clamp01(timer.Time));
+        foreach (var p in progressID)
+            renderer.material.SetFloat(p, Mathf.Clamp01(timer.Time));
     }
 
+#if UNITY_EDITOR
     private void Reset()
     {
         renderer = GetComponent<MeshRenderer>();
-    }
-
-
+    } 
+#endif
 }
 
 public class NormalizedTimer

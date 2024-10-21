@@ -76,8 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445c63b02eed60d4abf192ee0cd71237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceChange: 0
   highligther: {fileID: 4287136758590898612}
+  owner: 0
+  forceChange: 1
   childrenOwnership:
   - {fileID: 2469102542773394377}
   - {fileID: 2276376986643655668}
@@ -374,8 +375,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceChange: 0
   highligther: {fileID: 1080812222842220942}
+  owner: 0
 --- !u!1 &5360171749848113980
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,8 +626,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
-  - {fileID: 1215840123267825041}
   - {fileID: 7208856221945222616}
+  - {fileID: 1215840123267825041}
 --- !u!114 &7208856221945222616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -668,8 +669,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceChange: 0
   highligther: {fileID: 245107387377853587}
+  owner: 0
 --- !u!1 &7011579879458823039
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,8 +763,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceChange: 0
   highligther: {fileID: 3928166839351147778}
+  owner: 0
 --- !u!1001 &2281048710470588753
 PrefabInstance:
   m_ObjectHideFlags: 0

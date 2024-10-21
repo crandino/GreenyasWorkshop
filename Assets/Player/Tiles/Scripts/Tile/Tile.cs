@@ -31,7 +31,9 @@ namespace Hexalinks.Tile
 
             SplitLongCurve,
 
-            FillerSimple
+            FillerSimple,
+            FillerDouble,
+            FillerTriple
         }        
 
         public void Initialize()

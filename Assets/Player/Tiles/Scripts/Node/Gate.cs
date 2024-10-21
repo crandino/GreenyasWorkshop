@@ -39,7 +39,7 @@ namespace Hexalinks.Tile
             {
                 this.gate = gate;
                 Ownership = gate.Segment.GetComponent<PlayerOwnership>();
-                ForwardTraversalDir = gate.Segment.IsOriginalDirection(gate);
+                ForwardTraversalDir = gate.Segment.IsTraversalForward(gate);
             }
 
             public bool GoThrough(out ExposedGate[] connectedGates)
