@@ -50,6 +50,17 @@ namespace Hexalinks.Tile
             gridData.Clear();
         }
 
+        [ContextMenu("Add all tiles")]
+        public void AddAllToGrid()
+        {
+            ClearGrid();
+            Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
+            foreach (var tile in tiles)
+            {
+                AddTile(tile);
+            }
+        }
+
 #if UNITY_EDITOR
         #region VISUAL_DEBUG
 
