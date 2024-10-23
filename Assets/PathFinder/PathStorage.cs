@@ -1,4 +1,6 @@
 using Hexalinks.Tile;
+using HexaLinks.Ownership;
+using HexaLinks.Propagation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +11,49 @@ namespace Hexalinks.PathFinder
 {
     public static class PathStorage
     {
+        private class Storage
+        {
+            private readonly static List<uint> pathsHashes = new();
+
+            public bool ExistsPath(uint hash) => pathsHashes.Contains(hash);
+            public void AddPath(uint hash) => pathsHashes.Add(hash);
+            public void RemovePath(uint hash) => pathsHashes.Remove(hash);
+            public void Clear() => pathsHashes.Clear();
+        }
+
+        private readonly static Storage storage = new Storage();
+
         private class PropagationStep
         {
-            public int id;
-            public List<Path> paths;
+            private readonly int id;
+            private readonly Storage storage;
+            private List<Path> paths;
 
             public PropagationStep(int id)
             {
                 this.id = id;
                 paths = new List<Path>();
+                storage = PathStorage.storage;
+            }
+
+            public void AddPath(Path newPath)
+            {
+                if(storage.ExistsPath(newPath.HashID))
+                {
+                    Path identicPath = current.paths.First(p => p.HashID == newPath.HashID);
+
+                    storage.RemovePath(identicPath.HashID);
+                    identicPath.Log("Before trimmed");
+                    Merge(newPath, identicPath);
+                    identicPath.Log("After trimmed");
+
+                    storage.AddPath(identicPath.HashID);
+                    current.paths.Add(newPath);
+                }
+
+                storage.AddPath(newPath.HashID);
+                paths.Add(newPath);
+                newPath.Log("Added");
             }
 
             public List<Link[]> UnifyPaths()
@@ -44,22 +80,11 @@ namespace Hexalinks.PathFinder
                 return upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
             }
 
-            public class LinkGroup
-            {
-                private readonly Link[] links;
-                public bool IsAlone => links.Length == 1;
-
-                //public Link[] GetOppositeLinks()
-                //{
-                //    links.Sele
-                //}
-            }
-
             class PathLinkComparer : IEqualityComparer<Link>
             {
                 public bool Equals(Link x, Link y)
                 {
-                    return x.Ownership == y.Ownership && x.ForwardTraversal == y.ForwardTraversal;
+                    return x.Ownership == y.Ownership && x.ForwardPropagation == y.ForwardPropagation;
                 }
 
                 public int GetHashCode(Link product)
@@ -71,8 +96,6 @@ namespace Hexalinks.PathFinder
 
         private readonly static List<PropagationStep> steps = new List<PropagationStep>();
         private static PropagationStep current = null;
-
-        private readonly static List<uint> oldPathsHashes = new();
 
         public static void InitNewPropagation(bool fullReset = false)
         {
@@ -91,27 +114,7 @@ namespace Hexalinks.PathFinder
 
         public static void Add(Path newPath)
         {
-            if(!oldPathsHashes.Contains(newPath.HashID))
-            {
-                current.paths.Add(newPath);
-                oldPathsHashes.Add(newPath.HashID);
-                newPath.Log();
-            }
-            else
-            {
-                Path identicPath = current.paths.First(p => p.HashID == newPath.HashID);
-                //int midPointLink = Mathf.CeilToInt((float)identicPath.Links.Length / 2);
-
-                oldPathsHashes.Remove(identicPath.HashID);
-                identicPath.Merge(newPath);
-
-                identicPath.Log();
-                newPath.Log();
-
-                oldPathsHashes.Add(identicPath.HashID);
-                oldPathsHashes.Add(newPath.HashID);
-                current.paths.Add(newPath);
-            }
+            current.AddPath(newPath);
         }
 
         public static void StartPropagation()
@@ -119,7 +122,7 @@ namespace Hexalinks.PathFinder
             List<Link[]> unifiedPath = current.UnifyPaths();
 
             if(unifiedPath != null)
-                OwnershipPropagation.Start(unifiedPath);
+                PropagationManager.Start(unifiedPath);
         }
 
         public class Path
@@ -146,20 +149,11 @@ namespace Hexalinks.PathFinder
 
                 public readonly PlayerOwnership Ownership => entryGate.Ownership;
                 public readonly uint Hash => entryGate.Hash;
-                public readonly bool? ForwardTraversal => forwardTraversal;
-
-                private readonly bool? forwardTraversal;
+                public readonly bool ForwardPropagation => entryGate.ForwardTraversalDir;
 
                 public Link(Gate.ExposedGate gate)
                 {
                     entryGate = gate;
-                    forwardTraversal = entryGate.ForwardTraversalDir;
-                }
-
-                public Link(Link copyLink)
-                {
-                    entryGate = copyLink.entryGate;
-                    forwardTraversal = null;
                 }
             }
 
@@ -208,27 +202,33 @@ namespace Hexalinks.PathFinder
                 OwnershipCounter counter = OwnershipCounter.Calculate(Links);               
             }
 
-            public void Merge(Path otherPath)
+            public static void Merge(Path path1, Path path2)
             {
-                hash = InvalidHash;
+                path1.hash = path2.hash = InvalidHash;
 
-                int midPointLink = Mathf.CeilToInt((float)Links.Length / 2);
-                Links = Links.Take(midPointLink).ToArray();
-                Links[midPointLink - 1] = new Link(Links[midPointLink - 1]);
-                otherPath.Links = otherPath.Links.Take(midPointLink).ToArray();
-                otherPath.Links[midPointLink - 1] = new Link(otherPath.Links[midPointLink - 1]);
+                int midPointLink = Mathf.CeilToInt((float)path1.Links.Length / 2);
+                path1.Links = path1.Links.Take(midPointLink).ToArray();
+                path2.Links = path2.Links.Take(midPointLink).ToArray();
             }
 
-            public void Log()
+            private string LogMessage 
             {
-                int counter = 1;
-                string text = $"Path ID: {HashID} ({Links.Length} segments)\n";
+                get
+                {
+                    int counter = 1;
+                    string text = $"Path ID: {HashID} ({Links.Length} segments)\n";
 
-                foreach (var link in Links)
-                    text += $"{counter++} - {link.Ownership.transform.parent.name}:{link.Ownership.name}\n";
+                    foreach (var link in Links)
+                        text += $"{counter++} - {link.Ownership.transform.parent.name}:{link.Ownership.name}\n";
 
-                Debug.Log(text);
-            }      
+                    return text;
+                }
+            }     
+            
+            public void Log(string headerMessage)
+            {
+                Debug.Log($"{headerMessage} {LogMessage}");
+            }
         }
     }
 
