@@ -14,8 +14,8 @@ namespace Hexalinks.Tile
 
         public struct TileQueryResult
         {
-            public Tile tile;
-            public SideGate gate;
+            public Tile toTile;
+            public SideGate fromGate;
         }
 
         public List<TileQueryResult> GetNeighborCandidates(CubeCoord coord)
@@ -26,15 +26,21 @@ namespace Hexalinks.Tile
                 candidates.AddRange(s.GetCandidates(coord));
 
             return candidates;
-        }
-
-        public void TryConnect(SideGate againstGate)
+        }     
+        
+        public void GetPossibleConnections(SideGate againstGate, SideGate.ConnectionCandidates candidatesResult)
         {
             for (int i = 0; i < segments.Length; ++i)
-            {
-                segments[i].TryConnection(againstGate);
-            }
+                segments[i].GetPossibleConnections(againstGate, candidatesResult);
         }
+
+        //public void TryConnect(SideGate againstGate)
+        //{
+        //    for (int i = 0; i < segments.Length; ++i)
+        //    {
+        //        segments[i].TryConnection(againstGate);
+        //    }
+        //}
 
         public void Disconnect()
         {

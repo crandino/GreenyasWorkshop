@@ -28,18 +28,24 @@ namespace Hexalinks.Tile
                 if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
                     candidates.Add(new()
                     {
-                        tile = neighborTileData,
-                        gate = SideGates[i]
+                        toTile = neighborTileData,
+                        fromGate = SideGates[i]
                     });
             }
 
             return candidates;
         }
 
-        public void TryConnection(SideGate againstGate)
+        //public void TryConnection(SideGate againstGate, List<SideGate.ConnectionCandidate> candidates)
+        //{
+        //    foreach (var fromGate in SideGates)
+        //        fromGate.TryConnect(againstGate);
+        //}
+
+        public void GetPossibleConnections(SideGate againstGate, SideGate.ConnectionCandidates candidatesResult)
         {
             foreach (var fromGate in SideGates)
-                fromGate.TryConnect(againstGate);
+                fromGate.GetPossibleConnections(againstGate, candidatesResult);
         }
 
         public void Disconnect()
@@ -69,7 +75,6 @@ namespace Hexalinks.Tile
         {
             return gameObject.AddComponent<SideGate>();
         }
-
 #endif
     }
 

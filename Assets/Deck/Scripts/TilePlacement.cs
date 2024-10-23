@@ -28,11 +28,9 @@ public class TilePlacement : Game.SubSystem
 
     private void TryReleaseTile()
     {
-        if (!TileRaycast.CursorRaycastToTile())
+        if (!TileRaycast.CursorRaycastToTile() && currentSelectedTile.TryRelease())
         {
             OnSuccessPlacement();
-
-            currentSelectedTile.Release();
             Finish();
         }
     }
