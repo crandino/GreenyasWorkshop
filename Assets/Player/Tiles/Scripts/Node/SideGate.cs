@@ -10,6 +10,7 @@ using System;
 #if UNITY_EDITOR
 using UnityEditor;
 using Hexagon.Tile.Debug; 
+using HexaLinks.Tile.Extensions.Hexside;
 #endif
 
 namespace Hexalinks.Tile

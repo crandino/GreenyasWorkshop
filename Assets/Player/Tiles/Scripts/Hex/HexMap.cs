@@ -5,6 +5,7 @@ using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
+using HexaLinks.Extensions.Vector;
 using UnityEditor;
 #endif
 

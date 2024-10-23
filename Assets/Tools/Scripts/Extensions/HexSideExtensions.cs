@@ -1,7 +1,7 @@
 using Greenyas.Hexagon;
 using UnityEngine;
 
-namespace Greenyas.Hexagon
+namespace HexaLinks.Tile.Extensions.Hexside
 {
     public static class HexSideExtensions
     {
