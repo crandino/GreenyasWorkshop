@@ -3,6 +3,7 @@ using HexaLinks.Tile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tripolygon.UModelerX.Runtime.MessagePack.Resolvers;
 
 namespace HexaLinks.PathFinder
 {
@@ -50,17 +51,17 @@ namespace HexaLinks.PathFinder
 
             private struct OwnershipCounter
             {
-                private readonly Link[] pathLinks;
-
                 public class OwnershipSegments
                 {
+                    private readonly Link[] links;
                     public Range Range { private set; get; }
-                    public int GetNumberOfLinks(Link[] links) => Range.GetOffsetAndLength(links.Length).Length;
+                    public int GetNumberOfLinks() => Range.GetOffsetAndLength(links.Length).Length;
 
-                    public PlayerOwnership.Ownership GetOwner(Link[] links) => links[Range.Start].Ownership.Owner;
+                    public PlayerOwnership.Ownership GetOwner() => links[Range.Start].Ownership.Owner;
 
-                    public OwnershipSegments(Index startIndex)
+                    public OwnershipSegments(Link[] pathLinks, Index startIndex)
                     {
+                        links = pathLinks;
                         Range = Range.StartAt(startIndex);
                     }
 
@@ -74,21 +75,20 @@ namespace HexaLinks.PathFinder
 
                 public OwnershipCounter(Link[] links)
                 {
-                    pathLinks = links;
                     segments = new List<OwnershipSegments>();
 
-                    links = links.Skip(1).ToArray();
+                    Link[] linksMinusFirst = links.Skip(1).ToArray();
 
                     int index = 1;
 
-                    foreach (var l in links)
+                    foreach (Link link in linksMinusFirst)
                     {
-                        if (segments.Count == 0 || segments.Last().GetOwner(links) != l.Ownership.Owner)
+                        if (segments.Count == 0 || segments.Last().GetOwner() != link.Ownership.Owner)
                         {
                             if (segments.LastOrDefault() != null)
                                 segments.Last().CloseRange(index);
 
-                            segments.Add(new OwnershipSegments(index));
+                            segments.Add(new OwnershipSegments(links, index));
                         }
                         ++index;
                     }
@@ -100,12 +100,12 @@ namespace HexaLinks.PathFinder
 
                     foreach (OwnershipSegments seg in segments)
                     {
-                        PlayerOwnership.Ownership segmentOwner = seg.GetOwner(pathLinks);
+                        PlayerOwnership.Ownership segmentOwner = seg.GetOwner();
 
                         if (segmentOwner == PlayerOwnership.Ownership.None ||
-                            initialOwner != segmentOwner && totalOwnershipCounter > seg.GetNumberOfLinks(pathLinks))
+                            initialOwner != segmentOwner && totalOwnershipCounter > seg.GetNumberOfLinks())
                         {
-                            totalOwnershipCounter += seg.GetNumberOfLinks(pathLinks);
+                            totalOwnershipCounter += seg.GetNumberOfLinks();
                         }
                         else
                             return Range.EndAt(seg.Range.Start);
@@ -120,16 +120,17 @@ namespace HexaLinks.PathFinder
                 Links = gates.Select(s => new Link(s)).ToArray();
                 StartLink = Links.First();
                 OwnershipCounter counter = new OwnershipCounter(Links);
-                PropagationRange = counter.CalculateOwnershipRange(StartLink.Ownership.Owner);
+                PropagationRange = counter.CalculateOwnershipRange(((InitialPlayerOwnership)StartLink.Ownership).StartingOwner);
             }
 
+            //https://stackoverflow.com/questions/2978311/format-a-string-into-columns
             public override string ToString()
             {
-                int counter = 1;
-                string text = $"Path ID: {HashID} ({Links.Length} segments)\n";
+                int counter = 0;
+                string text = $"Path ID: {HashID} ({Links.Length} segments)\n";      
 
                 foreach (var link in Links)
-                    text += $"{counter++} - {link.Ownership.transform.parent.name}:{link.Ownership.name}\n";
+                    text += string.Format("{0,-3}|{1,-40}|{2,-15}|{3,-12}\n", ++counter, link.Ownership.transform.parent.name, link.Ownership.name,link.Ownership.Owner);
 
                 return text;
             }
