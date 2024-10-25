@@ -1,11 +1,11 @@
 using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEngine;
-using static Hexalinks.Tile.TileConnectivity;
+using static HexaLinks.Tile.TileConnectivity;
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
-    public abstract class TileSegment : MonoBehaviour, Tile.IHashable
+    public abstract class TileSegment : MonoBehaviour, IHashable<TileSegment, uint>
     {
         public virtual bool CanBeCrossed => true;
 
@@ -15,7 +15,8 @@ namespace Hexalinks.Tile
 
         protected abstract SideGate[] SideGates { get; }
 
-        public uint Hash => transform.GetTransformUpUntil<Tile>().GetComponent<Tile>().Hash + ((uint)transform.GetSiblingIndex() + 1);
+        public uint Hash => HashFunction(this);
+        public uint HashFunction(TileSegment s) => s.transform.GetTransformUpUntil<Tile>().GetComponent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
 
         public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
         {

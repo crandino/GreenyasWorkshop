@@ -34,46 +34,34 @@ namespace HexaLinks.Ownership
 
         public Ownership Owner => owner;
 
+        public Ownership PendingOwner { protected set; get; } = Ownership.None;
+
+        public event Action OnOnwerChanged = delegate { };
+
         public void InstantOwnerChange(Ownership newOwnership)
         {
-            owner = newOwnership;
-            highligther.InstantPropagation(playerColors[newOwnership]);
+            PendingOwner = owner = newOwnership;
+            highligther.InstantPropagation(playerColors[owner]);
+        }     
+        
+        public virtual void OwnerChange(Ownership newOwnership)
+        {
+            PendingOwner = newOwnership;
         }
 
-        public virtual async UniTask GraduallyOwnerChange(Ownership newOwner, bool forwardPropagation)
+        public async UniTask UpdatePropagation(bool forwardPropagation)
         {
-            highligther.PrePropagation(playerColors[newOwner], forwardPropagation);
-
-            if (owner == newOwner)
+            if (PendingOwner == owner)
                 return;
 
-            owner = newOwner;
+            highligther.PrePropagation(playerColors[PendingOwner], forwardPropagation);
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
 
+            owner = PendingOwner;
+            OnOnwerChanged();
+
             return;
-        }
-
-        public static class OwnershipCounter
-        {
-            public static bool IsWinnerOwner(PlayerOwnership[] playerOwnerships, out Ownership winner)
-            {
-                winner = Ownership.None;
-
-                int[] ownershipCount = Enumerable.Repeat(0, 3).ToArray();
-
-                foreach (var ownership in playerOwnerships)
-                    ownershipCount[(int)ownership.owner]++;
-
-                int winnerOwnership = ownershipCount.Max();
-                bool tie = ownershipCount.Skip(1).Count(o => o == winnerOwnership) != 1;
-
-                if (!tie)
-                    winner = (Ownership)Array.LastIndexOf(ownershipCount, winnerOwnership);
-
-                return !tie && winner != Ownership.None;
-
-            }
         }
 
 #if UNITY_EDITOR

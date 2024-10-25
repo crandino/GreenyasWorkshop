@@ -1,9 +1,9 @@
-using Hexalinks.PathFinder.Tools;
+using HexaLinks.PathFinder.Tools;
 using System.Linq;
 
-using Gate = Hexalinks.Tile.Gate.ExposedGate;
+using Gate = HexaLinks.Tile.Gate.ExposedGate;
 
-namespace Hexalinks.PathFinder
+namespace HexaLinks.PathFinder
 {
     public static class PathIterator
     {
@@ -28,13 +28,7 @@ namespace Hexalinks.PathFinder
                     if (currentGate.GoThrough(out Gate[] nextGates))
                         gateTracker.AddStep(nextGates);
                     else
-                    {
-                        PathStorage.Path path = new(gateTracker.GetEvaluatedSteps()
-                                            .ToArray());
-                        
-
-                        PathStorage.Add(path);
-                    }
+                        PathStorage.Add(new(gateTracker.GetEvaluatedSteps().ToArray()));
                 }
             }
 

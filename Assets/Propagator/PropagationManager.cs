@@ -1,47 +1,60 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using HexaLinks.Ownership;
-using static Hexalinks.PathFinder.PathStorage;
-using static Hexalinks.PathFinder.PathStorage.Path;
+using static HexaLinks.PathFinder.PathStorage;
+using static HexaLinks.PathFinder.PathStorage.Path;
+using UnityEditor;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace HexaLinks.Propagation
 {
     public static class PropagationManager
     {
-        private static List<Link[]> unifiedPath;
-
-        private static PlayerOwnership.Ownership owner;
-
-        public readonly struct PropagationData
-        {
-            public readonly PlayerOwnership.Ownership newOwner;
-            public readonly bool? forwardTraversalDirection;
-
-            public PropagationData(PlayerOwnership.Ownership owner, bool? propagationDirection)
-            {
-                newOwner = owner;
-                forwardTraversalDirection = propagationDirection;
-            }
-        }
+        private static List<List<Link[]>> unifiedPaths = new List<List<Link[]>>();
 
         public static void Start(List<Link[]> path)
         {
-            unifiedPath = path;
-            owner = unifiedPath[0][0].Ownership.Owner;
+            unifiedPaths.Add(path);
 
-            TriggerPropagation(owner);
+            if (propagating)
+                return;
+
+            TriggerPropagation();           
         }
 
-        private async static void TriggerPropagation(PlayerOwnership.Ownership owner)
+        private static bool propagating = false;
+
+        private static async void TriggerPropagation()
+        {
+            propagating = true;
+
+            for (int i = 0; i < unifiedPaths.Count; i++)
+            {
+                SetNewOwnershipAlongPath(((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).StartingOwner, unifiedPaths[i]);
+                await UpdatePropagation(unifiedPaths[i]);
+            }
+
+            propagating = false;
+            unifiedPaths.Clear();
+        }
+
+        private static void SetNewOwnershipAlongPath(PlayerOwnership.Ownership newOwner, List<Link[]> unifiedPath)
+        {
+            foreach (Path.Link[] pathLinks in unifiedPath)
+            {
+                foreach (Path.Link c in pathLinks)
+                   c.Ownership.OwnerChange(newOwner);
+            }
+        }
+
+        private async static UniTask UpdatePropagation(List<Link[]> unifiedPath)
         {
             foreach (Path.Link[] pathLinks in unifiedPath)
             {
                 List<UniTask> tasks = new();
 
                 foreach (Path.Link c in pathLinks)
-                {
-                    tasks.Add(c.Ownership.GraduallyOwnerChange(owner, c.ForwardPropagation));
-                }
+                    tasks.Add(c.Ownership.UpdatePropagation(c.ForwardTraversal));
 
                 await UniTask.SwitchToMainThread();
                 await UniTask.WhenAll(tasks);

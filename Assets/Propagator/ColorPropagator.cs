@@ -48,25 +48,7 @@ namespace HexaLinks.Propagation
                     return CurrentMaterial.GetColor(forwardPlayerColorID);
                 return CurrentMaterial.GetColor(backwardPlayerColorID);
             }
-
-            set
-            {
-                CurrentMaterial.SetFloat(forwardPathProgressID, 1f);
-                CurrentMaterial.SetColor(forwardPlayerColorID, value);
-            }
         }
-
-        //public readonly struct Data
-        //{
-        //    public readonly Color color;
-        //    public readonly bool forward;
-
-        //    public Data(Color newColor, bool forwardPropagationDir)
-        //    {
-        //        color = newColor;
-        //        forward = forwardPropagationDir;
-        //    }
-        //}
 
         private readonly List<int> pathProgressIDs = new List<int>();
 
@@ -80,12 +62,10 @@ namespace HexaLinks.Propagation
 
             // TODO: 
             /*
-             *  Poner orden. El bool? cambiarlo por un enum (no queda claro)
              *  La gestión de los paths y el historial de caminos, automatizarlo más
              *  Crear extensiones para modificar varios parámetros a la vez en los renderers
              *  Utilizar el TimerNormalized es la mejor opción
              *  Crear mejores namespaces
-             *  Poner el NormalizedTimer en su clase separada
              */
         }
 

@@ -1,13 +1,13 @@
 using Greenyas.Hexagon;
 using System.Collections.Generic;
 using UnityEngine;
-using Hexalinks.PathFinder;
-using static Hexalinks.Tile.Tile;
+using HexaLinks.PathFinder;
+using static HexaLinks.Tile.Tile;
 using System;
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
-    public class Tile : MonoBehaviour, IHashable
+    public class Tile : MonoBehaviour, IHashable<CubeCoord, uint>
     {
         [SerializeField]
         private TileManipulator manipulator;
@@ -61,8 +61,8 @@ namespace Hexalinks.Tile
 
             connectionCandidates.Connect();
 
-            PathStorage.InitNewPropagation(true);
-            PathIterator.FindPathsFrom(this);
+            PathStorage.Reset();
+            PathStorage.Init(this);
 
             return true;
         }
@@ -93,12 +93,14 @@ namespace Hexalinks.Tile
             connectivity.Disconnect();
         }
 
-        public uint Hash => (uint)((Coord.Q * Coord.Q) + (Coord.Q * Coord.Q) * 3 +
-                                   (Coord.R * Coord.R) * 13 + (Coord.R * Coord.R) * 4 +
-                                   (Coord.S * Coord.S) * 7 + (Coord.S * Coord.S) * 2);
+        public uint HashFunction(CubeCoord c) => (uint)((c.Q * c.Q) * 13 + (c.Q * c.Q) * 3    +
+                                                        (c.R * c.R)      + (c.R * c.R) * 17   +
+                                                        (c.S * c.S) * 7  + (c.S * c.S) * 11);
+
+        public uint Hash => HashFunction(Coord);
 
 #if UNITY_EDITOR
-        public TileCoordinates Coordinates => coordinates;      
+        public TileCoordinates Coordinates => coordinates;
 
         private void OnValidate()
         {
@@ -115,9 +117,9 @@ namespace Hexalinks.Tile
         }
 #endif
 
-        public interface IHashable
-        {
-            public uint Hash { get; }
-        }
+        //public interface IHashable
+        //{
+        //    public int Hash { get; }
+        //}
     }
 }
