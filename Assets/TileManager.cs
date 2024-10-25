@@ -1,6 +1,6 @@
 using System.Linq;
 using UnityEngine;
-using Hexalinks.Tile;
+using HexaLinks.Tile;
 
 public class TileManager : MonoBehaviour
 {

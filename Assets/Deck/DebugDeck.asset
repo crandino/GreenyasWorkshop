@@ -19,5 +19,5 @@ MonoBehaviour:
     amount: 0
   - tileType: 2
     amount: 0
-  - tileType: 10
+  - tileType: 8
     amount: 1

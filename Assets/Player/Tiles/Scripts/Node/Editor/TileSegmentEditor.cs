@@ -1,5 +1,5 @@
 using Greenyas.Hexagon;
-using Hexalinks.Tile;
+using HexaLinks.Tile;
 using UnityEditor;
 using UnityEngine;
 

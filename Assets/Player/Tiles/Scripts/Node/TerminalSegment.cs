@@ -4,7 +4,7 @@ using UnityEngine;
 //using System.Reflection;
 //#endif
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     public class TerminalSegment : TileSegment
     {

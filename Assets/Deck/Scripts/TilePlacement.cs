@@ -1,5 +1,5 @@
 using Greenyas.Input;
-using Hexalinks.Tile;
+using HexaLinks.Tile;
 using System;
 using UnityEngine;
 

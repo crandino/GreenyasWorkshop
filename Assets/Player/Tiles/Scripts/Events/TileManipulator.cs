@@ -2,7 +2,7 @@ using Greenyas.Hexagon;
 using UnityEditor;
 using UnityEngine;
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     public class TileManipulator : MonoBehaviour
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 using Hexagon.Tile.Debug;
 #endif
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     public class TraversalSegment : TileSegment
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Assertions;
 
-namespace Hexalinks.PathFinder.Tools
+namespace HexaLinks.PathFinder.Tools
 {
     public class TileStepTracker<T>
     {

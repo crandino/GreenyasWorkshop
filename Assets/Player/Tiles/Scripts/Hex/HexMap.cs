@@ -9,7 +9,7 @@ using HexaLinks.Extensions.Vector;
 using UnityEditor;
 #endif
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     public class HexMap : SingletonMonobehaviour<HexMap>
     {

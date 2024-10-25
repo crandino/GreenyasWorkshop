@@ -1,4 +1,4 @@
-using Hexalinks.Tile;
+using HexaLinks.Tile;
 using UnityEngine;
 using UnityEngine.UIElements;
 

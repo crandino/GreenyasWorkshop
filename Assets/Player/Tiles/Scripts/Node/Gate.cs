@@ -7,7 +7,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     [System.Serializable]
     public class Gate : MonoBehaviour
@@ -25,7 +25,7 @@ namespace Hexalinks.Tile
             outwardGates.Clear();
         }
 
-        public readonly struct ExposedGate : Tile.IHashable
+        public readonly struct ExposedGate
         {
             private readonly Gate gate;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     public class TileConnectivity : MonoBehaviour
     {

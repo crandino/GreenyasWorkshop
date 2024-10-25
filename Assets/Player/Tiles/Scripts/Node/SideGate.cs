@@ -3,17 +3,16 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
-using System.Collections.Generic;
 using System;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
-using Hexagon.Tile.Debug; 
+using Hexagon.Tile.Debug;
 using HexaLinks.Tile.Extensions.Hexside;
 #endif
 
-namespace Hexalinks.Tile
+namespace HexaLinks.Tile
 {
     [System.Serializable]
     public class SideGate : Gate
