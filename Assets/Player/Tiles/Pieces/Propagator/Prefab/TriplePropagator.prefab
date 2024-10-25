@@ -282,7 +282,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4608011544846304644}
-  m_Mesh: {fileID: 4300000, guid: 8ac9353de5ebf2c4f871441aa3f7e875, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 1fe7a4b938ff7e04c8fff7aa545758a7, type: 2}
 --- !u!1 &5351636505702849466
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,8 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates:
-  - {fileID: 4561228286680848292}
+  outwardGates: []
 --- !u!114 &8045037846449820345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,8 +639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates:
-  - {fileID: 4561228286680848292}
+  outwardGates: []
 --- !u!114 &1215840123267825041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,8 +732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates:
-  - {fileID: 4561228286680848292}
+  outwardGates: []
 --- !u!114 &721416023698220945
 MonoBehaviour:
   m_ObjectHideFlags: 0
