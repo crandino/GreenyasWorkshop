@@ -116,10 +116,5 @@ namespace HexaLinks.Tile
             //connectivity.DrawDebugInfo();
         }
 #endif
-
-        //public interface IHashable
-        //{
-        //    public int Hash { get; }
-        //}
     }
 }
