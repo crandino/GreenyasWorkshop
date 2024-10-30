@@ -61,6 +61,18 @@ namespace HexaLinks.Tile
             }
         }
 
+        // North. Min R
+        // West.  Min Q
+        // South. Max R
+        // East.  Max Q
+
+        [ContextMenu("Search")]
+        public void GetNorthestTile()
+        {
+            Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
+            Tile[] tilesR = tiles.OrderBy(c => c.Coord.R).ThenBy(c => c.Coord.Q).ToArray();
+        }
+
 #if UNITY_EDITOR
         #region VISUAL_DEBUG
 
