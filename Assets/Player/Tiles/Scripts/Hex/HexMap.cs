@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Greenyas.Hexagon;
 using System.Linq;
+using System;
+
 
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
@@ -21,9 +23,14 @@ namespace HexaLinks.Tile
         [SerializeField]
         private SerializableDictionary<CubeCoord, Tile> gridData = new(new CubeCoord.CoordinateComparer());
 
+        public event Action OnGridChanged;
+
         public bool AddTile(Tile tile)
         {
-            return gridData.TryAdd(tile.Coord, tile);
+            bool successfulAdded = gridData.TryAdd(tile.Coord, tile);
+            if (successfulAdded)
+                OnGridChanged();
+            return successfulAdded;
         }
 
         public void RemoveTile(CubeCoord coord)

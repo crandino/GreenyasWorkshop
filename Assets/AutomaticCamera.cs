@@ -1,3 +1,4 @@
+using HexaLinks.Tile;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,15 @@ public class AutomaticCamera : MonoBehaviour
     private new Camera camera;
 
     [SerializeField]
-    private Transform up, bottom, left, right;
+    private Vector2 centerOffset;
+
+    [SerializeField, Tooltip("Left, right, bottom, up")]
+    private Vector4 frustumLimitsOffset;
+
+    public Camera Camera => camera;
+    public Vector2 CenterOffset => centerOffset;
+    public Vector4 FrustumLimitsOffset => frustumLimitsOffset;
+
 
     private Vector3 targetCameraPosition;
     private Vector3 velocity = Vector3.zero;
@@ -17,25 +26,23 @@ public class AutomaticCamera : MonoBehaviour
 
     private void Awake()
     {
+        HexMap.Instance.OnGridChanged += UpdateLimits;
+
         TileFinder.GridLimits gridLimits = TileFinder.GetLimits();
+        frustum = new(this, gridLimits);
+    }
 
-        up = gridLimits.north;
-        bottom = gridLimits.south;
-        left = gridLimits.west;
-        right = gridLimits.east;
-
-        frustum = new(camera, left, right, up, bottom);
+    private void UpdateLimits()
+    {
+        frustum.UpdateLimits(TileFinder.GetLimits());
     }
 
     void LateUpdate()
     {
-        Vector3 centerHorizontal = (right.position + left.position) * 0.5f;
-        Vector3 centerVertical = (up.position + bottom.position) * 0.5f;
-
         targetCameraPosition = transform.position;
 
-        targetCameraPosition += camera.transform.InverseTransformPoint(centerVertical).y * camera.transform.up;
-        targetCameraPosition += camera.transform.InverseTransformPoint(centerHorizontal).x * camera.transform.right;
+        targetCameraPosition += camera.transform.InverseTransformPoint(frustum.VertLimitCenter).y * camera.transform.up;
+        targetCameraPosition += camera.transform.InverseTransformPoint(frustum.HorzLimitCenter).x * camera.transform.right;
         targetCameraPosition += frustum.GetTranslationCorrection().z * camera.transform.forward;
 
         camera.transform.position = Vector3.SmoothDamp(camera.transform.position, targetCameraPosition, ref velocity, Time.deltaTime);
@@ -45,37 +52,53 @@ public class AutomaticCamera : MonoBehaviour
 [System.Serializable]
 public class CameraFrustum
 {
-    private PlaneLimit[] limits; // left, right, bottom, up
+    private readonly PlaneLimit[] limits; // left, right, bottom, up
+    private readonly AutomaticCamera autoCamera;
 
-    private static Camera Camera { set; get; }
+    public Vector3 HorzLimitCenter => ((limits[0].worldLimitPosition + limits[1].worldLimitPosition) * 0.5f) +
+                                      (-autoCamera.CenterOffset.x * autoCamera.Camera.transform.right);
+    public Vector3 VertLimitCenter => ((limits[2].worldLimitPosition + limits[3].worldLimitPosition) * 0.5f) +
+                                      (-autoCamera.CenterOffset.y * autoCamera.Camera.transform.up);
 
-    public CameraFrustum(Camera camera, Transform leftLimit, Transform rightLimit, Transform upLimit, Transform bottomLimit)
+    public CameraFrustum(AutomaticCamera camera, TileFinder.GridLimits gridlimits)
     {
-        CameraFrustum.Camera = camera;
+        autoCamera = camera;
 
         // Left, right, bottom, up, near, far
-        Plane[] worldPlanes = GeometryUtility.CalculateFrustumPlanes(camera);
-        
+        Plane[] worldPlanes = GeometryUtility.CalculateFrustumPlanes(camera.Camera);
+
+        //UpdateLimits(gridlimits);
+
         limits = new PlaneLimit[] {
-            new(worldPlanes[0], leftLimit, 1.5f),
-            new(worldPlanes[1], rightLimit, 0.5f),
-            new(worldPlanes[2], bottomLimit, 0.5f),
-            new(worldPlanes[3], upLimit, 0.5f)
+            new(worldPlanes[0], autoCamera.Camera.transform, gridlimits.limits[0], autoCamera.FrustumLimitsOffset[0]),
+            new(worldPlanes[1], autoCamera.Camera.transform, gridlimits.limits[1], autoCamera.FrustumLimitsOffset[1]),
+            new(worldPlanes[2], autoCamera.Camera.transform, gridlimits.limits[2], autoCamera.FrustumLimitsOffset[2]),
+            new(worldPlanes[3], autoCamera.Camera.transform, gridlimits.limits[3], autoCamera.FrustumLimitsOffset[3])
             };
+    }
+
+    public void UpdateLimits(TileFinder.GridLimits gridlimits)
+    {
+        limits[0].worldLimitPosition = gridlimits.limits[0];
+        limits[1].worldLimitPosition = gridlimits.limits[1];
+        limits[2].worldLimitPosition = gridlimits.limits[2];
+        limits[3].worldLimitPosition = gridlimits.limits[3];
     }
 
     private struct PlaneLimit
     {
         private readonly Plane localPlane;
-        private readonly float sideThreshold;
-        public Transform LimitPos { private set; get; }
+        public Vector3 worldLimitPosition;
+        public readonly float sideThreshold;
+        private readonly Transform camTransform;
 
-        private readonly float DistanceToLocalPlane => localPlane.GetDistanceToPoint(Camera.transform.InverseTransformPoint(LimitPos.position));
+        private readonly float DistanceToLocalPlane => localPlane.GetDistanceToPoint(camTransform.InverseTransformPoint(worldLimitPosition));
 
-        public PlaneLimit(Plane worldPlane, Transform limit, float threshold = 0f)
+        public PlaneLimit(Plane worldPlane, Transform camTransform, Vector3 worldLimit, float threshold = 0f)
         {
-            localPlane = new Plane(Camera.transform.InverseTransformVector(worldPlane.normal), worldPlane.distance + (Vector3.Dot(worldPlane.normal, Camera.transform.position)));
-            LimitPos = limit;
+            this.camTransform = camTransform;
+            localPlane = new Plane(camTransform.InverseTransformVector(worldPlane.normal), worldPlane.distance + (Vector3.Dot(worldPlane.normal, camTransform.position)));
+            worldLimitPosition = worldLimit;
             sideThreshold = threshold;
         }
 
@@ -86,9 +109,9 @@ public class CameraFrustum
 
         public Vector3 GetCorrection()
         {
-            float distance = DistanceToLocalPlane - sideThreshold;
-            Vector3 correction = Camera.transform.TransformDirection(distance * localPlane.normal);
-            Debug.DrawLine(LimitPos.position, LimitPos.position + correction, Color.red);
+            float distanceCorrected = DistanceToLocalPlane - sideThreshold;
+            Vector3 correction = distanceCorrected * camTransform.TransformDirection(localPlane.normal);
+            Debug.DrawLine(worldLimitPosition, worldLimitPosition + correction, Color.yellow);
 
             return correction;
         }

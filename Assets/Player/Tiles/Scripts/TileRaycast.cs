@@ -12,7 +12,7 @@ public static class TileRaycast
     private static bool CursorRaycast(LayerMask mask, out RaycastHit hit)
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        return Physics.Raycast(ray, out hit, 10f, mask);
+        return Physics.Raycast(ray, out hit, Camera.main.farClipPlane, mask);
     }
 
     public static bool CursorRaycastToTile()

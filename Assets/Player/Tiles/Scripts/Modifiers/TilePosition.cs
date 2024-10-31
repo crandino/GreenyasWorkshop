@@ -25,7 +25,7 @@ public class TilePosition : TileModifier
                     verticalOffset = verticalHoverGridOffset; break;
             }
 
-            SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
+            SetPos(HexTools.GetHexCenterCartesianWorldPos(Coordinates.Position));
         }
 
 #if UNITY_EDITOR
