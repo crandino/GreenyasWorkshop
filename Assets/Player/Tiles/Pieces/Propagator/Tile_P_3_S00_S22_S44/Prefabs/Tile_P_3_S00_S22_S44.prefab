@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highligther: {fileID: 4287136758590898612}
-  owner: 0
+  owner: 1
   forceChange: 1
   childrenOwnership:
   - {fileID: 2469102542773394377}
