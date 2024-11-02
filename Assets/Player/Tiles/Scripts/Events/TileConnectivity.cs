@@ -34,14 +34,6 @@ namespace HexaLinks.Tile
                 segments[i].GetPossibleConnections(againstGate, candidatesResult);
         }
 
-        //public void TryConnect(SideGate againstGate)
-        //{
-        //    for (int i = 0; i < segments.Length; ++i)
-        //    {
-        //        segments[i].TryConnection(againstGate);
-        //    }
-        //}
-
         public void Disconnect()
         {
             for (int i = 0; i < segments.Length; ++i)

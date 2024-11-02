@@ -16,10 +16,10 @@ public class TilePlacerWindow : EditorWindow
 
     private readonly struct Option
     {
-        private readonly TilePrefabOption tile;
+        private readonly TileResourceOption tile;
         private readonly TilePrefabOptionManipulator manipulator;
 
-        public Option(TilePrefabOption tileOption)
+        public Option(TileResourceOption tileOption)
         {
             tile = tileOption;
             manipulator = new TilePrefabOptionManipulator(tile);
@@ -44,7 +44,7 @@ public class TilePlacerWindow : EditorWindow
         {
             styleSheet.CloneTree(rootVisualElement);
 
-            options = rootVisualElement.Query<TilePrefabOption>().ForEach(prefabPathLabel => new Option(prefabPathLabel)).ToArray();
+            options = rootVisualElement.Query<TileResourceOption>().ForEach(prefabPathLabel => new Option(prefabPathLabel)).ToArray();
 
             foreach (var label in options)
             {

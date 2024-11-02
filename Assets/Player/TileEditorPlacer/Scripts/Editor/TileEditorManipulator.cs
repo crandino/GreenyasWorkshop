@@ -91,9 +91,9 @@ public static class TileEditorManipulator
             case KeyCode.Alpha2:
                 ChangeOwner(PlayerOwnership.Ownership.PlayerTwo);
                 break;
-            default:
-                //Debug.Log("Clicking");
-                break;
+            //default:
+            //    Debug.Log("Clicking");
+            //    break;
         }
     }
 

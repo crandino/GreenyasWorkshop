@@ -28,8 +28,13 @@ namespace HexaLinks.Tile
         public bool AddTile(Tile tile)
         {
             bool successfulAdded = gridData.TryAdd(tile.Coord, tile);
-            if (successfulAdded)
-                OnGridChanged();
+
+            if (successfulAdded
+#if UNITY_EDITOR
+                 && Application.isPlaying
+#endif
+               )
+               OnGridChanged(); 
             return successfulAdded;
         }
 

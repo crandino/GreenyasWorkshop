@@ -1,22 +1,48 @@
-using HexaLinks.Tile;
-using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TilePrefabOption : VisualElement
+public class TileResourceOption : VisualElement
 {
-    public Tile TilePrefab { get; set; }
+    private TileResource tileResource;
 
-    public new class UxmlFactory : UxmlFactory<TilePrefabOption, UxmlTraits> { }
+    public TileResource TileResource
+    {
+        get => tileResource;
+        set
+        {
+            tileResource = value;
+            if (tileResource != null)
+                style.backgroundImage = Background.FromSprite(tileResource.Icon);
+        }
+    }
+
+    public void SizeChanged(GeometryChangedEvent ev)
+    {
+        layout.size.Set(ev.newRect.width, ev.newRect.height);
+    }
+
+
+    public new class UxmlFactory : UxmlFactory<TileResourceOption, UxmlTraits> { }
 
     // Traits class
     public new class UxmlTraits : VisualElement.UxmlTraits
     {
-        protected UxmlAssetAttributeDescription<Tile> prefab = new() { name = "tile-prefab" };
+        protected UxmlAssetAttributeDescription<TileResource> resource = new() { name = "tile-resource" };
 
         public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
         {
             base.Init(ve, bag, cc);
-            ((TilePrefabOption)ve).TilePrefab = prefab.GetValueFromBag(bag, cc);
+
+            TileResourceOption tro = ((TileResourceOption)ve);
+
+            tro.TileResource = resource.GetValueFromBag(bag, cc);
+
+            tro.style.marginLeft = tro.style.marginRight = new StyleLength(5);
+
+            tro.style.width = 50f;
+            tro.style.height = 50f;
+
+            tro.focusable = true;
+            
         }
-    }    
+    }
 }

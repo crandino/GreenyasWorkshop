@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
 using System;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 using Hexagon.Tile.Debug;

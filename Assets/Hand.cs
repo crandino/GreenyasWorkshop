@@ -1,54 +1,64 @@
 using HexaLinks.Tile;
 using System;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static TileResources;
 
 public class Hand : MonoBehaviour
 {
     private class HandOption
     {
         private readonly Button button;
-        private TileResourceLocator tileResourceLocator;
 
-        public bool Empty => button.iconImage == Background.FromSprite(emptyIcon);
+        private TileResource tileResource;
+        private static TileResource emptyTileResource;
 
-        public HandOption(Button button)
+        public bool Selected { private set; get; }
+
+        public HandOption(Button button, TileResource emptyTileResource)
         {
             this.button = button;
+            HandOption.emptyTileResource = emptyTileResource;
+            //Reset();
         }
 
-        public void Set(TileResourceLocator locator)
+        public void Set(TileResource resourceLocator)
         {
-            tileResourceLocator = locator;
-            button.iconImage = Background.FromSprite(locator.sprite);
+            tileResource = resourceLocator;
+            Reset();
         }
 
         public void Reset()
         {
-            if(Empty)
-                button.iconImage = Background.FromSprite(tileResourceLocator.sprite);
+            button.iconImage = Background.FromSprite(tileResource.Icon);
+            Selected = false;
         }
 
-        private Tile LoadTile()
-        {
-            button.iconImage = Background.FromSprite(emptyIcon);
-            return GameObject.Instantiate<Tile>(tileResourceLocator.tile);
-        }
+        //private Tile LoadTile()
+        //{
+        //    button.iconImage = Background.FromSprite(emptyIcon);
+        //    return GameObject.Instantiate<Tile>(tileResourceLocator.Prefab);
+        //}
 
         public void ActivateSelection(Action<Tile> onTileSelection)
         {
             button.clicked += () =>
             {
-                Tile tile = LoadTile();
-                onTileSelection(tile);
+                if (tileResource.Prefab != null)
+                {
+                    button.iconImage = Background.FromSprite(emptyTileResource.Icon);
+                    Tile tile = GameObject.Instantiate<Tile>(tileResource.Prefab);
+                    onTileSelection(tile);
+
+                    Selected = true;
+                }
             };
         }
 
         public void DeactivateSelection()
         {
-            button.clickable = null;       
+            button.clickable = null;
         }
     }
 
@@ -61,23 +71,14 @@ public class Hand : MonoBehaviour
     [SerializeField]
     private DeckContent deckContent;
 
-    [SerializeField]
-    private TileResources resources;
-
-    public static Sprite emptyIcon;
-
-    private void Start()
-    {
-        emptyIcon = resources.EmptyIcon;
-    }
-
     public void Initialize()
     {
         deck = deckContent.CreateDeck();
+
         playerOptions = playerHandUI.rootVisualElement.Query<Button>().ForEach(b =>
         {
-            HandOption handOption = new(b);
-            handOption.Set(resources[deck.Draw()]);
+            HandOption handOption = new(b, deck.EmptyTile);
+            handOption.Set(deck.Draw());
             return handOption;
         }).ToArray();
     }
@@ -101,10 +102,7 @@ public class Hand : MonoBehaviour
 
     public void Draw()
     {
-        if (deck.Empty)
-            return;
-        
-        HandOption handOption = playerOptions.First(o => o.Empty);
-        handOption.Set(resources[deck.Draw()]);
+        HandOption handOption = playerOptions.First(o => o.Selected);
+        handOption.Set(deck.Draw());
     }
 }

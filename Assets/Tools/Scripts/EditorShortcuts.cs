@@ -15,7 +15,7 @@ public static class EditorShortcuts
         AssetDatabase.CreateFolder(currentSelectedPpath, "Prefabs");
     }
 
-    private static string GetSelectedPathOrFallback()
+    public static string GetSelectedPathOrFallback()
     {
         string path = "Assets";
 
