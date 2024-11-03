@@ -69,6 +69,11 @@ public class TileRotation : TileModifier
         Coordinates.RotationAngle = finalAngle;
     }
 
+    protected override void OnCancel()
+    {
+        RestrictRotation();
+    }
+
     protected override bool OnUpdate()
     {
         progress = progress + Time.deltaTime * inverseTotalTime;

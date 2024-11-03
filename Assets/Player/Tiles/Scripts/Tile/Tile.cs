@@ -18,36 +18,21 @@ namespace HexaLinks.Tile
         protected TileCoordinates coordinates;
 
         public CubeCoord Coord => coordinates.Coord;
-        public Gate.ExposedGate[] StartingGates => connectivity.StartingGates;
-
-        public enum Type
-        {
-            FlowStraight,
-            FlowSimpleShortCurve,
-            FlowSimpleLongCurve,
-            FlowDoubleNearShortCurve,
-            FlowDoubleFarShortCurve,
-            FlowDoubleLongCurve,
-            FlowTripleShortCurve,
-
-            SplitLongCurve,
-
-            FillerSimple,
-            FillerDouble,
-            FillerTriple
-        }        
+        public Gate.ExposedGate[] StartingGates => connectivity.StartingGates;      
 
         public void Initialize()
         {
             manipulator.Initialize(coordinates);
         }
 
+        public void Terminate()
+        {
+            manipulator.Terminate();
+        }
+
         public void PickUp()
         {
-            //connectivity.Disconnection();
             manipulator.PickUp();
-
-            //HexMap.Instance.RemoveTile(Coord);
         }
 
         public bool TryRelease()

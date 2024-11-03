@@ -11,21 +11,33 @@ public class DeckContentEditor : Editor
         SerializedProperty fallbackProp = deckContentObject.FindProperty("fallback");
         EditorGUILayout.ObjectField(fallbackProp);
 
-        SerializedProperty contentProperty = deckContentObject.FindProperty("content");
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Traversal tiles");        
+        ShowTileResourcesGrid(deckContentObject.FindProperty("traversalContent"));
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Propagator tiles");
+        ShowTileResourcesGrid(deckContentObject.FindProperty("propagatorContent"));
+       
+        if (deckContentObject.hasModifiedProperties)
+            deckContentObject.ApplyModifiedProperties();
+    }
 
+    private void ShowTileResourcesGrid(SerializedProperty property)
+    {
         const int COLUMNS = 4;
 
         GUIStyle textCenterAlignment = new GUIStyle() { alignment = TextAnchor.MiddleCenter };
         textCenterAlignment.normal.textColor = Color.white;
 
-        for(int i = 0; i < contentProperty.arraySize;)
+        for (int i = 0; i < property.arraySize;)
         {
             EditorGUILayout.BeginHorizontal();
 
-            for (int j = 0; j < COLUMNS && (i+j) < contentProperty.arraySize; ++j)
+            for (int j = 0; j < COLUMNS && (i + j) < property.arraySize; ++j)
             {
-                SerializedProperty element = contentProperty.GetArrayElementAtIndex(i + j);
-               
+                SerializedProperty element = property.GetArrayElementAtIndex(i + j);
+
                 EditorGUILayout.BeginVertical(GUILayout.MaxWidth(60));
                 EditorGUILayout.PropertyField(element.FindPropertyRelative("tileResource"), GUILayout.MaxWidth(50));
                 SerializedProperty amountProp = element.FindPropertyRelative("amount");
@@ -37,8 +49,7 @@ public class DeckContentEditor : Editor
 
             EditorGUILayout.EndHorizontal();
         }
-
-        if (deckContentObject.hasModifiedProperties)
-            deckContentObject.ApplyModifiedProperties();
     }
+
+
 }

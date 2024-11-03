@@ -38,6 +38,7 @@ namespace HexaLinks.Tile
                 {
                     gate.outwardGates.Add(otherGate);
                     otherGate.outwardGates.Add(gate);
+                    OnGateConnected?.Invoke();
                 }
             }
 
@@ -59,6 +60,8 @@ namespace HexaLinks.Tile
             }
         }
 
+        public static event Action OnGateConnected;
+        public static event Action OnGateDisconnected;
 
         public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult )
         {
@@ -70,18 +73,19 @@ namespace HexaLinks.Tile
                 candidatesResult.AddPair(this, againstGate);
         }
        
-        public void TryConnect(SideGate againstGate)
-        {
-            // There's any previous connection between those gates
-            if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
-                return;
+        //public void TryConnect(SideGate againstGate)
+        //{
+        //    // There's any previous connection between those gates
+        //    if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
+        //        return;
 
-            if (IsFacingOtherGate(againstGate))
-            {
-                outwardGates.Add(againstGate);
-                againstGate.outwardGates.Add(this);
-            };
-        }
+        //    if (IsFacingOtherGate(againstGate))
+        //    {
+        //        outwardGates.Add(againstGate);
+        //        againstGate.outwardGates.Add(this);
+        //        OnGateConnected();
+        //    };
+        //}
 
         private bool IsFacingOtherGate(SideGate gateTo)
         {

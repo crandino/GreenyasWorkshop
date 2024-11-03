@@ -1,5 +1,3 @@
-using HexaLinks.Tile;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -9,30 +7,43 @@ using UnityEngine;
 public class DeckContent : ScriptableObject
 {
     [System.Serializable]
-    private struct TileEntry
+    public struct TileEntry
     {
         public TileResource tileResource;
         public int amount;
+
+        public TileEntry(TileResource resource)
+        {
+            tileResource = resource;
+            amount = 0;
+        }
     }
 
     [SerializeField]
-    private TileEntry[] content;
+    private TileEntry[] traversalContent;
 
     [SerializeField]
-    private TileResource fallback;
+    private TileEntry[] propagatorContent;
 
     public Deck CreateDeck()
     {
-        Deck newDeck = new Deck(this);
-        newDeck.Shuffle();
-        return newDeck;
+        return new Deck(this);
     }
 
-#if UNTIY_EDITOR
+#if UNITY_EDITOR
     [ContextMenu("Create content structure")]
     private void Create()
     {
-        string[] tileResourcesIDs = AssetDatabase.FindAssets("t:TileResource");
+        // Traversal tiles
+        traversalContent = GetTileResources("t:TileResource, _T_").ToArray();
+
+        // Propagator tiles
+        propagatorContent = GetTileResources("t:TileResource, _P_").ToArray();
+    }
+
+    private TileEntry[] GetTileResources(string searchFilter)
+    {
+        string[] tileResourcesIDs = AssetDatabase.FindAssets(searchFilter);
         List<TileResource> listOfResources = new();
         foreach (var t in tileResourcesIDs)
         {
@@ -41,43 +52,47 @@ public class DeckContent : ScriptableObject
                 listOfResources.Add(AssetDatabase.LoadAssetAtPath<TileResource>(AssetDatabase.GUIDToAssetPath(t)));
         }
 
-        content = listOfResources.Select(r => new TileEntry()
-        {
-            tileResource = r,
-            amount = 0
-        }).ToArray();
-    } 
+        return listOfResources.Select(r => new TileEntry(r)).ToArray();
+    }
 #endif
 
     public class Deck
     {
-        private readonly TileResource[] deck;
-        private int discardIndex = 0;
-        public TileResource EmptyTile { private set; get; }
+        public class DrawableDeck
+        {
+            private readonly TileResource[] deck;
+            private int discardIndex = 0;
+            public bool EmptyDeck => discardIndex >= deck.Length;
 
-        public bool EmptyDeck => discardIndex >= deck.Length;
+            public DrawableDeck(TileEntry[] content)
+            {
+                List<TileResource> newDeck = new();
+
+                for (int i = 0; i < content.Length; i++)
+                    newDeck.AddRange(Enumerable.Repeat(content[i].tileResource, content[i].amount));
+
+                deck = newDeck.ToArray();
+                Shuffle();
+            }
+
+            private void Shuffle()
+            {
+                discardIndex = 0;
+                deck.Shuffle();
+            }
+
+            public TileResource Draw(TileResource fallback)
+            {
+                return !EmptyDeck ? deck[discardIndex++] : fallback;
+            }
+        }
+        public DrawableDeck TraversalDeck { private set; get; }
+        public DrawableDeck PropagatorDeck { private set; get; }
 
         public Deck(DeckContent creator)
         {
-            EmptyTile = creator.fallback;
-
-            List<TileResource> newDeck = new();
-
-            for (int i = 0; i < creator.content.Length; i++)
-                newDeck.AddRange(Enumerable.Repeat(creator.content[i].tileResource, creator.content[i].amount));
-
-            deck = newDeck.ToArray();
-        }
-
-        public void Shuffle()
-        {
-            discardIndex = 0;
-            deck.Shuffle();
-        }
-
-        public TileResource Draw()
-        {
-            return EmptyDeck ? EmptyTile : deck[discardIndex++];
+            TraversalDeck = new DrawableDeck(creator.traversalContent);
+            PropagatorDeck = new DrawableDeck(creator.propagatorContent);
         }
     }
 }

@@ -39,7 +39,6 @@ public class TilePosition : TileModifier
     public TilePosition(TileCoordinates coordinates, PositionMode positionMode = PositionMode.GRID) : base(coordinates)
     {
         Mode = positionMode;
-        //SetPos(coordinates.Position);
     }
 
     public void AllowMovement()
@@ -65,7 +64,6 @@ public class TilePosition : TileModifier
     public void AttachToGrid()
     {
         Mode = PositionMode.GRID;
-        //SetPos(HexTools.GetGridCartesianWorldPos(Coordinates.Position));
     }
 
     public void SetPos(Vector3 position)

@@ -12,24 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ddb6c15f54425646950b576dee9d3b2, type: 3}
   m_Name: DebugDeck
   m_EditorClassIdentifier: 
-  content:
-  - tileResource: {fileID: 11400000, guid: 049264b967f683045b3fba0bb02144ec, type: 2}
-    amount: 0
-  - tileResource: {fileID: 11400000, guid: 65695e6fae923bf45a96e591d92482d6, type: 2}
-    amount: 0
-  - tileResource: {fileID: 11400000, guid: 22084668c251b6d458ac6d4bc53f5480, type: 2}
-    amount: 0
+  traversalContent:
   - tileResource: {fileID: 11400000, guid: ec4b608fa613de64e9b2cff5fa1fcffe, type: 2}
-    amount: 0
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 9950b61009f0f2342a455fc7e346fb2d, type: 2}
-    amount: 0
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 5ee38bae914febc429ab6376e7418f46, type: 2}
-    amount: 0
+    amount: 2
+  - tileResource: {fileID: 11400000, guid: e76e3c538a4d8254a8f10517a1e3722b, type: 2}
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 882b168b8f37118468d7c94910d7b50c, type: 2}
-    amount: 0
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 3bd880c6ca90123488d8fd62a8ea3af5, type: 2}
-    amount: 0
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 1ac25984f9f4d3e4e9083f5a68498dab, type: 2}
-    amount: 0
+    amount: 2
   - tileResource: {fileID: 11400000, guid: 87bcf1005848c894d9a3fb30a6667ed8, type: 2}
-    amount: 0
+    amount: 2
+  propagatorContent:
+  - tileResource: {fileID: 11400000, guid: 049264b967f683045b3fba0bb02144ec, type: 2}
+    amount: 2
+  - tileResource: {fileID: 11400000, guid: 65695e6fae923bf45a96e591d92482d6, type: 2}
+    amount: 2
+  - tileResource: {fileID: 11400000, guid: 22084668c251b6d458ac6d4bc53f5480, type: 2}
+    amount: 2
+  fallback: {fileID: 11400000, guid: 0ddc00d81302ef745a5afb6d374baf3c, type: 2}

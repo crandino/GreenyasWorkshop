@@ -18,6 +18,12 @@ namespace HexaLinks.Tile
             position = new TilePosition(coordinates);
         }
 
+        public void Terminate()
+        {
+            rotation.Cancel();
+            position.Cancel();
+        }
+
         public void PickUp()
         {
             trigger.enabled = false;

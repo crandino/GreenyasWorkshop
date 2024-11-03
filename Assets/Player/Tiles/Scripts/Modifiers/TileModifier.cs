@@ -30,11 +30,19 @@ public abstract class TileModifier
     protected void Finish()
     {
         OnFinish();
-        if(coroutine != null) 
+        if (coroutine != null)
+            CoroutineManager.Stop(coroutine);
+    }
+
+    public void Cancel()
+    {
+        OnCancel();
+        if (coroutine != null)
             CoroutineManager.Stop(coroutine);
     }
 
     protected virtual void OnStart() { }
     protected virtual bool OnUpdate() { return false; }
     protected virtual void OnFinish() { }
+    protected virtual void OnCancel() { }
 }

@@ -37,6 +37,7 @@ public class TilePlacement : Game.SubSystem
 
     private void CancelTile()
     {
+        currentSelectedTile.Terminate();
         GameObject.Destroy(currentSelectedTile.gameObject);
 
         OnFailurePlacement();
