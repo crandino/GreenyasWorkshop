@@ -211,6 +211,10 @@ PrefabInstance:
       propertyPath: 'segments.Array.data[0]'
       value: 
       objectReference: {fileID: 855448087009069288}
+    - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3175736382684188824, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

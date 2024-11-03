@@ -207,7 +207,6 @@ GameObject:
   - component: {fileID: 6667744662360893654}
   - component: {fileID: 8508980899390457262}
   - component: {fileID: 4351519961201404571}
-  - component: {fileID: 2613093004512863975}
   m_Layer: 6
   m_Name: Path
   m_TagString: Untagged
@@ -295,28 +294,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5796168207332748213}
-  m_Mesh: {fileID: 4300000, guid: c7e4e31a1e5733b43ac7c7f48135f603, type: 2}
---- !u!64 &2613093004512863975
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5796168207332748213}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: c7e4e31a1e5733b43ac7c7f48135f603, type: 2}
 --- !u!1 &7276678055054480768
 GameObject:
@@ -433,6 +410,10 @@ PrefabInstance:
       propertyPath: 'segments.Array.data[1]'
       value: 
       objectReference: {fileID: 640278709570074929}
+    - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3175736382684188824, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -475,7 +456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4622106612996760707, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Name
-      value: Tile_T_2_S02_S05
+      value: Tile_T_2_S02_S04
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
