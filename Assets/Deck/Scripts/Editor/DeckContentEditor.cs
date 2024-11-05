@@ -8,10 +8,6 @@ public class DeckContentEditor : Editor
     {
         SerializedObject deckContentObject = new SerializedObject(target);
 
-        SerializedProperty fallbackProp = deckContentObject.FindProperty("fallback");
-        EditorGUILayout.ObjectField(fallbackProp);
-
-        EditorGUILayout.Space();
         EditorGUILayout.LabelField("Traversal tiles");        
         ShowTileResourcesGrid(deckContentObject.FindProperty("traversalContent"));
         

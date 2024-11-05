@@ -36,4 +36,3 @@ MonoBehaviour:
     amount: 2
   - tileResource: {fileID: 11400000, guid: 22084668c251b6d458ac6d4bc53f5480, type: 2}
     amount: 2
-  fallback: {fileID: 11400000, guid: 0ddc00d81302ef745a5afb6d374baf3c, type: 2}
