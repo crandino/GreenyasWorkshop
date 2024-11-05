@@ -117,6 +117,7 @@ public static class TileEditorManipulator
         if (!hexMap.TryGetTile(tile.Coordinates.Coord, out Tile _))
         {
             tilePos.AttachToGrid();
+            tile.GetComponentInChildren<MeshCollider>().enabled = true; // hot fix
             hexMap.AddTile(tile);
 
             if (Application.isPlaying)
