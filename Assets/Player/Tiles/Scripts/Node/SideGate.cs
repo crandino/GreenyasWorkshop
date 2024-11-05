@@ -39,6 +39,7 @@ namespace HexaLinks.Tile
                     gate.outwardGates.Add(otherGate);
                     otherGate.outwardGates.Add(gate);
                     OnGateConnected?.Invoke();
+                    //TileEvents.onSegmentConnected.Invoke();
                 }
             }
 
@@ -61,7 +62,7 @@ namespace HexaLinks.Tile
         }
 
         public static event Action OnGateConnected;
-        public static event Action OnGateDisconnected;
+        //public static event Action OnGateDisconnected;
 
         public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult )
         {

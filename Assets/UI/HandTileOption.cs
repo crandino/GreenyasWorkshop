@@ -1,5 +1,3 @@
-using HexaLinks.Tile;
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,6 +15,7 @@ namespace HexaLinks.UI.PlayerHand
         public HandTileOption(Button tileButton, DeckContent.Deck.DrawableDeck drawableDeck)
         {
             button = tileButton;
+            button.clicked += LoadTile;
             deck = drawableDeck;
         }
 
@@ -32,34 +31,37 @@ namespace HexaLinks.UI.PlayerHand
             DrawingPending = false;
         }
 
-        public void ActivateSelection(Action<Tile.Tile> onTileSelection)
+        public virtual void Activate()
         {
             button.SetEnabled(true);
-            button.clicked += () => SelectTile(onTileSelection);
         }
 
-        protected virtual void SelectTile(Action<Tile.Tile> onTileSelection)
-        {
-            if (tileResource.Prefab != null)
-            {
-                button.iconImage = Background.FromSprite(Hand.EmptyTile.Icon);
-                Tile.Tile tile = GameObject.Instantiate<Tile.Tile>(tileResource.Prefab);
-                onTileSelection(tile);
-
-                DrawingPending = true;
-            }
-        }
-
-        public void DeactivateSelection()
+        public virtual void Deactivate()
         {
             button.SetEnabled(false);
-            button.clickable = null;
         }
 
         public void Draw(TileResource fallback)
         {
             Set(deck.Draw(fallback));
             DrawingPending = false;
+        }
+
+        private void LoadTile()
+        {
+            if (tileResource.Prefab != null)
+            {
+                PrepareTile(GameObject.Instantiate<Tile.Tile>(tileResource.Prefab));
+                button.iconImage = Background.FromSprite(Hand.EmptyTile.Icon);
+                Deactivate();
+
+                DrawingPending = true;
+            }
+        } 
+        
+        protected virtual void PrepareTile(Tile.Tile tile)
+        {
+            Game.Instance.GetSystem<TilePlacement>().Start(tile);
         }
     } 
 }

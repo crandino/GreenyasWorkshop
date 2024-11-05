@@ -8,30 +8,19 @@ namespace HexaLinks.Ownership
     public class InitialPlayerOwnership : PlayerOwnership
     {
         [SerializeField]
-        private bool forceChange = false;
-
-        [SerializeField]
         private PlayerOwnership[] childrenOwnership;
-
-        public Ownership StartingOwner { private set; get; }
 
         private void Awake()
         {
-            if (forceChange)
-            {
-                StartingOwner = Ownership.PlayerOne;
-                InstantOwnerChange(Ownership.PlayerOne);
-            }
-
             foreach (var child in childrenOwnership)
                 child.OnOnwerChanged += UpdateOwnership;
         }   
         
         private void UpdateOwnership()
         {
-            if (IsWinnerOwner(out Ownership newOwner) && newOwner != StartingOwner)
+            if (IsWinnerOwner(out Ownership newOwner) && newOwner != Owner)
             {
-                StartingOwner = PendingOwner = newOwner;
+                PendingOwner = newOwner;
 
                 Tile.Tile parentTile = transform.GetTransformUpUntil<Tile.Tile>().GetComponent<Tile.Tile>();
                 PathStorage.Init(parentTile);

@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class DeckDrawingTurnStep : TurnStep
 {
-    [SerializeField]
-    private Hand hand;
-
-    public override void Begin()
+    public override void Begin(TurnManager.PlayerContext context)
     {
-        hand.Draw();
-        Next();
+        context.hand.Draw();
+        context.turnManager.ChangePlayer(context);
     }
 }

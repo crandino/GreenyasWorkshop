@@ -1,29 +1,25 @@
-using HexaLinks.Tile;
-using UnityEngine;
 using HexaLinks.UI.PlayerHand;
 
 public class TileSelectionTurnStep : TurnStep
 {
-    [SerializeField]
-    private Hand hand;   
+    private TilePlacement tilePlacement;
+    private Hand hand;
 
-    public override void Begin()
+    public override void Begin(TurnManager.PlayerContext context)
     {
-        hand.ActivateSelection(OnTileSelection);
-    }
+        hand = context.hand;
+        hand.Activate();
 
-    private void OnTileSelection(Tile tile)
+        tilePlacement = Game.Instance.GetSystem<TilePlacement>();
+        tilePlacement.OnSuccessPlacement += Next;
+        tilePlacement.OnFailurePlacement += hand.Activate;
+    }   
+
+    public override void End()
     {
-        tile.Initialize();
-        tile.PickUp();
+        tilePlacement.OnSuccessPlacement -= Next;
+        tilePlacement.OnFailurePlacement -= hand.Activate;
 
-        Game.Instance.GetSystem<TilePlacement>().Start(tile);
-
-        Next();
-    }
-
-    protected override void End()
-    {
-        hand.DeactivateSelection();
+        hand.Deactivate();
     }
 }

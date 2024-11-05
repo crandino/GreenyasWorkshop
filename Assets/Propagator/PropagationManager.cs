@@ -30,7 +30,7 @@ namespace HexaLinks.Propagation
 
             for (int i = 0; i < unifiedPaths.Count; i++)
             {
-                SetNewOwnershipAlongPath(((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).StartingOwner, unifiedPaths[i]);
+                SetNewOwnershipAlongPath(((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).Owner, unifiedPaths[i]);
                 await UpdatePropagation(unifiedPaths[i]);
             }
 
@@ -43,7 +43,7 @@ namespace HexaLinks.Propagation
             foreach (Path.Link[] pathLinks in unifiedPath)
             {
                 foreach (Path.Link c in pathLinks)
-                   c.Ownership.OwnerChange(newOwner);
+                   c.Ownership.PrepareOwnerChange(newOwner);
             }
         }
 

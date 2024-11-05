@@ -18,9 +18,7 @@ public static class TileRaycast
 
     public static bool CursorRaycastToTile()
     {
-        bool success = CursorRaycast(tileMask, out hit);
-        Debug.Log($"Raycast {success}");
-        return success;
+        return CursorRaycast(tileMask, out hit);
     }
 
 

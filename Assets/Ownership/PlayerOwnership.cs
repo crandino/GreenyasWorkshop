@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using HexaLinks.Propagation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace HexaLinks.Ownership
@@ -32,33 +31,36 @@ namespace HexaLinks.Ownership
         [SerializeField]
         protected Ownership owner = Ownership.None;
 
-        public Ownership Owner => owner;
+        public Ownership Owner => PendingOwner.HasValue ? PendingOwner.Value : owner;
 
-        public Ownership PendingOwner { protected set; get; } = Ownership.None;
+        public Ownership? PendingOwner { protected set; get; } = null;
 
         public event Action OnOnwerChanged = delegate { };
 
         public void InstantOwnerChange(Ownership newOwnership)
         {
-            PendingOwner = owner = newOwnership;
+            owner = newOwnership;
             highligther.InstantPropagation(playerColors[owner]);
         }     
         
-        public virtual void OwnerChange(Ownership newOwnership)
+        public void PrepareOwnerChange(Ownership newOwnership)
         {
-            PendingOwner = newOwnership;
+            if(owner != newOwnership)
+                PendingOwner = newOwnership;
         }
 
         public async UniTask UpdatePropagation(bool forwardPropagation)
         {
-            if (PendingOwner == owner)
+            if (!PendingOwner.HasValue)
                 return;
 
-            highligther.PrePropagation(playerColors[PendingOwner], forwardPropagation);
+            highligther.PrePropagation(playerColors[PendingOwner.Value], forwardPropagation);
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
 
-            owner = PendingOwner;
+            owner = PendingOwner.Value;
+            PendingOwner = null;
+
             OnOnwerChanged();
 
             return;

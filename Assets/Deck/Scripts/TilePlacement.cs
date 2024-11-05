@@ -17,9 +17,9 @@ public class TilePlacement : Game.SubSystem
         return true;
     }
 
+    // Include that as a DEBUG feature
     private void PickUpTile()
     {
-        // Include that as a DEBUG feature
         if (TileRaycast.CursorRaycastToTile(out currentSelectedTile))
         {
             currentSelectedTile.PickUp();
@@ -47,6 +47,9 @@ public class TilePlacement : Game.SubSystem
     public void Start(Tile tile)
     {
         currentSelectedTile = tile;
+
+        tile.Initialize();
+        tile.PickUp();
 
         input.TilePlacement.OnButtonPressed += TryReleaseTile;
         input.TilePlacementCancellation.OnButtonPressed += CancelTile;

@@ -1,31 +1,14 @@
 using UnityEngine;
 
-public abstract class TurnStep : MonoBehaviour
+public abstract class TurnStep
 {
-    [SerializeField]
-    private TurnStep nextStep;  
-
-    public void Next()
+    protected void Next()
     {
-        End();
-        nextStep.Begin();
+        TurnManager.Steps.NextStep();        
     }
 
-    protected virtual void Start() { }
-    protected virtual void End() { }
-    public abstract void Begin();
-}
-
-public abstract class ForkTurnStep : TurnStep
-{
-    [SerializeField]
-    private TurnStep previousStep;
-
-    public void Previous()
-    {
-        End();
-        previousStep.Begin();
-    }
+    public abstract void Begin(TurnManager.PlayerContext context);
+    public virtual void End() { }
 }
 
 

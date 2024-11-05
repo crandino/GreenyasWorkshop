@@ -59,14 +59,6 @@ namespace HexaLinks.Propagation
 
             CurrentMaterial.SetFloat(forwardPathProgressID, 0f);
             CurrentMaterial.SetFloat(backwardPathProgressID, 0f);
-
-            // TODO: 
-            /*
-             *  La gestión de los paths y el historial de caminos, automatizarlo más
-             *  Crear extensiones para modificar varios parámetros a la vez en los renderers
-             *  Utilizar el TimerNormalized es la mejor opción
-             *  Crear mejores namespaces
-             */
         }
 
         public void PostPropagation()
@@ -82,12 +74,6 @@ namespace HexaLinks.Propagation
             CurrentMaterial.SetFloat(forwardPathProgressID, 0f);
             CurrentMaterial.SetFloat(backwardPathProgressID, 0f);
         }
-
-        //public void Unhighlight(Color color)
-        //{
-        //    renderer.material.SetFloat(pathProgressID, 0.0f);
-        //    renderer.material.SetColor(playerColorID, color);
-        //}
 
         public IEnumerator UpdatePropagation()
         {

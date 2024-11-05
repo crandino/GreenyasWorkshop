@@ -120,7 +120,7 @@ namespace HexaLinks.PathFinder
                 Links = gates.Select(s => new Link(s)).ToArray();
                 StartLink = Links.First();
                 OwnershipCounter counter = new OwnershipCounter(Links);
-                PropagationRange = counter.CalculateOwnershipRange(((InitialPlayerOwnership)StartLink.Ownership).StartingOwner);
+                PropagationRange = counter.CalculateOwnershipRange(((InitialPlayerOwnership)StartLink.Ownership).Owner);
             }
 
             //https://stackoverflow.com/questions/2978311/format-a-string-into-columns

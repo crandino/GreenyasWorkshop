@@ -1,3 +1,4 @@
+using HexaLinks.Ownership;
 using HexaLinks.Tile;
 using System;
 using UnityEngine.UIElements;
@@ -24,15 +25,17 @@ namespace HexaLinks.UI.PlayerHand
 
         private bool CountdownReached => Counter <= 0;
 
-        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck) : base(button, deck)
+        private PlayerOwnership.Ownership owner;
+
+        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck, PlayerOwnership.Ownership owner) : base(button, deck)
         {
             counterLabel = counter;
+            this.owner = owner;
             InitializeCountdown();
         }
 
         private void InitializeCountdown()
         {
-            SideGate.OnGateConnected += OnSegmentConnected;
             Counter = CONNECTIONS_TO_GET;
             counterLabel.visible = true;
             DrawingPending = false;
@@ -41,7 +44,6 @@ namespace HexaLinks.UI.PlayerHand
 
         private void FinalizeCountdown()
         {
-            SideGate.OnGateConnected -= OnSegmentConnected;
             counterLabel.visible = false;
         }
 
@@ -56,16 +58,28 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
+        public override void Activate()
+        {
+            base.Activate();
+            SideGate.OnGateConnected += OnSegmentConnected;
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            SideGate.OnGateConnected -= OnSegmentConnected;
+        }
+
         private void OnTilePlaced()
         {
-            Game.Instance.GetSystem<TilePlacement>().OnSuccessPlacement -= OnTilePlaced;
             InitializeCountdown();
             UnregisterCallbacks();
         }
 
-        protected override void SelectTile(Action<Tile.Tile> onTileSelection)
+        protected override void PrepareTile(Tile.Tile tile)
         {
-            base.SelectTile(onTileSelection);
+            base.PrepareTile(tile);
+            tile.GetComponentInChildren<InitialPlayerOwnership>().InstantOwnerChange(owner);
             RegisterCallbacks();
         }
 

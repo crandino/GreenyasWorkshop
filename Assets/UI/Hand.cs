@@ -1,3 +1,4 @@
+using HexaLinks.Ownership;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace HexaLinks.UI.PlayerHand
 
         public static TileResource EmptyTile;
 
-        public void Initialize()
+        public void Initialize(PlayerOwnership.Ownership playerOwner)
         {
             EmptyTile = emptyTile;
             deck = deckContent.CreateDeck();
@@ -30,30 +31,36 @@ namespace HexaLinks.UI.PlayerHand
             List<Button> buttons = playerHandUI.rootVisualElement.Query<Button>().ToList();
             playerOptions = new HandTileOption[buttons.Count];
 
+            HandTileOption option;
+
             for (int i = 0; i < 3; ++i)
             {
-                playerOptions[i] = new(buttons[i], deck.TraversalDeck);
-                playerOptions[i].Draw(emptyTile);
+                option = new(buttons[i], deck.TraversalDeck);
+                option.Draw(emptyTile);
+                playerOptions[i] = option;
             }
 
-            playerOptions[^1] = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>(), deck.PropagatorDeck);
-            playerOptions[^1].Set(emptyTile);
+            option = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>(), deck.PropagatorDeck, playerOwner);
+            option.Set(emptyTile);
+            playerOptions[^1] = option;
+
+            Deactivate();
         }
 
-        public void ActivateSelection(Action<Tile.Tile> onTileSelection)
+        public void Activate()
         {
             foreach (HandTileOption option in playerOptions)
             {
                 option.Reset();
-                option.ActivateSelection(onTileSelection);
+                option.Activate();
             }
         }
 
-        public void DeactivateSelection()
+        public void Deactivate()
         {
             foreach (HandTileOption option in playerOptions)
             {
-                option.DeactivateSelection();
+                option.Deactivate();
             }
         }
 
