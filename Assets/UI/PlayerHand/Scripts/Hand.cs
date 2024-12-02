@@ -40,7 +40,7 @@ namespace HexaLinks.UI.PlayerHand
                 playerOptions[i] = option;
             }
 
-            option = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>(), deck.PropagatorDeck, playerOwner);
+            option = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("Score"), deck.PropagatorDeck, playerOwner);
             option.Set(emptyTile);
             playerOptions[^1] = option;
 
