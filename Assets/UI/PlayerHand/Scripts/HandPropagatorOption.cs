@@ -1,6 +1,5 @@
 using HexaLinks.Ownership;
 using HexaLinks.Tile;
-using System;
 using UnityEngine.UIElements;
 
 namespace HexaLinks.UI.PlayerHand
@@ -20,7 +19,7 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-        private const int CONNECTIONS_TO_GET = 1;
+        private const int CONNECTIONS_TO_GET = 3;
         private readonly Label counterLabel;
 
         private bool CountdownReached => Counter <= 0;
@@ -32,6 +31,8 @@ namespace HexaLinks.UI.PlayerHand
             counterLabel = counter;
             this.owner = owner;
             InitializeCountdown();
+
+            TileEvents.OnSegmentConnected.Register(OnSegmentConnected);
         }
 
         private void InitializeCountdown()
@@ -47,8 +48,11 @@ namespace HexaLinks.UI.PlayerHand
             counterLabel.visible = false;
         }
 
-        private void OnSegmentConnected()
+        private void OnSegmentConnected(PlayerOwnership.Ownership owner)
         {
+            if (this.owner != owner)
+                return;
+
             --Counter;
 
             if (CountdownReached)
@@ -58,17 +62,17 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-        public override void Activate()
-        {
-            base.Activate();
-            SideGate.OnGateConnected += OnSegmentConnected;
-        }
+        //public override void Activate()
+        //{
+        //    base.Activate();
+        //    //TileEvents.OnSegmentConnected.Register(owner, OnSegmentConnected);
+        //}
 
-        public override void Deactivate()
-        {
-            base.Deactivate();
-            SideGate.OnGateConnected -= OnSegmentConnected;
-        }
+        //public override void Deactivate()
+        //{
+        //    base.Deactivate();
+        //    //SideGate.OnGateConnected -= OnSegmentConnected;
+        //}
 
         private void OnTilePlaced()
         {

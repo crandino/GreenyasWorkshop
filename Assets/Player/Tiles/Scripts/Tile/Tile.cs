@@ -1,9 +1,6 @@
 using Greenyas.Hexagon;
-using System.Collections.Generic;
-using UnityEngine;
 using HexaLinks.PathFinder;
-using static HexaLinks.Tile.Tile;
-using System;
+using UnityEngine;
 
 namespace HexaLinks.Tile
 {

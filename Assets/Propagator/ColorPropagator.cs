@@ -98,7 +98,4 @@ namespace HexaLinks.Propagation
         }
 #endif
     }
-
-
-
 }
