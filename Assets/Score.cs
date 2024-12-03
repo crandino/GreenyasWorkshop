@@ -1,22 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UIElements;
+using HexaLinks.Ownership;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Owner = HexaLinks.Ownership.PlayerOwnership.Ownership;
 
 public class Score : MonoBehaviour
 {
     [SerializeField]
-    private Label playerOneScore, playerTwoScore;
+    private Label scoreLabel;
 
     [SerializeField]
     private UIDocument playerHandUI;
 
-    [ContextMenu("Get")]
-    private void Get()
+    public int Value
     {
-        //score = playerHandUI.rootVisualElement.Q<Label>("Score");
+        get
+        {
+            return int.Parse(scoreLabel.text);
+        }
+
+        set
+        {
+            scoreLabel.text = value.ToString();
+        }
     }
 
+    public void Initialize()
+    {
+        scoreLabel = playerHandUI.rootVisualElement.Q<Label>("Score");
+        Value = 0;
+    }
 
-
+    public void ModifyScore(Owner scoreOwner, Owner propagationOwner)
+    {
+        Value += (scoreOwner == propagationOwner) ? 1 : -1; 
+    }
 }

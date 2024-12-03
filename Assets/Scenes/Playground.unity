@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 871313412}
   - component: {fileID: 871313411}
   - component: {fileID: 871313410}
+  - component: {fileID: 871313413}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -621,6 +622,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &871313413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 871313409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6cf76b0ef12c64485627e46fb77454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHandUI: {fileID: 1544924229}
 --- !u!43 &1085543674
 Mesh:
   m_ObjectHideFlags: 0
@@ -1261,6 +1275,8 @@ GameObject:
   - component: {fileID: 1544924230}
   - component: {fileID: 1544924229}
   - component: {fileID: 1544924231}
+  - component: {fileID: 1544924232}
+  - component: {fileID: 1544924233}
   m_Layer: 5
   m_Name: PlayerOneHand
   m_TagString: Untagged
@@ -1311,9 +1327,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24e76ef30800624e92d4730299beccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deckContent: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
+  ui: {fileID: 1544924232}
+--- !u!114 &1544924232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544924228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2aaa66552d1aff46841251b4066b4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   emptyTile: {fileID: 11400000, guid: 0ddc00d81302ef745a5afb6d374baf3c, type: 2}
   playerHandUI: {fileID: 1544924229}
-  deckContent: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
+  score: {fileID: 1544924233}
+--- !u!114 &1544924233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544924228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6cf76b0ef12c64485627e46fb77454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHandUI: {fileID: 1544924229}
 --- !u!1 &1599926776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1705,13 +1748,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOneContext:
+    turnManager: {fileID: 1820122395}
     ownerShip: 1
     hand: {fileID: 1544924231}
-    turnManager: {fileID: 1820122395}
   playerTwoContext:
+    turnManager: {fileID: 1820122395}
     ownerShip: 2
     hand: {fileID: 2028650026}
-    turnManager: {fileID: 1820122395}
 --- !u!4 &1820122396
 Transform:
   m_ObjectHideFlags: 0
@@ -1999,9 +2042,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24e76ef30800624e92d4730299beccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyTile: {fileID: 11400000, guid: 0ddc00d81302ef745a5afb6d374baf3c, type: 2}
-  playerHandUI: {fileID: 2028650027}
   deckContent: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
+  ui: {fileID: 0}
 --- !u!114 &2028650027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2016,7 +2058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: f1ad6aec5ea01b4499d4e527c36b820b, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: aadf6e4799dede84abfc55f91b870c1b, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 330923d10cea61247b509bc6240e570a, type: 3}
   m_SortingOrder: 0
 --- !u!4 &2028650028
 Transform:

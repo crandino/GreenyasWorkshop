@@ -1,70 +1,69 @@
-using HexaLinks.Ownership;
 using HexaLinks.UI.PlayerHand;
-using System.Collections;
 using UnityEngine;
-using static HexaLinks.Ownership.PlayerOwnership;
+using Owner = HexaLinks.Ownership.PlayerOwnership.Ownership;
 
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerContext playerOneContext, playerTwoContext;
-    public static TurnSteps Steps { private set; get; }
-
-    static TurnManager()
-    {
-        Steps = new TurnSteps();
-    }
-   
-    private void Start()
-    {
-        playerOneContext.Init();
-        playerTwoContext.Init();
-
-        //TileEvents.DisableCallbacks(playerTwoContext.ownerShip);
-        //TileEvents.EnableCallbacks(playerOneContext.ownerShip);
-
-        Steps.Initialize(playerOneContext);
-    }
-
-    public void ChangePlayer(PlayerContext lastPlayer)
-    {
-        PlayerContext newPlayer = (lastPlayer == playerOneContext) ? playerTwoContext : playerOneContext;
-        
-        //TileEvents.DisableCallbacks(lastPlayer.ownerShip);
-        //TileEvents.EnableCallbacks(newPlayer.ownerShip);
-
-        Steps.Initialize(newPlayer);
-    }
-
     [System.Serializable]
     public class PlayerContext
     {
-        public TurnManager turnManager;
-        public Ownership ownerShip;
+        public Owner ownerShip;
         public Hand hand;
 
-        // UI -> Score 
-        // UI -> PlayerHand
+        [SerializeField] 
+        private Score score;
 
         public void Init()
         {
             hand.Initialize(ownerShip);
+            score.Initialize();
+
+            TileEvents.OnSegmentPropagated.Register(UpdateScore);
         }
+
+        private void UpdateScore(Owner propagationOwner)
+        {
+            score.ModifyScore(ownerShip, propagationOwner);
+        }
+    }
+
+    [SerializeField]
+    private PlayerContext playerOneContext, playerTwoContext;
+    public PlayerContext CurrentContext { private set; get; }
+
+    private TurnSteps steps;
+   
+    private void Start()
+    {
+        steps = new TurnSteps(this);
+
+        playerOneContext.Init();
+        playerTwoContext.Init();
+
+        CurrentContext = playerOneContext;
+
+        steps.Initialize(CurrentContext);
+    }
+
+    public void ChangePlayer()
+    {
+        CurrentContext = (CurrentContext == playerOneContext) ? playerTwoContext : playerOneContext;
+        steps.Initialize(CurrentContext);
     }
 
     public class TurnSteps
     {
-        public TurnStep[] steps;
+        private TurnStep[] steps;
         private PlayerContext context = null;
 
         private int stepIndex = 0;
 
-        public TurnSteps()
+        public TurnSteps(TurnManager turnManager)
         {
             steps = new TurnStep[]
             {
-                new TileSelectionTurnStep(),
-                new DeckDrawingTurnStep()
+                new TileSelectionTurnStep(NextStep),
+                new DeckDrawingTurnStep(turnManager.ChangePlayer)
             };
         }      
 
@@ -78,10 +77,10 @@ public class TurnManager : MonoBehaviour
             steps[stepIndex].Begin(context);
         }
 
-        public void NextStep()
+        private void NextStep()
         {
-            steps[stepIndex].End();
-            steps[++stepIndex].Begin(context);
+            if(stepIndex < steps.Length) 
+                steps[++stepIndex].Begin(context);
         }
     }
 }

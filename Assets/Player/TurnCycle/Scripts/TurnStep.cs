@@ -1,14 +1,21 @@
+using System;
 using UnityEngine;
 
 public abstract class TurnStep
 {
-    protected void Next()
+    private readonly Action endTurnStep = null;
+
+    protected TurnStep(Action endTurnStep)
     {
-        TurnManager.Steps.NextStep();        
+        this.endTurnStep = endTurnStep;
     }
 
     public abstract void Begin(TurnManager.PlayerContext context);
-    public virtual void End() { }
+    
+    protected virtual void End()
+    {
+        endTurnStep();
+    }
 }
 
 

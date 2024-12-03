@@ -61,6 +61,8 @@ namespace HexaLinks.Ownership
             owner = PendingOwner.Value;
             PendingOwner = null;
 
+            TileEvents.OnSegmentPropagated.Call(owner);
+
             OnOnwerChanged();
 
             return;

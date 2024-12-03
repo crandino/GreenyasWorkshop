@@ -40,7 +40,8 @@ namespace HexaLinks.UI.PlayerHand
             Counter = CONNECTIONS_TO_GET;
             counterLabel.visible = true;
             DrawingPending = false;
-            Set(Hand.EmptyTile);
+
+            Set(HandUI.EmptyTile);
         }
 
         private void FinalizeCountdown()
@@ -50,9 +51,6 @@ namespace HexaLinks.UI.PlayerHand
 
         private void OnSegmentConnected(PlayerOwnership.Ownership owner)
         {
-            if (this.owner != owner)
-                return;
-
             --Counter;
 
             if (CountdownReached)
@@ -61,18 +59,6 @@ namespace HexaLinks.UI.PlayerHand
                 DrawingPending = true;
             }
         }
-
-        //public override void Activate()
-        //{
-        //    base.Activate();
-        //    //TileEvents.OnSegmentConnected.Register(owner, OnSegmentConnected);
-        //}
-
-        //public override void Deactivate()
-        //{
-        //    base.Deactivate();
-        //    //SideGate.OnGateConnected -= OnSegmentConnected;
-        //}
 
         private void OnTilePlaced()
         {

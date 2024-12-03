@@ -52,7 +52,7 @@ namespace HexaLinks.UI.PlayerHand
             if (tileResource.Prefab != null)
             {
                 PrepareTile(GameObject.Instantiate<Tile.Tile>(tileResource.Prefab));
-                button.iconImage = Background.FromSprite(Hand.EmptyTile.Icon);
+                button.iconImage = Background.FromSprite(HandUI.EmptyTile.Icon);
                 Deactivate();
 
                 DrawingPending = true;

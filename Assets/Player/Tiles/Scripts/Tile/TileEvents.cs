@@ -3,13 +3,21 @@ using System;
 
 public static class TileEvents
 {
-    public static EventType OnSegmentConnected = new();
+    public static EventType OnSegmentConnected = new(true);
+    public static EventType OnSegmentPropagated = new();
 
     public static PlayerOwnership.Ownership Owner { get; set; } = PlayerOwnership.Ownership.None;
 
     public class EventType
     {
-        private event Action<PlayerOwnership.Ownership> Callbacks;       
+        private event Action<PlayerOwnership.Ownership> Callbacks;
+        private readonly Func<PlayerOwnership.Ownership, bool> predicate = (owner) => true;
+
+        public EventType(bool exclusiveOwnershipCallback = false)
+        {
+            if (exclusiveOwnershipCallback)
+                predicate = (owner) => owner == Owner;
+        }
 
         public bool Enabled { get; set; } = true;
 
@@ -27,8 +35,13 @@ public static class TileEvents
 
         public void Call()
         {
-            if(Enabled)
-                Callbacks.Invoke(Owner);
+            Call(Owner);
+        }
+
+        public void Call(PlayerOwnership.Ownership owner)
+        {
+            if (Enabled && predicate(owner)) 
+                Callbacks.Invoke(owner);
         }
     }
 }
