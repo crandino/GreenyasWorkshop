@@ -30,8 +30,8 @@ public class Score : MonoBehaviour
         Value = 0;
     }
 
-    public void ModifyScore(Owner scoreOwner, Owner propagationOwner)
-    {
-        Value += (scoreOwner == propagationOwner) ? 1 : -1; 
-    }
+    //public void ModifyScore(Owner scoreOwner, Owner propagationOwner)
+    //{
+    //    Value += (scoreOwner == propagationOwner) ? 1 : -1; 
+    //}
 }

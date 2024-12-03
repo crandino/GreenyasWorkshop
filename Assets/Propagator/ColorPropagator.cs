@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +26,7 @@ namespace HexaLinks.Propagation
         {
             get
             {
+
 #if UNITY_EDITOR
                 if (!Application.isPlaying)
                 {

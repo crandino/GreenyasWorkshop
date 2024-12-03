@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/UI/PlayerSelectionZone/PlayerOption.uss?fileID=7433441132597879392&amp;guid=3d3b9554a4e6bf744ae51674e0222b92&amp;type=3#PlayerOption" />
+    <Style src="project://database/Assets/UI/PlayerHand/Styles/PlayerOption.uss?fileID=7433441132597879392&amp;guid=3d3b9554a4e6bf744ae51674e0222b92&amp;type=3#PlayerOption" />
     <ui:VisualElement name="PlayerHandZone" style="height: 50%; width: 10%; flex-wrap: nowrap; top: 25%; background-color: rgba(0, 128, 0, 0.5); align-items: auto; justify-content: flex-start;">
-        <ui:VisualElement style="flex-direction: row; align-self: center; flex-shrink: 0;">
+        <ui:VisualElement style="flex-direction: row; align-self: center; flex-shrink: 0; align-items: center;">
             <ui:Label text="Score:" enable-rich-text="false" emoji-fallback-support="false" select-word-by-double-click="false" select-line-by-triple-click="false" display-tooltip-when-elided="false" style="align-items: auto; -unity-font-style: bold; font-size: 16px;" />
-            <ui:Label text="0" name="Score" style="align-items: auto; font-size: 16px;" />
+            <ui:Label text="0" name="Score" style="align-items: auto; font-size: 20px;" />
         </ui:VisualElement>
         <ui:Button icon-image="project://database/Assets/Player/TileEditorPlacer/UXML/Icons/Empty.png?fileID=2800000&amp;guid=add782cb169a75a47bc01d4bd7900f92&amp;type=3#Empty" class="PlayerOption" />
         <ui:Button icon-image="project://database/Assets/Player/TileEditorPlacer/UXML/Icons/Empty.png?fileID=2800000&amp;guid=add782cb169a75a47bc01d4bd7900f92&amp;type=3#Empty" style="flex-shrink: initial; flex-grow: initial; background-image: none; align-items: auto; flex-basis: auto; align-self: auto; justify-content: center; -unity-background-scale-mode: stretch-to-fill; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-color: rgba(88, 88, 88, 0);" />

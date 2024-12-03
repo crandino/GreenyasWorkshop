@@ -1,5 +1,6 @@
 using HexaLinks.UI.PlayerHand;
 using UnityEngine;
+using static TileEvents.OnSegmentPropagatedEvent;
 using Owner = HexaLinks.Ownership.PlayerOwnership.Ownership;
 
 public class TurnManager : MonoBehaviour
@@ -18,12 +19,12 @@ public class TurnManager : MonoBehaviour
             hand.Initialize(ownerShip);
             score.Initialize();
 
-            TileEvents.OnSegmentPropagated.Register(UpdateScore);
+            TileEvents.OnSegmentPropagated.Callbacks += UpdateScore;
         }
 
-        private void UpdateScore(Owner propagationOwner)
+        private void UpdateScore(OnSegmentPropagatedArgs args)
         {
-            score.ModifyScore(ownerShip, propagationOwner);
+            score.Value += args.GetScoreIncrement(ownerShip);
         }
     }
 
@@ -70,8 +71,6 @@ public class TurnManager : MonoBehaviour
         public void Initialize(PlayerContext context)
         {
             this.context = context;
-
-            TileEvents.Owner = context.ownerShip;
 
             stepIndex = 0;
             steps[stepIndex].Begin(context);

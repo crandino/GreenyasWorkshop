@@ -1,47 +1,52 @@
 using HexaLinks.Ownership;
 using System;
+using static TileEvents.OnSegmentPropagatedEvent;
 
 public static class TileEvents
 {
-    public static EventType OnSegmentConnected = new(true);
-    public static EventType OnSegmentPropagated = new();
-
-    public static PlayerOwnership.Ownership Owner { get; set; } = PlayerOwnership.Ownership.None;
+    public static EventType OnSegmentConnected = new();
+    public static OnSegmentPropagatedEvent OnSegmentPropagated = new();
 
     public class EventType
     {
-        private event Action<PlayerOwnership.Ownership> Callbacks;
-        private readonly Func<PlayerOwnership.Ownership, bool> predicate = (owner) => true;
-
-        public EventType(bool exclusiveOwnershipCallback = false)
-        {
-            if (exclusiveOwnershipCallback)
-                predicate = (owner) => owner == Owner;
-        }
-
-        public bool Enabled { get; set; } = true;
-
-        public void Register(Action<PlayerOwnership.Ownership> callback)
-        {
-            Callbacks += callback;
-        }
-
-        public void Unregister(Action<PlayerOwnership.Ownership> callback)
-        {
-            Callbacks -= callback;
-        }
-
-        public bool EmptyCallback { get { return Callbacks.GetInvocationList().Length == 0; } }
+        public event Action Callbacks;
 
         public void Call()
         {
-            Call(Owner);
+            Callbacks?.Invoke();
         }
+    }
 
-        public void Call(PlayerOwnership.Ownership owner)
+    public abstract class EventTypeArgs<T>
+    {
+        public event Action<T> Callbacks;
+
+        public void Call(T args)
         {
-            if (Enabled && predicate(owner)) 
-                Callbacks.Invoke(owner);
+            Callbacks?.Invoke(args);
+        }
+    }
+
+    public class OnSegmentPropagatedEvent : EventTypeArgs<OnSegmentPropagatedArgs>
+    {
+        public struct OnSegmentPropagatedArgs
+        {
+            public PlayerOwnership.Ownership lastSegmentOwner;
+            public PlayerOwnership.Ownership newSegmentOwner;
+
+            public readonly int GetScoreIncrement(PlayerOwnership.Ownership scoreOwner)
+            {
+                if (lastSegmentOwner != newSegmentOwner)
+                {
+                    if (scoreOwner == lastSegmentOwner)
+                        return -1;
+
+                    if (scoreOwner == newSegmentOwner)
+                        return +1;
+                }
+
+                return 0;
+            }
         }
     }
 }

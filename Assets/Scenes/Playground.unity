@@ -1748,13 +1748,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOneContext:
-    turnManager: {fileID: 1820122395}
     ownerShip: 1
     hand: {fileID: 1544924231}
+    score: {fileID: 1544924233}
   playerTwoContext:
-    turnManager: {fileID: 1820122395}
     ownerShip: 2
     hand: {fileID: 2028650026}
+    score: {fileID: 2028650030}
 --- !u!4 &1820122396
 Transform:
   m_ObjectHideFlags: 0
@@ -2023,6 +2023,8 @@ GameObject:
   - component: {fileID: 2028650028}
   - component: {fileID: 2028650027}
   - component: {fileID: 2028650026}
+  - component: {fileID: 2028650029}
+  - component: {fileID: 2028650030}
   m_Layer: 5
   m_Name: PlayerTwoHand
   m_TagString: Untagged
@@ -2043,7 +2045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deckContent: {fileID: 11400000, guid: c6f50b7499cc3714ab7c0e134a98f835, type: 2}
-  ui: {fileID: 0}
+  ui: {fileID: 2028650029}
 --- !u!114 &2028650027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2075,6 +2077,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2028650029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028650025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2aaa66552d1aff46841251b4066b4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emptyTile: {fileID: 11400000, guid: 0ddc00d81302ef745a5afb6d374baf3c, type: 2}
+  playerHandUI: {fileID: 2028650027}
+  score: {fileID: 2028650030}
+--- !u!114 &2028650030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028650025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6cf76b0ef12c64485627e46fb77454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHandUI: {fileID: 2028650027}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

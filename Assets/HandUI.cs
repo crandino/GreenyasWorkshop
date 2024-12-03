@@ -40,8 +40,6 @@ public class HandUI : MonoBehaviour
         option.Set(emptyTile);
         playerOptions[^1] = option;
 
-        //score.Initialize();
-
         Deactivate();
     }
 

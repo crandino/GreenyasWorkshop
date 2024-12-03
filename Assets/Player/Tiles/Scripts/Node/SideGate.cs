@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
 using System;
+using static TileEvents;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -121,7 +123,7 @@ namespace HexaLinks.Tile
                 Handles.color = textStyle.normal.textColor = outwardGates.Count != 0 ? Color.green : Color.red;
                 Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{outwardGates.Count}", textStyle);
 
-                Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, EventType.Repaint);
+                Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, UnityEngine.EventType.Repaint);
             }
         }
     }

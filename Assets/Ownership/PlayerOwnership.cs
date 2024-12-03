@@ -3,6 +3,7 @@ using HexaLinks.Propagation;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static TileEvents.OnSegmentPropagatedEvent;
 
 namespace HexaLinks.Ownership
 {
@@ -54,6 +55,12 @@ namespace HexaLinks.Ownership
             if (!PendingOwner.HasValue)
                 return;
 
+            OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs()
+            {
+                lastSegmentOwner = owner,
+                newSegmentOwner = PendingOwner.Value,
+            };
+
             highligther.PrePropagation(playerColors[PendingOwner.Value], forwardPropagation);
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
@@ -61,7 +68,7 @@ namespace HexaLinks.Ownership
             owner = PendingOwner.Value;
             PendingOwner = null;
 
-            TileEvents.OnSegmentPropagated.Call(owner);
+            TileEvents.OnSegmentPropagated.Call(args);
 
             OnOnwerChanged();
 
