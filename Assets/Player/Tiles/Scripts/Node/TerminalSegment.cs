@@ -1,9 +1,5 @@
 using UnityEngine;
 
-//#if UNITY_EDITOR
-//using System.Reflection;
-//#endif
-
 namespace HexaLinks.Tile
 {
     public class TerminalSegment : TileSegment

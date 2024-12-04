@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Assertions;
 
-namespace HexaLinks.PathFinder.Tools
+namespace HexaLinks.Path.Finder.Tools
 {
     public class TileStepTracker<T>
     {
@@ -55,6 +55,8 @@ namespace HexaLinks.PathFinder.Tools
         }
 
         public bool Empty => iteratedStack.Count == 0;
+
+        public int NumAccumulatedSteps => iteratedStack.Count;
 
         public bool MoveNext()
         {

@@ -30,7 +30,7 @@ namespace HexaLinks.Ownership
         }
 
         [SerializeField]
-        protected Ownership owner = Ownership.None;
+        private Ownership owner = Ownership.None;
 
         public Ownership Owner => PendingOwner.HasValue ? PendingOwner.Value : owner;
 

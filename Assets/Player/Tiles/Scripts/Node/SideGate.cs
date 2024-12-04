@@ -46,7 +46,7 @@ namespace HexaLinks.Tile
 
             private ConnectionPair[] candidates = new ConnectionPair[0];
 
-            public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => c.candidates.Length > 0;
+            public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => HexMap.Instance.NumOfTiles == 0 || c.candidates.Length > 0;
 
             public bool Check(Func<ConnectionCandidates, bool> predicate) => predicate(this);            
 

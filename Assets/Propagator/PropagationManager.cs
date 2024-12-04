@@ -1,10 +1,7 @@
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 using HexaLinks.Ownership;
-using static HexaLinks.PathFinder.PathStorage;
-using static HexaLinks.PathFinder.PathStorage.Path;
-using UnityEditor;
-using static UnityEngine.UI.GridLayoutGroup;
+using System.Collections.Generic;
+using static HexaLinks.Path.Finder.PathFinder.Path;
 
 namespace HexaLinks.Propagation
 {
@@ -34,26 +31,26 @@ namespace HexaLinks.Propagation
                 await UpdatePropagation(unifiedPaths[i]);
             }
 
-            propagating = false;
             unifiedPaths.Clear();
+            propagating = false;
         }
 
         private static void SetNewOwnershipAlongPath(PlayerOwnership.Ownership newOwner, List<Link[]> unifiedPath)
         {
-            foreach (Path.Link[] pathLinks in unifiedPath)
+            foreach (Link[] pathLinks in unifiedPath)
             {
-                foreach (Path.Link c in pathLinks)
+                foreach (Link c in pathLinks)
                    c.Ownership.PrepareOwnerChange(newOwner);
             }
         }
 
         private async static UniTask UpdatePropagation(List<Link[]> unifiedPath)
         {
-            foreach (Path.Link[] pathLinks in unifiedPath)
+            foreach (Link[] pathLinks in unifiedPath)
             {
                 List<UniTask> tasks = new();
 
-                foreach (Path.Link c in pathLinks)
+                foreach (Link c in pathLinks)
                     tasks.Add(c.Ownership.UpdatePropagation(c.ForwardTraversal));
 
                 await UniTask.SwitchToMainThread();

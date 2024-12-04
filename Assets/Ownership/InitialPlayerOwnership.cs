@@ -1,4 +1,4 @@
-using HexaLinks.PathFinder;
+using HexaLinks.Tile;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -22,8 +22,8 @@ namespace HexaLinks.Ownership
             {
                 PendingOwner = newOwner;
 
-                Tile.Tile parentTile = transform.GetTransformUpUntil<Tile.Tile>().GetComponent<Tile.Tile>();
-                PathStorage.Init(parentTile);
+                TilePropagator parentTile = transform.GetTransformUpUntil<TilePropagator>().GetComponent<TilePropagator>();
+                Path.Finder.PathFinder.Init(parentTile);
             }
         }       
 

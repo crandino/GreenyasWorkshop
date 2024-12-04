@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Tile_P_3_S00_S22_S44_R
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 9a056461efb016f49afee710f2dd2483, type: 3}
-  tilePrefab: {fileID: 8785954831677077518, guid: 390d071e267631c46b4a614f83f1366e, type: 3}
+  tilePrefab: {fileID: 8666780643570508557, guid: 390d071e267631c46b4a614f83f1366e, type: 3}

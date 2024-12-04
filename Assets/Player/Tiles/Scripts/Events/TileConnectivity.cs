@@ -10,7 +10,7 @@ namespace HexaLinks.Tile
         [SerializeField]
         private TileSegment[] segments = null;
 
-        public Gate.ExposedGate[] StartingGates => segments.Where(s => s is TerminalSegment).SelectMany(s => s.ExposedGates).ToArray();
+        //public Gate.ExposedGate[] StartingGates => segments.Where(s => s is TerminalSegment).SelectMany(s => s.ExposedGates).ToArray();
 
         public struct TileQueryResult
         {

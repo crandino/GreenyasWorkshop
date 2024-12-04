@@ -3,11 +3,10 @@ using HexaLinks.Tile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tripolygon.UModelerX.Runtime.MessagePack.Resolvers;
 
-namespace HexaLinks.PathFinder
+namespace HexaLinks.Path.Finder
 {
-    public static partial class PathStorage
+    public static partial class PathFinder
     {
         public class Path
         {

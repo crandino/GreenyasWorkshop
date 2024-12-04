@@ -1,5 +1,4 @@
 using Greenyas.Hexagon;
-using HexaLinks.PathFinder;
 using UnityEngine;
 
 namespace HexaLinks.Tile
@@ -15,9 +14,8 @@ namespace HexaLinks.Tile
         protected TileCoordinates coordinates;
 
         public CubeCoord Coord => coordinates.Coord;
-        public Gate.ExposedGate[] StartingGates => connectivity.StartingGates;      
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             manipulator.Initialize(coordinates);
         }
@@ -32,7 +30,7 @@ namespace HexaLinks.Tile
             manipulator.PickUp();
         }
 
-        public bool TryRelease()
+        public virtual bool TryRelease()
         {
             SideGate.ConnectionCandidates connectionCandidates = GetPossibleConnections();
             if (!connectionCandidates.Check(SideGate.ConnectionCandidates.AtLeastOneConnection))
@@ -41,10 +39,7 @@ namespace HexaLinks.Tile
             manipulator.Release();
             HexMap.Instance.AddTile(this);
 
-            connectionCandidates.Connect();
-
-            PathStorage.Reset();
-            PathStorage.Init(this);
+            connectionCandidates.Connect();           
 
             return true;
         }

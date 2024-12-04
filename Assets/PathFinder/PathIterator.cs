@@ -1,17 +1,19 @@
-using HexaLinks.PathFinder.Tools;
+using HexaLinks.Path.Finder.Tools;
+using HexaLinks.Tile;
 using System.Linq;
 
 using Gate = HexaLinks.Tile.Gate.ExposedGate;
 
-namespace HexaLinks.PathFinder
+namespace HexaLinks.Path.Finder
 {
     public static class PathIterator
     {
-        public static void FindPathsFrom(Tile.Tile startingTile)
+        public static void FindPathsFrom(TilePropagator initialTile)
         {
             TileStepTracker<Gate> gateTracker = new TileStepTracker<Gate>();
 
-            Gate[] initialGates = startingTile.StartingGates;
+            Gate[] initialGates = initialTile.StartingGates;
+            int maxPropagationSteps = initialTile.currentPropagatorStrength;
 
             for (int i = 0; i < initialGates.Length; i++)
             {
@@ -25,14 +27,14 @@ namespace HexaLinks.PathFinder
                 {
                     currentGate = gateTracker.GetCurrentStep();
 
-                    if (currentGate.GoThrough(out Gate[] nextGates))
+                    if (currentGate.GoThrough(out Gate[] nextGates) && gateTracker.NumAccumulatedSteps <= maxPropagationSteps )
                         gateTracker.AddStep(nextGates);
                     else
-                        PathStorage.Add(new(gateTracker.GetEvaluatedSteps().ToArray()));
+                        PathFinder.Add(new(gateTracker.GetEvaluatedSteps().ToArray()));
                 }
             }
 
-            PathStorage.StartPropagation();
+            PathFinder.StartPropagation();
         }
     } 
 }

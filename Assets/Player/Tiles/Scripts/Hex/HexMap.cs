@@ -23,7 +23,9 @@ namespace HexaLinks.Tile
         [SerializeField]
         private SerializableDictionary<CubeCoord, Tile> gridData = new(new CubeCoord.CoordinateComparer());
 
-        public event Action OnGridChanged;
+        public event Action OnGridChanged; // TODO: Use TileEvents
+
+        public int NumOfTiles => gridData.Count;
 
         public bool AddTile(Tile tile)
         {

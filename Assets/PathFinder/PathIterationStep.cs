@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static HexaLinks.PathFinder.PathStorage.Path;
+using static HexaLinks.Path.Finder.PathFinder.Path;
 
-namespace HexaLinks.PathFinder
+namespace HexaLinks.Path.Finder
 {
-    public static partial class PathStorage
+    public static partial class PathFinder
     {
         private class PathIterationStep
         {
@@ -22,9 +22,6 @@ namespace HexaLinks.PathFinder
 
             public void Add(Path newPath)
             {
-                //if (stepUsedHashes.Contains(newPath.HashID))
-                //    newPath.IsInverse = true;
-
                 paths.Add(newPath);
                 stepUsedHashes.Add(newPath.HashID);
 

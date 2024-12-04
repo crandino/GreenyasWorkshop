@@ -1,7 +1,5 @@
 using HexaLinks.Ownership;
-using HexaLinks.Tile;
 using UnityEngine.UIElements;
-using static TileEvents;
 
 namespace HexaLinks.UI.PlayerHand
 {
@@ -43,11 +41,6 @@ namespace HexaLinks.UI.PlayerHand
             Set(HandUI.EmptyTile);
         }
 
-        //private void FinalizeCountdown()
-        //{
-        //    counterLabel.visible = false;
-        //}
-
         private void OnSegmentConnected()
         {
             --Counter;
@@ -56,6 +49,7 @@ namespace HexaLinks.UI.PlayerHand
             {
                 counterLabel.visible = false;
                 DrawingPending = true;
+                Counter = CONNECTIONS_TO_GET;
             }
         }
 
@@ -75,7 +69,8 @@ namespace HexaLinks.UI.PlayerHand
         public override void Activate()
         {
             base.Activate();
-            TileEvents.OnSegmentConnected.Callbacks += OnSegmentConnected;
+            if(!DrawingPending)
+                TileEvents.OnSegmentConnected.Callbacks += OnSegmentConnected;
         }
 
         public override void Deactivate()
