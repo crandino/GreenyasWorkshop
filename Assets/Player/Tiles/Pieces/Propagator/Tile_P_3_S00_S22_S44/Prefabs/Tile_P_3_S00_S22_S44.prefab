@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6234650519740450572}
-  - component: {fileID: 133286223096713480}
+  - component: {fileID: 3529804821714580537}
   - component: {fileID: 4561228286680848292}
   - component: {fileID: 3483833458080089058}
   m_Layer: 6
@@ -35,7 +35,7 @@ Transform:
   - {fileID: 1001964706635378449}
   m_Father: {fileID: 3726045746631969225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &133286223096713480
+--- !u!114 &3529804821714580537
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,10 +44,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1587197438825415131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c50e12aba9b02f04987a213ba4b2925e, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gate: {fileID: 4561228286680848292}
+  gates:
+  - {fileID: 4561228286680848292}
 --- !u!114 &4561228286680848292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 0}
   outwardGates:
   - {fileID: 7208856221945222616}
   - {fileID: 127103331707196355}
@@ -291,7 +293,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1913798760668433358}
-  - component: {fileID: 2970646019919968198}
+  - component: {fileID: 4032269013648366387}
   - component: {fileID: 127103331707196355}
   - component: {fileID: 8045037846449820345}
   - component: {fileID: 2276376986643655668}
@@ -318,7 +320,7 @@ Transform:
   - {fileID: 2501013306676262576}
   m_Father: {fileID: 3726045746631969225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2970646019919968198
+--- !u!114 &4032269013648366387
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -327,7 +329,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5351636505702849466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -345,7 +347,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates: []
+  inwardGate: {fileID: 8045037846449820345}
+  outwardGates:
+  - {fileID: 4561228286680848292}
 --- !u!114 &8045037846449820345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 127103331707196355}
   outwardGates: []
   hexSide:
     localSide: 2
@@ -584,7 +589,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3009264127553636649}
-  - component: {fileID: 5367866435588241588}
+  - component: {fileID: 1617011999172427629}
   - component: {fileID: 7208856221945222616}
   - component: {fileID: 1215840123267825041}
   - component: {fileID: 2469102542773394377}
@@ -611,7 +616,7 @@ Transform:
   - {fileID: 7778103937481897700}
   m_Father: {fileID: 3726045746631969225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5367866435588241588
+--- !u!114 &1617011999172427629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -620,7 +625,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6277353315249304961}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -638,7 +643,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates: []
+  inwardGate: {fileID: 1215840123267825041}
+  outwardGates:
+  - {fileID: 4561228286680848292}
 --- !u!114 &1215840123267825041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,6 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 7208856221945222616}
   outwardGates: []
   hexSide:
     localSide: 0
@@ -677,7 +685,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4085799714717818052}
-  - component: {fileID: 8893953141177497587}
+  - component: {fileID: 4975642264063363997}
   - component: {fileID: 6459647841053926256}
   - component: {fileID: 721416023698220945}
   - component: {fileID: 5810657489533557684}
@@ -704,7 +712,7 @@ Transform:
   - {fileID: 5798807376497586389}
   m_Father: {fileID: 3726045746631969225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8893953141177497587
+--- !u!114 &4975642264063363997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -713,7 +721,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7011579879458823039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -731,7 +739,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outwardGates: []
+  inwardGate: {fileID: 721416023698220945}
+  outwardGates:
+  - {fileID: 4561228286680848292}
 --- !u!114 &721416023698220945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,6 +754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 6459647841053926256}
   outwardGates: []
   hexSide:
     localSide: 4
@@ -771,24 +782,20 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: segments.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 133286223096713480}
+      objectReference: {fileID: 1617011999172427629}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[1]'
       value: 
-      objectReference: {fileID: 5367866435588241588}
+      objectReference: {fileID: 4032269013648366387}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[2]'
       value: 
-      objectReference: {fileID: 2970646019919968198}
-    - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
-      propertyPath: 'segments.Array.data[3]'
-      value: 
-      objectReference: {fileID: 8893953141177497587}
+      objectReference: {fileID: 4975642264063363997}
     - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -907,3 +914,4 @@ MonoBehaviour:
   coordinates:
     tileTransform: {fileID: 3726045746631969225}
   maxPropagatorStrength: 4
+  currentPropagatorStrength: 0

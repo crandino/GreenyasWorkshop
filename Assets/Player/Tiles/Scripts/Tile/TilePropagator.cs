@@ -15,9 +15,7 @@ namespace HexaLinks.Tile
         [HideInInspector]
 		public int currentPropagatorStrength = 0;
 
-        public Gate.ExposedGate[] StartingGates => GetComponentsInChildren<TerminalSegment>().
-												   Where(s => s is TerminalSegment).
-												   SelectMany(s => s.ExposedGates).ToArray();
+        public Gate.ExposedGate StartingGate => new Gate.ExposedGate(GetComponentInChildren<Gate>());												  
 
         public override void Initialize()
         {
@@ -40,7 +38,7 @@ namespace HexaLinks.Tile
 #if UNITY_EDITOR
         private void Reset()
         {
-			maxPropagatorStrength = MAX_PROPAGATOR_STRENGTH / GetComponentsInChildren<TraversalSegment>().Length; 
+			maxPropagatorStrength = MAX_PROPAGATOR_STRENGTH / (GetComponentsInChildren<TileSegment>().Length - 1); 
         }
 #endif
     } 

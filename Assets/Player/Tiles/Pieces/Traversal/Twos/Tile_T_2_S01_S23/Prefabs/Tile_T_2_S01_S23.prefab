@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2913142430624885272}
-  - component: {fileID: 2787874612904932842}
+  - component: {fileID: 2611257596228682142}
   - component: {fileID: 7074893993208754668}
   - component: {fileID: 3195048215468902956}
   - component: {fileID: 6476556608023164711}
@@ -36,7 +36,7 @@ Transform:
   - {fileID: 8348843087631051073}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2787874612904932842
+--- !u!114 &2611257596228682142
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 926932684248876007}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 3195048215468902956}
   outwardGates: []
   hexSide:
     localSide: 2
@@ -78,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 7074893993208754668}
   outwardGates: []
   hexSide:
     localSide: 3
@@ -304,7 +306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 5078571083864392753}
+  - component: {fileID: 2709300104596472559}
   - component: {fileID: 1800240009547117888}
   - component: {fileID: 1343248941098341078}
   - component: {fileID: 5678655161828963364}
@@ -331,7 +333,7 @@ Transform:
   - {fileID: 5618014014574581968}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5078571083864392753
+--- !u!114 &2709300104596472559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -340,7 +342,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7276678055054480768}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -358,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 1343248941098341078}
   outwardGates: []
   hexSide:
     localSide: 0
@@ -373,6 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 1800240009547117888}
   outwardGates: []
   hexSide:
     localSide: 1
@@ -405,11 +409,11 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 5078571083864392753}
+      objectReference: {fileID: 2709300104596472559}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[1]'
       value: 
-      objectReference: {fileID: 2787874612904932842}
+      objectReference: {fileID: 2611257596228682142}
     - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Enabled
       value: 0

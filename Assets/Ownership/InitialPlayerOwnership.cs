@@ -9,7 +9,7 @@ namespace HexaLinks.Ownership
     {
         [SerializeField]
         private PlayerOwnership[] childrenOwnership;
-
+        
         private void Awake()
         {
             foreach (var child in childrenOwnership)
@@ -46,5 +46,4 @@ namespace HexaLinks.Ownership
 
         }
     }
-
 }

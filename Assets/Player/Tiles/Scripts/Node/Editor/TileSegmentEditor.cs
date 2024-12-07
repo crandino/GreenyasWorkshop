@@ -3,6 +3,8 @@ using HexaLinks.Tile;
 using UnityEditor;
 using UnityEngine;
 
+// TODO: Delete all of these
+
 [CustomEditor(typeof(TileSegment))]
 public class TileSegmentEditor : Editor
 {
@@ -36,34 +38,36 @@ public class TileSegmentEditor : Editor
 
     private SegmentProperties properties;
     
-    private void OnEnable()
-    {
-        properties = new SegmentProperties(serializedObject);
-        serializedObject.ApplyModifiedProperties();
-    }
+    //private void OnEnable()
+    //{
+    //    properties = new SegmentProperties(serializedObject);
+    //    serializedObject.ApplyModifiedProperties();
+    //}
 
     public override void OnInspectorGUI()
     {
-        serializedObject.Update();
 
-        //EditorGUILayout.ObjectField(properties.meshRenderer);
+        DrawDefaultInspector();
+        //serializedObject.Update();
 
-        ++EditorGUI.indentLevel;
-        for (int i = 0; i < properties.gates.Length; i++)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Gate {i + 1}");
+        ////EditorGUILayout.ObjectField(properties.meshRenderer);
 
-            ++EditorGUI.indentLevel;
-            ShowHexSideCarousel(ref properties.gates[i]);
-            --EditorGUI.indentLevel;
+        //++EditorGUI.indentLevel;
+        //for (int i = 0; i < properties.gates.Length; i++)
+        //{
+        //    EditorGUILayout.BeginHorizontal();
+        //    EditorGUILayout.LabelField($"Gate {i + 1}");
 
-            EditorGUILayout.EndHorizontal();
-        }
-        --EditorGUI.indentLevel;
+        //    ++EditorGUI.indentLevel;
+        //    ShowHexSideCarousel(ref properties.gates[i]);
+        //    --EditorGUI.indentLevel;
 
-        if (serializedObject.hasModifiedProperties)
-            serializedObject.ApplyModifiedProperties();
+        //    EditorGUILayout.EndHorizontal();
+        //}
+        //--EditorGUI.indentLevel;
+
+        //if (serializedObject.hasModifiedProperties)
+        //    serializedObject.ApplyModifiedProperties();
     }
 
     private void ShowHexSideCarousel(ref SegmentProperties.GateProperties nodeSerialized)

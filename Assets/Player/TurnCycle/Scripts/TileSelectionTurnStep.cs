@@ -3,7 +3,7 @@ using System;
 
 public class TileSelectionTurnStep : TurnStep
 {
-    private TilePlacement tilePlacement;
+    private readonly TilePlacement tilePlacement;
     private Hand hand;
 
     public TileSelectionTurnStep(Action endTurnStep) : base(endTurnStep)

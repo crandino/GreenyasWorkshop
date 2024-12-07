@@ -3,9 +3,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Greenyas.Hexagon.HexSide;
-using System;
 using static TileEvents;
-
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -62,8 +61,13 @@ namespace HexaLinks.Tile
             }
         }
 
-        //public static event Action OnGateConnected;
-        //public static event Action OnGateDisconnected;
+        //public void Disconnect()
+        //{
+        //    foreach (Gate conn in outwardGates)
+        //        conn.outwardGates.Clear();
+
+        //    outwardGates.Clear();
+        //}
 
         public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult )
         {
@@ -74,20 +78,6 @@ namespace HexaLinks.Tile
             if (IsFacingOtherGate(againstGate))
                 candidatesResult.AddPair(this, againstGate);
         }
-       
-        //public void TryConnect(SideGate againstGate)
-        //{
-        //    // There's any previous connection between those gates
-        //    if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
-        //        return;
-
-        //    if (IsFacingOtherGate(againstGate))
-        //    {
-        //        outwardGates.Add(againstGate);
-        //        againstGate.outwardGates.Add(this);
-        //        OnGateConnected();
-        //    };
-        //}
 
         private bool IsFacingOtherGate(SideGate gateTo)
         {
@@ -107,9 +97,9 @@ namespace HexaLinks.Tile
             }
         }
 
-        public override void DrawDebugInfo()
+        public override void DrawDebugInfo(Color tint)
         {
-            base.DrawDebugInfo();
+            base.DrawDebugInfo(tint);
 
             // Outward node conntections
             if (TileDebugOptions.Instance.showConnections && Application.isPlaying)

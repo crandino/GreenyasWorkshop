@@ -1,19 +1,21 @@
 using Greenyas.Hexagon;
+using Hexagon.Tile.Debug;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static HexaLinks.Tile.TileConnectivity;
 
 namespace HexaLinks.Tile
 {
-    public abstract class TileSegment : MonoBehaviour, IHashable<TileSegment, uint>
+    public class TileSegment : MonoBehaviour, IHashable<TileSegment, uint>
     {
-        public virtual bool CanBeCrossed => true;
+        [SerializeField]
+        private Gate[] gates = null;
 
-        public abstract Gate[] AllGates { get; }
+        public virtual bool CanBeCrossed => gates.Length == 2;
 
-        public Gate.ExposedGate[] ExposedGates => AllGates.ToExposedGates();
-
-        protected abstract SideGate[] SideGates { get; }
+        protected SideGate[] SideGates => gates.Where(g => g is SideGate).Cast<SideGate>().ToArray();
 
         public uint Hash => HashFunction(this);
         public uint HashFunction(TileSegment s) => s.transform.GetTransformUpUntil<Tile>().GetComponent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
@@ -37,12 +39,6 @@ namespace HexaLinks.Tile
             return candidates;
         }
 
-        //public void TryConnection(SideGate againstGate, List<SideGate.ConnectionCandidate> candidates)
-        //{
-        //    foreach (var fromGate in SideGates)
-        //        fromGate.TryConnect(againstGate);
-        //}
-
         public void GetPossibleConnections(SideGate againstGate, SideGate.ConnectionCandidates candidatesResult)
         {
             foreach (var fromGate in SideGates)
@@ -51,30 +47,52 @@ namespace HexaLinks.Tile
 
         public void Disconnect()
         {
-            foreach (var from in AllGates)
-                from.Disconnect();
+            //TODO: Completar la desconexión
+            //foreach (var from in SideGates)
+            //    from.Disconnect();
         }
 
-        public abstract Gate GoThrough(Gate enterGate);
+        public Gate GoThrough(Gate enterGate)
+        {
+            return gates.Where(g => g != enterGate).First();
+        }
 
-        public bool IsTraversalForward(Gate enterGate) => AllGates[0] == enterGate;
+        public bool IsTraversalForward(Gate enterGate) => gates[0] == enterGate;
 
 #if UNITY_EDITOR
 
-        protected virtual void OnDrawGizmos()
+        private void Reset()
         {
-            for (int i = 0; i < AllGates.Length; i++)
-                AllGates[i].DrawDebugInfo();
+            gates = new Gate[0];
         }
 
-        protected Gate CreateGate()
+        private void OnDrawGizmos()
         {
-            return gameObject.AddComponent<Gate>();
-        }
+            for (int i = 0; i < gates.Length; i++)
+            {
+                if (gates[i] == null)
+                    continue;
 
-        protected SideGate CreateSideGate()
-        {
-            return gameObject.AddComponent<SideGate>();
+                Color tint = Color.grey;
+                float tintMultiplier = (gates[0] == gates[i]) ? 1.5f : 0.5f;
+                gates[i].DrawDebugInfo(new Color(tint.r * tintMultiplier,
+                    tint.g * tintMultiplier,
+                    tint.b * tintMultiplier,
+                    1.0f));              
+            }
+
+            //if (TileDebugOptions.Instance.showSegments && CanBeCrossed)
+            //{
+            //    Vector3 arrowDir = (gates[1].WorldDebugPos - gates[0].WorldDebugPos);
+            //    Vector3 arrowDirNormalized = arrowDir.normalized;
+            //    float magnitude = arrowDir.magnitude;
+
+            //    Handles.color = CustomColors.darkGreen;
+            //    Vector3 lateralOffset = Vector3.Cross(arrowDir.normalized, Vector3.up) * 0.1f;
+            //    Handles.ArrowHandleCap(0, gates[0].WorldDebugPos + lateralOffset, Quaternion.LookRotation(arrowDirNormalized, Vector3.up), magnitude * 0.9f, EventType.Repaint);
+            //    Handles.color = CustomColors.brown;
+            //    Handles.ArrowHandleCap(0, gates[1].WorldDebugPos - lateralOffset, Quaternion.LookRotation(-arrowDirNormalized, Vector3.up), magnitude * 0.9f, EventType.Repaint);
+            //}
         }
 #endif
     }

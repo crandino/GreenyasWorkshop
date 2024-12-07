@@ -109,9 +109,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 855448087009069288}
-  - component: {fileID: 6575901544814067886}
+  - component: {fileID: 4279257872285467491}
   - component: {fileID: 2847625353533994675}
+  - component: {fileID: 6575901544814067886}
   - component: {fileID: 5254106543370647923}
   m_Layer: 6
   m_Name: Segment_1
@@ -136,7 +136,7 @@ Transform:
   - {fileID: 1177242478823334600}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &855448087009069288
+--- !u!114 &4279257872285467491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,27 +145,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7276678055054480768}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
   - {fileID: 2847625353533994675}
   - {fileID: 6575901544814067886}
---- !u!114 &6575901544814067886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outwardGates: []
-  hexSide:
-    localSide: 3
 --- !u!114 &2847625353533994675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,9 +163,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 6575901544814067886}
   outwardGates: []
   hexSide:
     localSide: 0
+--- !u!114 &6575901544814067886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inwardGate: {fileID: 2847625353533994675}
+  outwardGates: []
+  hexSide:
+    localSide: 3
 --- !u!114 &5254106543370647923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,7 +212,7 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 855448087009069288}
+      objectReference: {fileID: 4279257872285467491}
     - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Enabled
       value: 0

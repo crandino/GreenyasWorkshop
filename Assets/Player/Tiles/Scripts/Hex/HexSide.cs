@@ -73,6 +73,8 @@ namespace Greenyas.Hexagon
         
     }
 
+    // TODO: Move to a separate file
+
     [CustomPropertyDrawer(typeof(HexSide))]
     public class CubeCoordPropertyDrawer : PropertyDrawer
     {

@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1962697707849010308}
-  - component: {fileID: 6264783679501173111}
-  - component: {fileID: 5792281496455837106}
+  - component: {fileID: 3093877141093200868}
   - component: {fileID: 4618197824759919133}
   - component: {fileID: 5612015481715028659}
+  - component: {fileID: 6264783679501173111}
   m_Layer: 6
   m_Name: Segment_2
   m_TagString: Untagged
@@ -36,7 +36,7 @@ Transform:
   - {fileID: 1575577652291505984}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6264783679501173111
+--- !u!114 &3093877141093200868
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,21 +45,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4869383292949262976}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highligther: {fileID: 2648452015544162495}
-  owner: 0
---- !u!114 &5792281496455837106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4869383292949262976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -77,6 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 5612015481715028659}
   outwardGates: []
   hexSide:
     localSide: 3
@@ -92,9 +79,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 4618197824759919133}
   outwardGates: []
   hexSide:
     localSide: 5
+--- !u!114 &6264783679501173111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4869383292949262976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highligther: {fileID: 2648452015544162495}
+  owner: 0
 --- !u!1 &5373022504462377702
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,10 +306,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 8218937942073292873}
-  - component: {fileID: 7085572353533113055}
+  - component: {fileID: 3267715701838082418}
   - component: {fileID: 5701794849089203885}
   - component: {fileID: 8689241896382028592}
+  - component: {fileID: 8218937942073292873}
   m_Layer: 6
   m_Name: Segment_1
   m_TagString: Untagged
@@ -331,7 +333,7 @@ Transform:
   - {fileID: 3398594014145131218}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8218937942073292873
+--- !u!114 &3267715701838082418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -340,21 +342,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7276678055054480768}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highligther: {fileID: 8005272940134570667}
-  owner: 0
---- !u!114 &7085572353533113055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gates:
@@ -372,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 8689241896382028592}
   outwardGates: []
   hexSide:
     localSide: 0
@@ -387,9 +376,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 5701794849089203885}
   outwardGates: []
   hexSide:
     localSide: 2
+--- !u!114 &8218937942073292873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highligther: {fileID: 8005272940134570667}
+  owner: 0
 --- !u!1001 &2828225911198047407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,11 +409,11 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 7085572353533113055}
+      objectReference: {fileID: 3267715701838082418}
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[1]'
       value: 
-      objectReference: {fileID: 5792281496455837106}
+      objectReference: {fileID: 3093877141093200868}
     - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Enabled
       value: 0

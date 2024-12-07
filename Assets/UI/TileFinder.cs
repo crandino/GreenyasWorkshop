@@ -33,7 +33,7 @@ public static class TileFinder
                 tiles.OrderByDescending(c => HexTools.GetGridCartesianWorldPos(c.Coord).x).First().transform.position,
                 orderedTilesByDistanceToOrigin.OrderBy(c => HexTools.GetGridCartesianWorldPos(c.Coord).z).First().transform.position,
                 orderedTilesByDistanceToOrigin.OrderByDescending(c => HexTools.GetGridCartesianWorldPos(c.Coord).z).First().transform.position
-            }
+                }
             };
         }
     }

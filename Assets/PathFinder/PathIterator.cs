@@ -12,12 +12,12 @@ namespace HexaLinks.Path.Finder
         {
             TileStepTracker<Gate> gateTracker = new TileStepTracker<Gate>();
 
-            Gate[] initialGates = initialTile.StartingGates;
+            Gate initialGate = initialTile.StartingGate;
             int maxPropagationSteps = initialTile.currentPropagatorStrength;
 
-            for (int i = 0; i < initialGates.Length; i++)
-            {
-                gateTracker.AddStep(initialGates);
+            //for (int i = 0; i < initialGates.Length; i++)
+            //{
+                gateTracker.AddStep(initialGate);
                 gateTracker.MoveNext();
 
                 Gate currentGate = gateTracker.GetCurrentStep();
@@ -32,7 +32,7 @@ namespace HexaLinks.Path.Finder
                     else
                         PathFinder.Add(new(gateTracker.GetEvaluatedSteps().ToArray()));
                 }
-            }
+            //}
 
             PathFinder.StartPropagation();
         }

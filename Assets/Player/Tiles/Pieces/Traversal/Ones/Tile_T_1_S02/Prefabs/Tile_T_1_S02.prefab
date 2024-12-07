@@ -109,10 +109,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685380187248785063}
-  - component: {fileID: 8668097863273272302}
-  - component: {fileID: 8555168937447241449}
   - component: {fileID: 6580801937998288993}
   - component: {fileID: 2540314308472993609}
+  - component: {fileID: 7645589959606106353}
+  - component: {fileID: 8668097863273272302}
   m_Layer: 6
   m_Name: Segment_1
   m_TagString: Untagged
@@ -136,35 +136,6 @@ Transform:
   - {fileID: 2884405986168875008}
   m_Father: {fileID: 805470406821481527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8668097863273272302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highligther: {fileID: 6585886739797569807}
-  owner: 0
---- !u!114 &8555168937447241449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7276678055054480768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c775e813b9b4cb4ea63dcf6db3ae2dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gates:
-  - {fileID: 6580801937998288993}
-  - {fileID: 2540314308472993609}
 --- !u!114 &6580801937998288993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 2540314308472993609}
   outwardGates: []
   hexSide:
     localSide: 0
@@ -192,9 +164,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inwardGate: {fileID: 6580801937998288993}
   outwardGates: []
   hexSide:
     localSide: 2
+--- !u!114 &7645589959606106353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65d090ccb3a43047af29fcbbc1f7460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gates:
+  - {fileID: 6580801937998288993}
+  - {fileID: 2540314308472993609}
+--- !u!114 &8668097863273272302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7276678055054480768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highligther: {fileID: 6585886739797569807}
+  owner: 0
 --- !u!1001 &2828225911198047407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,7 +212,7 @@ PrefabInstance:
     - target: {fileID: 402700206281876928, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: 'segments.Array.data[0]'
       value: 
-      objectReference: {fileID: 8555168937447241449}
+      objectReference: {fileID: 7645589959606106353}
     - target: {fileID: 945197633307862922, guid: 9a9591f01675c954f9546df17766a76d, type: 3}
       propertyPath: m_Enabled
       value: 0
