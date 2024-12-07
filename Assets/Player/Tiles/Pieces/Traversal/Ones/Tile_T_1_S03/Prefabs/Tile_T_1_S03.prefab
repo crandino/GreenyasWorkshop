@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 4279257872285467491}
   inwardGate: {fileID: 6575901544814067886}
   outwardGates: []
   hexSide:
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 4279257872285467491}
   inwardGate: {fileID: 2847625353533994675}
   outwardGates: []
   hexSide:

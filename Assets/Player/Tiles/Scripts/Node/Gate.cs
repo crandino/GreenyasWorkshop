@@ -12,6 +12,9 @@ namespace HexaLinks.Tile
 {
     public class Gate : MonoBehaviour
     {
+        [SerializeField, ReadOnly]
+        protected TileSegment parentSegment;
+
         [SerializeField]
         private Gate inwardGate;
 
@@ -19,8 +22,7 @@ namespace HexaLinks.Tile
         protected List<Gate> outwardGates = new List<Gate>();
 
         public bool IsEnd => inwardGate == null;
-
-        public TileSegment Segment => gameObject.GetComponent<TileSegment>();       
+        public virtual Vector3 WorldPos => parentSegment.transform.position;
 
         public readonly struct ExposedGate
         {
@@ -30,21 +32,21 @@ namespace HexaLinks.Tile
             public readonly PlayerOwnership Ownership { get; }
             public readonly bool ForwardTraversalDir { get; }
 
-            public uint Hash => gate.Segment.Hash;
+            public uint Hash => gate.parentSegment.Hash;
 
             public ExposedGate(Gate gate)
             {
                 this.gate = gate;
-                Ownership = gate.Segment.GetComponent<PlayerOwnership>();
-                ForwardTraversalDir = gate.Segment.IsTraversalForward(gate);
+                Ownership = gate.parentSegment.GetComponent<PlayerOwnership>();
+                ForwardTraversalDir = gate.parentSegment.IsTraversalForward(gate);
             }
 
             public bool GoThrough(out ExposedGate[] connectedGates)
             {
                 connectedGates = null;
 
-                if (gate.Segment.CanBeCrossed)
-                    connectedGates = gate.Segment.GoThrough(gate).outwardGates.ToExposedGates();
+                if (gate.parentSegment.CanBeCrossed)
+                    connectedGates = gate.parentSegment.GoThrough(gate).outwardGates.ToExposedGates();
 
                 return connectedGates != null && connectedGates.Length != 0;
             }
@@ -62,7 +64,6 @@ namespace HexaLinks.Tile
         }
 
 #if UNITY_EDITOR
-        public virtual Vector3 WorldDebugPos => Segment.transform.position;       
 
         public virtual void DrawDebugInfo(Color tint)
         {
@@ -70,20 +71,31 @@ namespace HexaLinks.Tile
             if (TileDebugOptions.Instance.showNodes)
             {
                 Gizmos.color = Color.yellow * tint;
-                Gizmos.DrawSphere(WorldDebugPos, 0.05f);
+                Gizmos.DrawSphere(WorldPos, 0.05f);
             }
 
             if(TileDebugOptions.Instance.showSegments && inwardGate != null)
             {
-                Vector3 arrowDir = (inwardGate.WorldDebugPos - WorldDebugPos);
+                Vector3 arrowDir = (inwardGate.WorldPos - WorldPos);
                 Vector3 arrowDirNormalized = arrowDir.normalized;
                 float magnitude = arrowDir.magnitude;
 
                 Handles.color = CustomColors.darkGreen * tint;
                 Vector3 lateralOffset = Vector3.Cross(arrowDir.normalized, Vector3.up) * 0.1f;
-                Handles.ArrowHandleCap(0, WorldDebugPos + lateralOffset, Quaternion.LookRotation(arrowDirNormalized, Vector3.up), magnitude, EventType.Repaint);
+                Handles.ArrowHandleCap(0, WorldPos + lateralOffset, Quaternion.LookRotation(arrowDirNormalized, Vector3.up), magnitude, EventType.Repaint);
             }
-        }      
+        }
+
+        private void Reset()
+        {
+            GetParentSegment();
+        }
+
+        [ContextMenu("Get Parent Segment")]
+        private void GetParentSegment()
+        {
+            parentSegment = GetComponentInParent<TileSegment>();
+        }
 #endif
     }
 

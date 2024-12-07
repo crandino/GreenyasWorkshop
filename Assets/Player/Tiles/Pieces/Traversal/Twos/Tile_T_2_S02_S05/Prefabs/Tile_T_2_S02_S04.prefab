@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 8362024400032449924}
   inwardGate: {fileID: 7797891488430969101}
   outwardGates: []
   hexSide:
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 8362024400032449924}
   inwardGate: {fileID: 6916991951741468597}
   outwardGates: []
   hexSide:
@@ -360,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 3785647485413128035}
   inwardGate: {fileID: 1780676940764100562}
   outwardGates: []
   hexSide:
@@ -376,6 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 3785647485413128035}
   inwardGate: {fileID: 185651802859597516}
   outwardGates: []
   hexSide:

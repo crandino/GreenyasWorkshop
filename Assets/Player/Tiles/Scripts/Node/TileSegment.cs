@@ -1,8 +1,6 @@
 using Greenyas.Hexagon;
-using Hexagon.Tile.Debug;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using static HexaLinks.Tile.TileConnectivity;
 
@@ -78,23 +76,9 @@ namespace HexaLinks.Tile
                 gates[i].DrawDebugInfo(new Color(tint.r * tintMultiplier,
                     tint.g * tintMultiplier,
                     tint.b * tintMultiplier,
-                    1.0f));              
+                    1.0f));
             }
-
-            //if (TileDebugOptions.Instance.showSegments && CanBeCrossed)
-            //{
-            //    Vector3 arrowDir = (gates[1].WorldDebugPos - gates[0].WorldDebugPos);
-            //    Vector3 arrowDirNormalized = arrowDir.normalized;
-            //    float magnitude = arrowDir.magnitude;
-
-            //    Handles.color = CustomColors.darkGreen;
-            //    Vector3 lateralOffset = Vector3.Cross(arrowDir.normalized, Vector3.up) * 0.1f;
-            //    Handles.ArrowHandleCap(0, gates[0].WorldDebugPos + lateralOffset, Quaternion.LookRotation(arrowDirNormalized, Vector3.up), magnitude * 0.9f, EventType.Repaint);
-            //    Handles.color = CustomColors.brown;
-            //    Handles.ArrowHandleCap(0, gates[1].WorldDebugPos - lateralOffset, Quaternion.LookRotation(-arrowDirNormalized, Vector3.up), magnitude * 0.9f, EventType.Repaint);
-            //}
         }
 #endif
     }
-
 }

@@ -2,9 +2,8 @@ using Greenyas.Hexagon;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
-using static Greenyas.Hexagon.HexSide;
-using static TileEvents;
 using System;
+using static Greenyas.Hexagon.HexSide;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,7 +19,17 @@ namespace HexaLinks.Tile
         [SerializeField]
         private HexSide hexSide = new();
 
-        public Side WorldSide => hexSide.GetWorldSide(Segment);
+        public Side WorldSide => hexSide.GetWorldSide(parentSegment);
+
+        public override Vector3 WorldPos
+        {
+            get
+            {
+                Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn(WorldSide);
+                Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
+                return parentSegment.transform.position + localPosition * HexTools.hexagonSize;
+            }
+        }
 
         public class ConnectionCandidates
         {
@@ -47,11 +56,11 @@ namespace HexaLinks.Tile
 
             public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => HexMap.Instance.NumOfTiles == 0 || c.candidates.Length > 0;
 
-            public bool Check(Func<ConnectionCandidates, bool> predicate) => predicate(this);            
+            public bool Check(Func<ConnectionCandidates, bool> predicate) => predicate(this);
 
             public void Connect()
             {
-                for(int i = 0; i < candidates.Length; ++i)
+                for (int i = 0; i < candidates.Length; ++i)
                     candidates[i].Connect();
             }
 
@@ -59,17 +68,18 @@ namespace HexaLinks.Tile
             {
                 candidates = candidates.Append(new(gate, otherGate)).ToArray();
             }
+
+
+            //public void Disconnect()
+            //{
+            //    foreach (Gate conn in outwardGates)
+            //        conn.outwardGates.Clear();
+
+            //    outwardGates.Clear();
+            //}
         }
 
-        //public void Disconnect()
-        //{
-        //    foreach (Gate conn in outwardGates)
-        //        conn.outwardGates.Clear();
-
-        //    outwardGates.Clear();
-        //}
-
-        public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult )
+        public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult)
         {
             // There's any previous connection between those gates
             if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
@@ -81,21 +91,11 @@ namespace HexaLinks.Tile
 
         private bool IsFacingOtherGate(SideGate gateTo)
         {
-            Assert.IsTrue(Segment != gateTo.Segment);
+            Assert.IsTrue(parentSegment != gateTo.parentSegment);
             return WorldSide.IsOpposite(gateTo.WorldSide);
         }
 
 #if UNITY_EDITOR
-
-        public override Vector3 WorldDebugPos
-        {
-            get
-            {
-                Vector2 localDir = CubeCoord.GetVectorToNeighborHexOn(WorldSide);
-                Vector3 localPosition = new Vector3(localDir.x, 0.05f, localDir.y);
-                return Segment.transform.position + localPosition * HexTools.hexagonSize;
-            }
-        }
 
         public override void DrawDebugInfo(Color tint)
         {
@@ -111,9 +111,9 @@ namespace HexaLinks.Tile
                 GUIStyle textStyle = new GUIStyle();
                 textStyle.fontSize = 18;
                 Handles.color = textStyle.normal.textColor = outwardGates.Count != 0 ? Color.green : Color.red;
-                Handles.Label(WorldDebugPos + toNextTile * 0.3f, $"{outwardGates.Count}", textStyle);
+                Handles.Label(WorldPos + toNextTile * 0.3f, $"{outwardGates.Count}", textStyle);
 
-                Handles.ArrowHandleCap(0, WorldDebugPos, arrowOrientatinon, 0.2f, UnityEngine.EventType.Repaint);
+                Handles.ArrowHandleCap(0, WorldPos, arrowOrientatinon, 0.2f, UnityEngine.EventType.Repaint);
             }
         }
     }

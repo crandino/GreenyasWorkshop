@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 3680695001723196299}
   inwardGate: {fileID: 0}
   outwardGates:
   - {fileID: 7208856221945222616}
@@ -343,6 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4da79586068ff8428ff76c818a7d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 5015706143315596744}
   inwardGate: {fileID: 1215840123267825041}
   outwardGates: []
 --- !u!114 &1215840123267825041
@@ -357,6 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f614b3f68f94d2c47a8cb97c5209a11c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentSegment: {fileID: 5015706143315596744}
   inwardGate: {fileID: 7208856221945222616}
   outwardGates: []
   hexSide:
