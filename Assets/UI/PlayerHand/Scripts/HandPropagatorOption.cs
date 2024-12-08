@@ -18,7 +18,7 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-        private const int CONNECTIONS_TO_GET = 3;
+        private const int CONNECTIONS_TO_GET = 0;
         private readonly Label counterLabel;
 
         private bool CountdownReached => Counter <= 0;

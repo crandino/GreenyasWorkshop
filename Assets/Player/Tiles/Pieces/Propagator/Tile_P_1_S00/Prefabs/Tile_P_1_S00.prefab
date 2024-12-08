@@ -346,7 +346,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentSegment: {fileID: 5015706143315596744}
   inwardGate: {fileID: 1215840123267825041}
-  outwardGates: []
+  outwardGates:
+  - {fileID: 4561228286680848292}
 --- !u!114 &1215840123267825041
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ namespace HexaLinks.Path.Finder
 
         public static void Add(Path newPath)
         {
-            current.Add(newPath);           
+            current.Add(newPath);
         }
 
         public static void StartPropagation()

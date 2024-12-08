@@ -11,8 +11,6 @@ namespace HexaLinks.Tile
         [SerializeField]
         private Gate[] gates = null;
 
-        public virtual bool CanBeCrossed => gates.Length == 2;
-
         protected SideGate[] SideGates => gates.Where(g => g is SideGate).Cast<SideGate>().ToArray();
 
         public uint Hash => HashFunction(this);

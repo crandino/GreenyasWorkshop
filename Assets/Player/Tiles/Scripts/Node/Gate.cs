@@ -22,6 +22,8 @@ namespace HexaLinks.Tile
         protected List<Gate> outwardGates = new List<Gate>();
 
         public bool IsEnd => inwardGate == null;
+        public bool IsConnected => outwardGates.Count > 0;
+
         public virtual Vector3 WorldPos => parentSegment.transform.position;
 
         public readonly struct ExposedGate
@@ -33,30 +35,21 @@ namespace HexaLinks.Tile
             public readonly bool ForwardTraversalDir { get; }
 
             public uint Hash => gate.parentSegment.Hash;
+            public bool GoThrough(out ExposedGate[] connectedGates) => gate.GoThrough(out connectedGates);
 
             public ExposedGate(Gate gate)
             {
                 this.gate = gate;
                 Ownership = gate.parentSegment.GetComponent<PlayerOwnership>();
                 ForwardTraversalDir = gate.parentSegment.IsTraversalForward(gate);
-            }
-
-            public bool GoThrough(out ExposedGate[] connectedGates)
-            {
-                connectedGates = null;
-
-                if (gate.parentSegment.CanBeCrossed)
-                    connectedGates = gate.parentSegment.GoThrough(gate).outwardGates.ToExposedGates();
-
-                return connectedGates != null && connectedGates.Length != 0;
-            }
+            }          
         }
 
         public bool GoThrough(out ExposedGate[] connectedGates)
         {
             connectedGates = null;
 
-            if (IsEnd)
+            if (IsEnd || !inwardGate.IsConnected)
                 return false;
 
             connectedGates = inwardGate.outwardGates.ToExposedGates();

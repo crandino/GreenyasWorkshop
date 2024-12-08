@@ -351,7 +351,6 @@ MonoBehaviour:
   inwardGate: {fileID: 8045037846449820345}
   outwardGates:
   - {fileID: 4561228286680848292}
-  - {fileID: 4561228286680848292}
 --- !u!114 &8045037846449820345
 MonoBehaviour:
   m_ObjectHideFlags: 0

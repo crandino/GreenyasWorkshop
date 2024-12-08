@@ -27,7 +27,7 @@ namespace HexaLinks.Path.Finder
             }
 
             public Link StartLink { private set; get; }
-            public Range PropagationRange { private set; get; }
+            //public Range PropagationRange { private set; get; }
             public Link[] Links { private set; get; }
 
             //TODO: Split all of these. Maybe, add a reference on the Ownership counter to encapsulate better and not to pass any other possible array of Links
@@ -119,7 +119,7 @@ namespace HexaLinks.Path.Finder
                 Links = gates.Select(s => new Link(s)).ToArray();
                 StartLink = Links.First();
                 OwnershipCounter counter = new OwnershipCounter(Links);
-                PropagationRange = counter.CalculateOwnershipRange(((InitialPlayerOwnership)StartLink.Ownership).Owner);
+                //PropagationRange = counter.CalculateOwnershipRange(((InitialPlayerOwnership)StartLink.Ownership).Owner);
             }
 
             //https://stackoverflow.com/questions/2978311/format-a-string-into-columns

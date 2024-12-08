@@ -51,7 +51,8 @@ namespace HexaLinks.Path.Finder
 
                 for (int i = 0; i < paths.Count; ++i)
                 {
-                    for (int j = 0; j < paths[i].Links[paths[i].PropagationRange].Length; ++j)
+                    //for (int j = 0; j < paths[i].Links[paths[i].PropagationRange].Length; ++j)          
+                    for (int j = 0; j < paths[i].Links.Length; ++j)
                     {
                         if (paths[i].Equals(paths[i].Links[j]))
                             break;
