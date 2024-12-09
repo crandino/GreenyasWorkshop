@@ -1,18 +1,17 @@
-using System.Linq;
-using UnityEngine;
 using HexaLinks.Tile;
+using static Game;
 
-public class TileManager : MonoBehaviour
+public class TileManager : GameSystemMonobehaviour
 {
-    private Tile[] tiles;
+    //private Tile[] tiles;
 
-    [SerializeField]
-    private Tile[] excludeTiles;
+    //[SerializeField]
+    //private Tile[] excludeTiles;
 
-    [SerializeField]
-    private DeckContent deckCreator;
+    //[SerializeField]
+    //private DeckContent deckCreator;
 
-    private void Start()
+    public override void InitSystem()
     {
         HexMap.Instance.ConnectAll();
     }

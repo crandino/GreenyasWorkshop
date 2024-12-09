@@ -3,7 +3,7 @@ using HexaLinks.Tile;
 using System;
 using UnityEngine;
 
-public class TilePlacement : Game.SubSystem
+public class TilePlacement : Game.IGameSystem
 {
     private Tile currentSelectedTile = null;
     private InputManager input = null;
@@ -11,10 +11,20 @@ public class TilePlacement : Game.SubSystem
     public event Action OnSuccessPlacement;
     public event Action OnFailurePlacement;
 
-    protected override bool TryInitSystem()
+    public void InitSystem()
     {
         input = Game.Instance.GetSystem<InputManager>();
-        return true;
+    }
+
+    public void Start(Tile tile)
+    {
+        currentSelectedTile = tile;
+
+        tile.Initialize();
+        tile.PickUp();
+
+        input.TilePlacement.OnButtonPressed += TryReleaseTile;
+        input.TilePlacementCancellation.OnButtonPressed += CancelTile;
     }
 
     // Include that as a DEBUG feature
@@ -44,16 +54,7 @@ public class TilePlacement : Game.SubSystem
         Finish();
     }
 
-    public void Start(Tile tile)
-    {
-        currentSelectedTile = tile;
-
-        tile.Initialize();
-        tile.PickUp();
-
-        input.TilePlacement.OnButtonPressed += TryReleaseTile;
-        input.TilePlacementCancellation.OnButtonPressed += CancelTile;
-    }  
+   
 
     private void Finish()
     {

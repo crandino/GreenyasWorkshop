@@ -1,7 +1,5 @@
 using HexaLinks.Path.Finder;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace HexaLinks.Tile
 {
@@ -27,6 +25,9 @@ namespace HexaLinks.Tile
         {
             if (base.TryRelease())
             {
+                Ownership.PlayerOwnership.Ownership currentPlayer = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
+                Game.Instance.GetSystem<PropagatorPopUp>().PopUpNumber(currentPropagatorStrength, Color.yellow, transform);
+
                 PathFinder.Reset();
                 PathFinder.Init(this);
                 return true;

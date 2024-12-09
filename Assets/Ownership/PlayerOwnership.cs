@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
 using HexaLinks.Propagation;
+using HexaLinks.Tile.Events;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static TileEvents.OnSegmentPropagatedEvent;
 
 namespace HexaLinks.Ownership
 {

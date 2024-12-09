@@ -1,6 +1,6 @@
 namespace Greenyas.Input
 {
-    public class InputManager : Game.SubSystem
+    public class InputManager : Game.IGameSystem
     {
         private PlayerActions actions = null;
 
@@ -9,7 +9,7 @@ namespace Greenyas.Input
         public InputButtonCallback TilePlacement;
         public InputButtonCallback TilePlacementCancellation;
 
-        protected override bool TryInitSystem()
+        public void InitSystem()
         {
             actions = new PlayerActions();
             actions.Enable();
@@ -17,8 +17,6 @@ namespace Greenyas.Input
             TilePlacement = new InputButtonCallback(actions.InGame.TilePlacement);
             TilePlacementCancellation = new InputButtonCallback(actions.InGame.CancelTilePlacement);
             OnAxis = new InputDeltaCallback(actions.InGame.RotatePiece);
-
-            return true;
         }
     }    
 }

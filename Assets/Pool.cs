@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
+using static PropagatorPopUp;
 
 public class Pool : MonoBehaviour
 {
@@ -11,34 +11,31 @@ public class Pool : MonoBehaviour
     [SerializeField]
     private VisualTreeAsset numberTemplate;
 
-    public Vector2 position;
+    private ObjectPool<PropagatorLabel> pool = null;
+    private readonly static Vector3 OUT_OF_CANVAS_POSITION = new Vector3(5000, 5000, 0);
 
-    private ObjectPool<Label> pool = null;
-
-    void Start()
+    public void InitPool()
     {
-        pool = new(Create);
+        pool = new(OnCreate, null, OnRelease);
     }
 
-    private Label Create()
+    private PropagatorLabel OnCreate()
     {
         var pooledObject = numberTemplate.Instantiate();
         Label l = pooledObject.Q<Label>();
         canvas.rootVisualElement.Add(l);
-        return l;
+
+        PropagatorLabel item = new PropagatorLabel(l, pool);
+        return item;
     }
 
-    public Label Get()
+    private void OnRelease(PropagatorLabel label)
     {
-        var obj = pool.Get();
-        //Vector3 pos = Camera.main.WorldToScreenPoint(Vector3.zero);
-        obj.transform.position = position;
-        return obj;
+        //label.SetPosition(OUT_OF_CANVAS_POSITION);
     }
 
-    private void Update()
+    public PropagatorLabel Get()
     {
-        if (Keyboard.current.gKey.wasPressedThisFrame)
-            Get();
-    }
+        return pool.Get();
+    }   
 }

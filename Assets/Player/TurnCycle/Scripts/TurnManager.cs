@@ -1,9 +1,10 @@
+using HexaLinks.Tile.Events;
 using HexaLinks.UI.PlayerHand;
 using UnityEngine;
-using static TileEvents.OnSegmentPropagatedEvent;
+using static Game;
 using Owner = HexaLinks.Ownership.PlayerOwnership.Ownership;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : GameSystemMonobehaviour
 {
     [System.Serializable]
     public class PlayerContext
@@ -11,7 +12,7 @@ public class TurnManager : MonoBehaviour
         public Owner ownerShip;
         public Hand hand;
 
-        [SerializeField] 
+        [SerializeField]
         private Score score;
 
         public void Init()
@@ -30,33 +31,32 @@ public class TurnManager : MonoBehaviour
 
     [SerializeField]
     private PlayerContext playerOneContext, playerTwoContext;
-    public PlayerContext CurrentContext { private set; get; }
+    private static PlayerContext Current { set; get; }
 
-    private TurnSteps steps;
-   
-    private void Start()
+    public Owner CurrentPlayer => Current.ownerShip;
+
+    private TurnSteps steps = null;
+
+    public override void InitSystem()
     {
         steps = new TurnSteps(this);
 
         playerOneContext.Init();
         playerTwoContext.Init();
 
-        CurrentContext = playerOneContext;
-
-        steps.Initialize(CurrentContext);
+        Current = playerOneContext;
+        steps.Initialize();
     }
 
     public void ChangePlayer()
     {
-        CurrentContext = (CurrentContext == playerOneContext) ? playerTwoContext : playerOneContext;
-        steps.Initialize(CurrentContext);
+        Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
+        steps.Initialize();
     }
 
     public class TurnSteps
     {
-        private TurnStep[] steps;
-        private PlayerContext context = null;
-
+        private readonly TurnStep[] steps;
         private int stepIndex = 0;
 
         public TurnSteps(TurnManager turnManager)
@@ -66,20 +66,18 @@ public class TurnManager : MonoBehaviour
                 new TileSelectionTurnStep(NextStep),
                 new DeckDrawingTurnStep(turnManager.ChangePlayer)
             };
-        }      
+        }
 
-        public void Initialize(PlayerContext context)
+        public void Initialize()
         {
-            this.context = context;
-
             stepIndex = 0;
-            steps[stepIndex].Begin(context);
+            steps[stepIndex].Begin(Current);
         }
 
         private void NextStep()
         {
-            if(stepIndex < steps.Length) 
-                steps[++stepIndex].Begin(context);
+            if (stepIndex < steps.Length)
+                steps[++stepIndex].Begin(Current);
         }
     }
 }

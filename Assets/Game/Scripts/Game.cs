@@ -2,20 +2,22 @@ using Greenyas.Input;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Game;
 
 public class Game : MonoBehaviour
 {
+    [SerializeField, Header("Monobehaviours")] private GameSystemMonobehaviour[] gameSystemMonobehaviour;
+    [SerializeField, Header("ScriptableObjects")] private GameSystemScriptableObject[] gameSystemScriptableObject;
+
     public static Game Instance
     {
         private set; get;
     }
 
-    private readonly Dictionary<Type, SubSystem> systems = new Dictionary<Type, SubSystem>();
+    private readonly Dictionary<Type, IGameSystem> systems = new Dictionary<Type, IGameSystem>();
 
     private void Awake()
     {
-        if(Instance == null) 
+        if(Instance == null)
         {
             Instance = this;
             InitializeSubSystems();
@@ -28,18 +30,29 @@ public class Game : MonoBehaviour
 
     private void InitializeSubSystems()
     {
-        RegisterSubSystem<InputManager>();
-        RegisterSubSystem<TilePlacement>();
+        RegisterSystem<InputManager>();
+        RegisterSystem<TilePlacement>();
+
+        foreach (var system in gameSystemMonobehaviour)
+            RegisterSystem(system);
+
+        foreach (var system in gameSystemScriptableObject)
+            RegisterSystem(system);
     }
 
-    private void RegisterSubSystem<T>() where T : SubSystem, new()
+    private void RegisterSystem<T>() where T : IGameSystem, new()
     {
         T subSystem = new T();
-        subSystem.InitSystem();
-        systems.Add(typeof(T), subSystem);
+        RegisterSystem(subSystem);
     }
 
-    public T GetSystem<T>() where T : SubSystem
+    private void RegisterSystem<T>(T system) where T : IGameSystem
+    {
+        system.InitSystem();
+        systems.Add(system.GetType(), system);
+    }
+
+    public T GetSystem<T>() where T : IGameSystem
     {
         try
         {
@@ -48,24 +61,25 @@ public class Game : MonoBehaviour
         catch(Exception e)
         {
             Debug.LogError(e.Message);
+            return default;
         }
-
-        return null;
-
     }
 
-    public abstract class SubSystem
+    public interface IGameSystem 
     {
-        private bool Initialized { get; set; }
-
-        public void InitSystem()
-        {
-            if (!Initialized)
-                Initialized = TryInitSystem();
-        }
-
-        protected abstract bool TryInitSystem();
+        void InitSystem();
+    }   
+    
+    public abstract class GameSystemMonobehaviour : MonoBehaviour, IGameSystem
+    {
+        public abstract void InitSystem();
     }
+
+    public abstract class GameSystemScriptableObject : ScriptableObject, IGameSystem
+    {
+        public abstract void InitSystem();
+    }
+
 }
 
 
