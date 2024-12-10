@@ -40,7 +40,7 @@ namespace HexaLinks.Ownership
         public void InstantOwnerChange(Owner newOwnership)
         {
             owner = newOwnership;
-            highligther.InstantPropagation(Game.Instance.GetSystem<Configuration>().colors[owner]);
+            highligther.InstantPropagation(Game.Instance.GetSystem<Configuration>().colors[owner].pathColor);
         }     
         
         public void PrepareOwnerChange(Owner newOwnership)
@@ -56,7 +56,7 @@ namespace HexaLinks.Ownership
 
             OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
 
-            highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value], forwardPropagation);
+            highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value].pathColor, forwardPropagation);
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
 

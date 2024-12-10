@@ -7,25 +7,43 @@ namespace HexaLinks.Configuration
     [System.Serializable]
     public class Colors
     {
-        [SerializeField] private Color noColor;
-        [SerializeField] private Color playerOneColor;
-        [SerializeField] private Color playerTwoColor;
+        [Header("Path colors")]
+        [SerializeField] private Color pathNoColor;
+        [SerializeField] private Color pathPlayerOneColor;
+        [SerializeField] private Color pathPlayerTwoColor;
 
-        private Dictionary<Owner, Color> playerColors = null;
+        [Header("Label colors")]
+        [SerializeField] private Color labelsNoColor;
+        [SerializeField] private Color labelPlayerOneColor;
+        [SerializeField] private Color labelPlayerTwoColor;
+
+        private Dictionary<Owner, ColorSet> playerColors = null;
+
+        public struct ColorSet
+        {
+            public Color pathColor;
+            public Color labelColor;
+
+            public ColorSet(Color path, Color label)
+            {
+                pathColor = path;
+                labelColor = label;
+            }
+        }
 
         public void Init()
         {
-            playerColors = new Dictionary<Owner, Color>(new[]
+            playerColors = new Dictionary<Owner, ColorSet>(new[]
             {
-                new KeyValuePair<Owner, Color>(Owner.None, noColor),
-                new KeyValuePair<Owner, Color>(Owner.PlayerOne, playerOneColor),
-                new KeyValuePair<Owner, Color>(Owner.PlayerTwo, playerTwoColor)
+                new KeyValuePair<Owner, ColorSet>(Owner.None, new(pathNoColor, labelsNoColor)),
+                new KeyValuePair<Owner, ColorSet>(Owner.PlayerOne, new(pathPlayerOneColor, labelPlayerOneColor)),
+                new KeyValuePair<Owner, ColorSet>(Owner.PlayerTwo, new(pathPlayerTwoColor, labelPlayerTwoColor))
             });
         }
 
-        public Color this[Owner owner]
+        public ColorSet this[Owner owner]
         {
             get => playerColors[owner];
         }
-    } 
+    }
 }

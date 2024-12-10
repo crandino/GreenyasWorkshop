@@ -16,6 +16,6 @@ public static class PropagatorPopUpHelper
 
     public static PropagatorPopUp.PropagatorLabel Show(int number, Transform transform)
     {
-        return propagatorPopUp.PopUpNumber(number, colors[turnManager.CurrentPlayer], transform);
+        return propagatorPopUp.PopUpNumber(number, colors[turnManager.CurrentPlayer].labelColor, transform);
     }
 }

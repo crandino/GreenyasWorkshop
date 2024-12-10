@@ -56,6 +56,7 @@ namespace HexaLinks.Propagation
 
                 await UniTask.SwitchToMainThread();
                 await UniTask.WhenAll(tasks);
+
                 TileEvents.OnPropagationStep.Call(null);
             }
 
