@@ -49,13 +49,13 @@ namespace HexaLinks.Tile
                 {
                     gate.outwardGates.Add(otherGate);
                     otherGate.outwardGates.Add(gate);
-                    TileEvents.OnSegmentConnected.Call();
+                    TileEvents.OnSegmentConnected.Call(null);
                 }
             }
 
             private ConnectionPair[] candidates = new ConnectionPair[0];
 
-            public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => HexMap.Instance.NumOfTiles == 0 || c.candidates.Length > 0;
+            public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || c.candidates.Length > 0;
 
             public bool Check(Func<ConnectionCandidates, bool> predicate) => predicate(this);
 

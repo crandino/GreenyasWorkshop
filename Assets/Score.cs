@@ -1,7 +1,5 @@
-using HexaLinks.Ownership;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Owner = HexaLinks.Ownership.PlayerOwnership.Ownership;
 
 public class Score : MonoBehaviour
 {
@@ -29,9 +27,4 @@ public class Score : MonoBehaviour
         scoreLabel = playerHandUI.rootVisualElement.Q<Label>("Score");
         Value = 0;
     }
-
-    //public void ModifyScore(Owner scoreOwner, Owner propagationOwner)
-    //{
-    //    Value += (scoreOwner == propagationOwner) ? 1 : -1; 
-    //}
 }

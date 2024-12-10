@@ -24,9 +24,9 @@ public class AutomaticCamera : MonoBehaviour
 
     private CameraFrustum frustum;
 
-    private void Awake()
+    private void Start()
     {
-        HexMap.Instance.OnGridChanged += UpdateLimits;
+        Game.Instance.GetSystem<HexMap>().OnGridChanged += UpdateLimits;
 
         TileFinder.GridLimits gridLimits = TileFinder.GetLimits();
         frustum = new(this, gridLimits);

@@ -56,7 +56,7 @@ namespace HexaLinks.Path.Finder
                     public Range Range { private set; get; }
                     public int GetNumberOfLinks() => Range.GetOffsetAndLength(links.Length).Length;
 
-                    public PlayerOwnership.Ownership GetOwner() => links[Range.Start].Ownership.Owner;
+                    public Owner GetOwner() => links[Range.Start].Ownership.Owner;
 
                     public OwnershipSegments(Link[] pathLinks, Index startIndex)
                     {
@@ -93,15 +93,15 @@ namespace HexaLinks.Path.Finder
                     }
                 }
 
-                public readonly Range CalculateOwnershipRange(PlayerOwnership.Ownership initialOwner)
+                public readonly Range CalculateOwnershipRange(Owner initialOwner)
                 {
                     int totalOwnershipCounter = 1;
 
                     foreach (OwnershipSegments seg in segments)
                     {
-                        PlayerOwnership.Ownership segmentOwner = seg.GetOwner();
+                        Owner segmentOwner = seg.GetOwner();
 
-                        if (segmentOwner == PlayerOwnership.Ownership.None ||
+                        if (segmentOwner == Owner.None ||
                             initialOwner != segmentOwner && totalOwnershipCounter > seg.GetNumberOfLinks())
                         {
                             totalOwnershipCounter += seg.GetNumberOfLinks();

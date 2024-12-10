@@ -24,7 +24,7 @@ namespace HexaLinks.Tile
             {
                 CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(SideGates[i].WorldSide);
 
-                if (HexMap.Instance.TryGetTile(neighborHexCoord, out Tile neighborTileData))
+                if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
                     candidates.Add(new()
                     {
                         toTile = neighborTileData,

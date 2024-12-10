@@ -12,7 +12,7 @@ namespace HexaLinks.UI.PlayerHand
         [SerializeField]
         private HandUI ui;
 
-        public void Initialize(PlayerOwnership.Ownership playerOwner)
+        public void Initialize(Owner playerOwner)
         {
             deck = deckContent.CreateDeck();
             ui.Initialize(deck, playerOwner);

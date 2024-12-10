@@ -37,7 +37,7 @@ namespace HexaLinks.Tile
                 return false;
 
             manipulator.Release();
-            HexMap.Instance.AddTile(this);
+            Game.Instance.GetSystem<HexMap>().AddTile(this);
 
             connectionCandidates.Connect();           
 

@@ -1,14 +1,19 @@
 using HexaLinks.Ownership;
 
-
 namespace HexaLinks.Tile.Events
 {
     public struct OnSegmentPropagatedArgs
     {
-        public PlayerOwnership.Ownership lastSegmentOwner;
-        public PlayerOwnership.Ownership newSegmentOwner;
+        private Owner lastSegmentOwner;
+        private Owner newSegmentOwner;
 
-        public readonly int GetScoreIncrement(PlayerOwnership.Ownership scoreOwner)
+        public OnSegmentPropagatedArgs(Owner lastOwner, Owner newOwner)
+        {
+            lastSegmentOwner = lastOwner;
+            newSegmentOwner = newOwner;
+        }
+
+        public readonly int GetScoreIncrement(Owner scoreOwner)
         {
             if (lastSegmentOwner != newSegmentOwner)
             {

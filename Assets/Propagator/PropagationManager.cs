@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using HexaLinks.Ownership;
+using HexaLinks.Tile.Events;
 using System.Collections.Generic;
 using static HexaLinks.Path.Finder.PathFinder.Path;
 
@@ -35,7 +36,7 @@ namespace HexaLinks.Propagation
             propagating = false;
         }
 
-        private static void SetNewOwnershipAlongPath(PlayerOwnership.Ownership newOwner, List<Link[]> unifiedPath)
+        private static void SetNewOwnershipAlongPath(Owner newOwner, List<Link[]> unifiedPath)
         {
             foreach (Link[] pathLinks in unifiedPath)
             {
@@ -55,7 +56,10 @@ namespace HexaLinks.Propagation
 
                 await UniTask.SwitchToMainThread();
                 await UniTask.WhenAll(tasks);
+                TileEvents.OnPropagationStep.Call(null);
             }
+
+            TileEvents.OnPropagationStep.Clean();
         }
     }
 }

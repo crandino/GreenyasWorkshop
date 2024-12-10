@@ -1,5 +1,7 @@
 using HexaLinks.Path.Finder;
+using HexaLinks.Tile.Events;
 using UnityEngine;
+using static HexaLinks.Tile.Events.TileEvents;
 
 namespace HexaLinks.Tile
 {
@@ -19,14 +21,16 @@ namespace HexaLinks.Tile
         {
             base.Initialize();
             currentPropagatorStrength = maxPropagatorStrength;
+            OnTurnEnded.RegisterPermamentCallback(IncreaseStrength);
         }
 
         public override bool TryRelease()
         {
             if (base.TryRelease())
             {
-                Ownership.PlayerOwnership.Ownership currentPlayer = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
-                Game.Instance.GetSystem<PropagatorPopUp>().PopUpNumber(currentPropagatorStrength, Color.yellow, transform);
+                propagatorLabel = PropagatorPopUpHelper.Show(currentPropagatorStrength, transform);
+
+                OnPropagationStep.RegisterVolatileCallback(DecreaseStrength);
 
                 PathFinder.Reset();
                 PathFinder.Init(this);
@@ -34,6 +38,20 @@ namespace HexaLinks.Tile
             }
 
             return false;
+        }
+
+        private PropagatorPopUp.PropagatorLabel propagatorLabel;
+
+        private void IncreaseStrength(EmptyArgs? noArgs)
+        {
+            currentPropagatorStrength = Mathf.Clamp(currentPropagatorStrength + 1, 0, maxPropagatorStrength);
+            propagatorLabel.SetText(currentPropagatorStrength.ToString());
+        }
+
+        private void DecreaseStrength(EmptyArgs? args)
+        {
+            currentPropagatorStrength = Mathf.Clamp(currentPropagatorStrength - 1, 0, maxPropagatorStrength);
+            propagatorLabel.SetText(currentPropagatorStrength.ToString());
         }
 
 #if UNITY_EDITOR

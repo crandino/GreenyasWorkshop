@@ -18,7 +18,7 @@ namespace HexaLinks.Ownership
         
         private void UpdateOwnership()
         {
-            if (IsWinnerOwner(out Ownership newOwner) && newOwner != Owner)
+            if (IsWinnerOwner(out Owner newOwner) && newOwner != Owner)
             {
                 PendingOwner = newOwner;
 
@@ -27,9 +27,9 @@ namespace HexaLinks.Ownership
             }
         }       
 
-        private bool IsWinnerOwner(out Ownership winner)
+        private bool IsWinnerOwner(out Owner winner)
         {
-            winner = Ownership.None;
+            winner = Owner.None;
 
             int[] ownershipCount = Enumerable.Repeat(0, 3).ToArray();
 
@@ -40,9 +40,9 @@ namespace HexaLinks.Ownership
             bool tie = ownershipCount.Skip(1).Count(o => o == winnerOwnership) != 1;
 
             if (!tie)
-                winner = (Ownership)Array.LastIndexOf(ownershipCount, winnerOwnership);
+                winner = (Owner)Array.LastIndexOf(ownershipCount, winnerOwnership);
 
-            return !tie && winner != Ownership.None;
+            return !tie && winner != Owner.None;
 
         }
     }

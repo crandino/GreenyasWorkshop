@@ -2,29 +2,25 @@ using UnityEngine;
 
 public class SingletonMonobehaviour<T> : MonoBehaviour where T : Object
 {
-    private static T instance = null;
+    public static T Instance { private set; get; }   
 
-    public static T Instance
+    private static void TryAutoInitialization()
     {
-        get
-        {
-            TryAutoInitialization();
-            return instance;
-        }
-
-        private set
-        {
-            instance = value;
-        }
-    }
-
-    protected static void TryAutoInitialization()
-    {
-        instance ??= FindAnyObjectByType<T>();
+        Instance ??= FindAnyObjectByType<T>();
     }
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogWarning($"There's already an instance of {Instance.name}");
+            Destroy(gameObject);
+            return;
+        }
+
         TryAutoInitialization();
+        OnInitialization();
     }
+
+    protected virtual void OnInitialization() { }
 }

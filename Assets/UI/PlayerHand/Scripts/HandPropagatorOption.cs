@@ -1,9 +1,11 @@
-using HexaLinks.Ownership;
-using HexaLinks.Tile.Events;
 using UnityEngine.UIElements;
 
 namespace HexaLinks.UI.PlayerHand
 {
+    using Configuration;
+    using Ownership;
+    using Tile.Events;
+
     public class HandPropagatorOption : HandTileOption
     {
         private int Counter
@@ -19,30 +21,33 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-        private const int CONNECTIONS_TO_GET = 0;
+        private readonly int connectionsToUnlock;
         private readonly Label counterLabel;
 
         private bool CountdownReached => Counter <= 0;
 
-        private PlayerOwnership.Ownership owner;
+        private Owner owner;
 
-        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck, PlayerOwnership.Ownership owner) : base(button, deck)
+        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck, Owner owner) : base(button, deck)
         {
             counterLabel = counter;
             this.owner = owner;
+
+            connectionsToUnlock = Game.Instance.GetSystem<Configuration>().parameters.NumOfConnectionsToUnlockPropagator;
+
             InitializeCountdown();
         }
 
         private void InitializeCountdown()
         {
-            Counter = CONNECTIONS_TO_GET;
+            Counter = connectionsToUnlock;
             counterLabel.visible = true;
             DrawingPending = false;
 
             Set(HandUI.EmptyTile);
         }
 
-        private void OnSegmentConnected()
+        private void OnSegmentConnected(TileEvents.EmptyArgs? noArgs)
         {
             --Counter;
 
@@ -50,7 +55,7 @@ namespace HexaLinks.UI.PlayerHand
             {
                 counterLabel.visible = false;
                 DrawingPending = true;
-                Counter = CONNECTIONS_TO_GET;
+                Counter = connectionsToUnlock;
             }
         }
 
@@ -71,13 +76,13 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.Activate();
             if(!DrawingPending)
-                TileEvents.OnSegmentConnected.Callbacks += OnSegmentConnected;
+                TileEvents.OnSegmentConnected.RegisterPermamentCallback(OnSegmentConnected);
         }
 
         public override void Deactivate()
         {
             base.Deactivate();
-            TileEvents.OnSegmentConnected.Callbacks -= OnSegmentConnected;
+            TileEvents.OnSegmentConnected.UnregisterPermamentCallback(OnSegmentConnected);
         }
 
         private void RegisterCallbacks()

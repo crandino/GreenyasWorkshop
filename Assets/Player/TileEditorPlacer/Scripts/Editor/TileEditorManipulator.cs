@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
 public static class TileEditorManipulator
 {
     private readonly static HexMap hexMap;
@@ -83,21 +82,18 @@ public static class TileEditorManipulator
                 tilePos.MoveUp();
                 break;
             case KeyCode.Alpha0:
-                ChangeOwner(PlayerOwnership.Ownership.None);
+                ChangeOwner(Owner.None);
                 break;
             case KeyCode.Alpha1:
-                ChangeOwner(PlayerOwnership.Ownership.PlayerOne);
+                ChangeOwner(Owner.PlayerOne);
                 break;
             case KeyCode.Alpha2:
-                ChangeOwner(PlayerOwnership.Ownership.PlayerTwo);
-                break;
-            //default:
-            //    Debug.Log("Clicking");
-            //    break;
+                ChangeOwner(Owner.PlayerTwo);
+                break;           
         }
     }
 
-    private static void ChangeOwner(PlayerOwnership.Ownership ownership)
+    private static void ChangeOwner(Owner ownership)
     {
         PlayerOwnership[] playerOwnerships = tile.GetComponentsInChildren<PlayerOwnership>();
         foreach(var p in playerOwnerships)

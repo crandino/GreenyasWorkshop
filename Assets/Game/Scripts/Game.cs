@@ -3,41 +3,23 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class Game : SingletonMonobehaviour<Game>
 {
-    [SerializeField, Header("Monobehaviours")] private GameSystemMonobehaviour[] gameSystemMonobehaviour;
     [SerializeField, Header("ScriptableObjects")] private GameSystemScriptableObject[] gameSystemScriptableObject;
-
-    public static Game Instance
-    {
-        private set; get;
-    }
+    [SerializeField, Header("Monobehaviours")] private GameSystemMonobehaviour[] gameSystemMonobehaviour;
 
     private readonly Dictionary<Type, IGameSystem> systems = new Dictionary<Type, IGameSystem>();
 
-    private void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-            InitializeSubSystems();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void InitializeSubSystems()
+    protected override void OnInitialization()
     {
         RegisterSystem<InputManager>();
         RegisterSystem<TilePlacement>();
 
-        foreach (var system in gameSystemMonobehaviour)
-            RegisterSystem(system);
-
         foreach (var system in gameSystemScriptableObject)
             RegisterSystem(system);
+
+        foreach (var system in gameSystemMonobehaviour)
+            RegisterSystem(system);   
     }
 
     private void RegisterSystem<T>() where T : IGameSystem, new()

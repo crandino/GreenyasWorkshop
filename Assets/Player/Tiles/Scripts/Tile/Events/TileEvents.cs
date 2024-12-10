@@ -4,28 +4,40 @@ namespace HexaLinks.Tile.Events
 {
     public static class TileEvents
     {
-        public static EventType OnSegmentConnected = new();
-        public static EventTypeArgs<OnSegmentPropagatedArgs> OnSegmentPropagated = new();
+        public readonly struct EmptyArgs { }
 
-        public class EventType
+        public static EventTypeArgs<EmptyArgs> OnTurnEnded = new();
+        public static EventTypeArgs<EmptyArgs> OnSegmentConnected = new(); 
+        public static EventTypeArgs<EmptyArgs> OnPropagationStep = new();
+
+        public static EventTypeArgs<OnSegmentPropagatedArgs> OnSegmentPropagated = new();       
+
+        public class EventTypeArgs<T> where T : struct
         {
-            public event Action Callbacks;
+            private event Action<T?> Callbacks, VolatileCallbacks;
 
-            public void Call()
+            public void RegisterPermamentCallback(Action<T?> callback) => Callbacks += callback;
+            public void UnregisterPermamentCallback(Action<T?> callback) => Callbacks -= callback;
+
+            public void RegisterVolatileCallback(Action<T?> callback) => VolatileCallbacks += callback;
+            public void UnregisterVolatileCallback(Action<T?> callback) => VolatileCallbacks -= callback;
+
+            public void Clean(bool includePermanent = false)
             {
-                Callbacks?.Invoke();
+                UnityEngine.Assertions.Assert.IsTrue(VolatileCallbacks.GetInvocationList().Length > 0, "There's no volatile callback to clean. Is that intended?");
+                
+                VolatileCallbacks = null;
+                if (includePermanent)
+                    Callbacks = null;
             }
-        }
 
-        public class EventTypeArgs<T>
-        {
-            public event Action<T> Callbacks;
-
-            public void Call(T args)
+            public void Call(T? args)
             {
                 Callbacks?.Invoke(args);
+                VolatileCallbacks?.Invoke(args);
             }
         }
+
     }
 }
 

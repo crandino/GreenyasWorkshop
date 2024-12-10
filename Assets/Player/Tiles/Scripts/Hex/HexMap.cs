@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Greenyas.Hexagon;
 using System.Linq;
 using System;
-
+using static Game;
 
 #if UNITY_EDITOR
 using UnityEngine.Assertions;
@@ -13,7 +13,7 @@ using UnityEditor;
 
 namespace HexaLinks.Tile
 {
-    public class HexMap : SingletonMonobehaviour<HexMap>
+    public class HexMap : GameSystemMonobehaviour
     {
         /* 
          *  More info: https://www.redblobgames.com/grids/hexagons/
@@ -26,6 +26,11 @@ namespace HexaLinks.Tile
         public event Action OnGridChanged; // TODO: Use TileEvents
 
         public int NumOfTiles => gridData.Count;
+
+        public override void InitSystem()
+        {
+            // Nothing!
+        }
 
         public bool AddTile(Tile tile)
         {

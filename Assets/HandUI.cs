@@ -20,7 +20,7 @@ public class HandUI : MonoBehaviour
     private HandTileOption[] playerOptions = null;
     public static TileResource EmptyTile;
 
-    public void Initialize(Deck deck, PlayerOwnership.Ownership ownership)
+    public void Initialize(Deck deck, Owner ownership)
     {
         EmptyTile = emptyTile;
 

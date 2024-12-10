@@ -1,50 +1,49 @@
 using Cysharp.Threading.Tasks;
-using HexaLinks.Propagation;
-using HexaLinks.Tile.Events;
+
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexaLinks.Ownership
 {
+    using Configuration;
+    using Propagation;
+    using Tile.Events;
+
+    public enum Owner
+    {
+        None = 0,
+        PlayerOne,
+        PlayerTwo
+    }
+
     public class PlayerOwnership : MonoBehaviour
     {
         [SerializeField]
         private ColorPropagator highligther;
 
-        private static readonly Dictionary<Ownership, Color> playerColors = new Dictionary<Ownership, Color>
-        (
-            new[]
-            {
-            new KeyValuePair<Ownership, Color>(Ownership.None, Color.black),
-            new KeyValuePair<Ownership, Color>(Ownership.PlayerOne, new Color(0f, 0.5f, 0f, 1f)),
-            new KeyValuePair<Ownership, Color>(Ownership.PlayerTwo, Color.yellow)
-            }
-        );
-
-        public enum Ownership
-        {
-            None = 0,
-            PlayerOne,
-            PlayerTwo
-        }
-
         [SerializeField]
-        private Ownership owner = Ownership.None;
+        private Owner owner = Owner.None;
 
-        public Ownership Owner => PendingOwner.HasValue ? PendingOwner.Value : owner;
+        public Owner Owner => PendingOwner.HasValue ? PendingOwner.Value : owner;
 
-        public Ownership? PendingOwner { protected set; get; } = null;
+        public Owner? PendingOwner { protected set; get; } = null;
 
         public event Action OnOnwerChanged = delegate { };
 
-        public void InstantOwnerChange(Ownership newOwnership)
+        //private Colors colors = null;
+
+        //private void Start()
+        //{
+        //    colors = Game.Instance.GetSystem<Configuration>().colors;
+        //}
+
+        public void InstantOwnerChange(Owner newOwnership)
         {
             owner = newOwnership;
-            highligther.InstantPropagation(playerColors[owner]);
+            highligther.InstantPropagation(Game.Instance.GetSystem<Configuration>().colors[owner]);
         }     
         
-        public void PrepareOwnerChange(Ownership newOwnership)
+        public void PrepareOwnerChange(Owner newOwnership)
         {
             if(owner != newOwnership)
                 PendingOwner = newOwnership;
@@ -55,13 +54,9 @@ namespace HexaLinks.Ownership
             if (!PendingOwner.HasValue)
                 return;
 
-            OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs()
-            {
-                lastSegmentOwner = owner,
-                newSegmentOwner = PendingOwner.Value,
-            };
+            OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
 
-            highligther.PrePropagation(playerColors[PendingOwner.Value], forwardPropagation);
+            highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value], forwardPropagation);
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
 
