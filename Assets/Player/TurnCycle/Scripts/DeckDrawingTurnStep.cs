@@ -1,13 +1,16 @@
 using System;
 
-public class DeckDrawingTurnStep : TurnStep
+namespace HexaLinks.Turn
 {
-    public DeckDrawingTurnStep(Action endTurnStep) : base(endTurnStep)
-    { }
-
-    public override void Begin(TurnManager.PlayerContext context)
+    public class DeckDrawingTurnStep : TurnStep
     {
-        context.hand.Draw();
-        base.End();
-    }
+        public DeckDrawingTurnStep(Action endTurnStep) : base(endTurnStep)
+        { }
+
+        public override void Begin(TurnManager.PlayerContext context)
+        {
+            context.hand.Draw();
+            base.End();
+        }
+    } 
 }

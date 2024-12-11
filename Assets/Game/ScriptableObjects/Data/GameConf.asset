@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: GameConf
   m_EditorClassIdentifier: 
   colors:
-    noColor: {r: 0, g: 0, b: 0, a: 1}
-    playerOneColor: {r: 0, g: 0.5, b: 0, a: 1}
-    playerTwoColor: {r: 1, g: 0.9, b: 0.1, a: 1}
+    pathNoColor: {r: 0, g: 0, b: 0, a: 1}
+    pathPlayerOneColor: {r: 0.006823262, g: 0.4339623, b: 0.006823262, a: 1}
+    pathPlayerTwoColor: {r: 0.958, g: 0.882, b: 0, a: 1}
+    labelsNoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    labelPlayerOneColor: {r: 0.49984172, g: 0.7987421, b: 0.49984172, a: 1}
+    labelPlayerTwoColor: {r: 0.9559748, g: 0.92249995, b: 0.5260867, a: 1}
   parameters:
-    numOfConnectionsToUnlockPropagator: 0
+    numOfConnectionsToUnlockPropagator: 3

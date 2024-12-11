@@ -1,39 +1,52 @@
 using Cysharp.Threading.Tasks;
-using HexaLinks.Ownership;
-using HexaLinks.Tile.Events;
+
 using System.Collections.Generic;
 using static HexaLinks.Path.Finder.PathFinder.Path;
 
 namespace HexaLinks.Propagation
 {
-    public static class PropagationManager
-    {
-        private static List<List<Link[]>> unifiedPaths = new List<List<Link[]>>();
+    using Ownership;
+    using Tile.Events;
+    using Turn;
 
-        public static void Start(List<Link[]> path)
+    public class PropagationManager : Game.IGameSystem
+    {
+        private List<List<Link[]>> unifiedPaths;
+
+        public void InitSystem()
+        {
+            unifiedPaths = new List<List<Link[]>>();
+        }
+
+        public void Start(List<Link[]> path)
         {
             unifiedPaths.Add(path);
 
-            if (propagating)
+            if (Propagating)
                 return;
 
             TriggerPropagation();           
         }
 
-        private static bool propagating = false;
+        public bool Propagating { private set; get; }
 
-        private static async void TriggerPropagation()
+        private async void TriggerPropagation()
         {
-            propagating = true;
+            Propagating = true;
 
             for (int i = 0; i < unifiedPaths.Count; i++)
             {
-                SetNewOwnershipAlongPath(((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).Owner, unifiedPaths[i]);
+                //Owner propagationOwner = ((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).Owner;
+                Owner propagationOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
+                SetNewOwnershipAlongPath(propagationOwner, unifiedPaths[i]);
                 await UpdatePropagation(unifiedPaths[i]);
+                TileEvents.OnPropagationStep.Call(null);
             }
 
             unifiedPaths.Clear();
-            propagating = false;
+            Propagating = false;
+
+            TileEvents.OnPropagationEnded.Call(null);
         }
 
         private static void SetNewOwnershipAlongPath(Owner newOwner, List<Link[]> unifiedPath)
@@ -56,11 +69,7 @@ namespace HexaLinks.Propagation
 
                 await UniTask.SwitchToMainThread();
                 await UniTask.WhenAll(tasks);
-
-                TileEvents.OnPropagationStep.Call(null);
             }
-
-            TileEvents.OnPropagationStep.Clean();
         }
     }
 }

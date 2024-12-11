@@ -1,10 +1,11 @@
-using HexaLinks.Propagation;
-using HexaLinks.Tile;
 using System.Collections.Generic;
-using static HexaLinks.Path.Finder.PathFinder.Path;
 
 namespace HexaLinks.Path.Finder
 {
+    using Propagation;
+    using Tile;
+    using static Path.Finder.PathFinder.Path;
+
     public static partial class PathFinder
     {
         private readonly static List<PathIterationStep> steps = new List<PathIterationStep>();
@@ -34,7 +35,7 @@ namespace HexaLinks.Path.Finder
             List<Link[]> unifiedPath = current.UnifyPaths();
 
             if (unifiedPath != null)
-                PropagationManager.Start(unifiedPath);
+                Game.Instance.GetSystem<PropagationManager>().Start(unifiedPath);
         }       
     }
 }

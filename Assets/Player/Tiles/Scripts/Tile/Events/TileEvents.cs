@@ -9,6 +9,7 @@ namespace HexaLinks.Tile.Events
         public static EventTypeArgs<EmptyArgs> OnTurnEnded = new();
         public static EventTypeArgs<EmptyArgs> OnSegmentConnected = new(); 
         public static EventTypeArgs<EmptyArgs> OnPropagationStep = new();
+        public static EventTypeArgs<EmptyArgs> OnPropagationEnded = new();
 
         public static EventTypeArgs<OnSegmentPropagatedArgs> OnSegmentPropagated = new();       
 
@@ -20,7 +21,6 @@ namespace HexaLinks.Tile.Events
             public void UnregisterPermamentCallback(Action<T?> callback) => Callbacks -= callback;
 
             public void RegisterVolatileCallback(Action<T?> callback) => VolatileCallbacks += callback;
-            public void UnregisterVolatileCallback(Action<T?> callback) => VolatileCallbacks -= callback;
 
             public void Clean(bool includePermanent = false)
             {

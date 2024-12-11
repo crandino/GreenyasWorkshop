@@ -1,84 +1,100 @@
-using HexaLinks.Tile.Events;
-using HexaLinks.UI.PlayerHand;
-using HexaLinks.Ownership;
 using UnityEngine;
 using static Game;
 
-public class TurnManager : GameSystemMonobehaviour
+namespace HexaLinks.Turn
 {
-    [System.Serializable]
-    public class PlayerContext
+    using Tile.Events;
+    using UI.PlayerHand;
+    using Ownership;   
+
+    public class TurnManager : GameSystemMonobehaviour
     {
-        public Owner ownerShip;
-        public Hand hand;
+        [System.Serializable]
+        public class PlayerContext
+        {
+            public Owner ownerShip;
+            public Hand hand;
+
+            [SerializeField]
+            private Score score;
+
+            public void Init()
+            {
+                hand.Initialize(ownerShip);
+                score.Initialize();
+
+                TileEvents.OnSegmentPropagated.RegisterPermamentCallback(UpdateScore);
+            }
+
+            private void UpdateScore(OnSegmentPropagatedArgs? args)
+            {
+                score.Value += args.Value.GetScoreIncrement(ownerShip);
+            }
+        }
 
         [SerializeField]
-        private Score score;
+        private PlayerContext playerOneContext, playerTwoContext;
+        private static PlayerContext Current { set; get; }
 
-        public void Init()
+        public Owner CurrentPlayer => Current.ownerShip;
+
+        //private TurnSteps steps = null;
+
+        public override void InitSystem()
         {
-            hand.Initialize(ownerShip);
-            score.Initialize();
+            playerOneContext.Init();
+            playerTwoContext.Init();
 
-            TileEvents.OnSegmentPropagated.RegisterPermamentCallback(UpdateScore);
+            Current = playerOneContext;
+
+            new TurnSteps(this);
         }
 
-        private void UpdateScore(OnSegmentPropagatedArgs? args)
+        private void ChangePlayer()
         {
-            score.Value += args.Value.GetScoreIncrement(ownerShip);
+            Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
         }
-    }
 
-    [SerializeField]
-    private PlayerContext playerOneContext, playerTwoContext;
-    private static PlayerContext Current { set; get; }
-
-    public Owner CurrentPlayer => Current.ownerShip;
-
-    private TurnSteps steps = null;
-
-    public override void InitSystem()
-    {
-        steps = new TurnSteps(this);
-
-        playerOneContext.Init();
-        playerTwoContext.Init();
-
-        Current = playerOneContext;
-        steps.Initialize();
-    }
-
-    public void ChangePlayer()
-    {
-        TileEvents.OnTurnEnded.Call(null);
-        Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
-        steps.Initialize();
-    }
-
-    public class TurnSteps
-    {
-        private readonly TurnStep[] steps;
-        private int stepIndex = 0;
-
-        public TurnSteps(TurnManager turnManager)
+        public class TurnSteps
         {
-            steps = new TurnStep[]
+            private readonly TurnManager turnManager;
+            private readonly TurnStep[] steps;
+            private int stepIndex = 0;
+
+            private TurnStep Step => steps[stepIndex];
+
+            public TurnSteps(TurnManager turnManager)
             {
-                new TileSelectionTurnStep(NextStep),
-                new DeckDrawingTurnStep(turnManager.ChangePlayer)
-            };
-        }
+                this.turnManager = turnManager;
 
-        public void Initialize()
-        {
-            stepIndex = 0;
-            steps[stepIndex].Begin(Current);
-        }
+                steps = new TurnStep[]
+                {
+                    new TileSelectionTurnStep(NextStep),
+                    new PropagationTurnStep(NextStep),
+                    new DeckDrawingTurnStep(NextStep)
+                };
 
-        private void NextStep()
-        {
-            if (stepIndex < steps.Length)
-                steps[++stepIndex].Begin(Current);
+                Initialize();
+            }
+
+            private void Initialize()
+            {
+                stepIndex = 0;
+                Step.Begin(Current);
+            }
+
+            private void NextStep()
+            {
+                if (++stepIndex < steps.Length)
+                    Step.Begin(Current);
+                else
+                {
+                    TileEvents.OnTurnEnded.Call(null);
+                    turnManager.ChangePlayer();
+                    Initialize();
+                }
+            }
         }
     }
+
 }

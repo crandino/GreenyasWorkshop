@@ -54,8 +54,6 @@ public class TilePlacement : Game.IGameSystem
         Finish();
     }
 
-   
-
     private void Finish()
     {
         currentSelectedTile = null;
