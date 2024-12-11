@@ -9,34 +9,30 @@ namespace HexaLinks.Tile
         [SerializeField]
         private TileSegment[] segments = null;
 
-        public struct TileQueryResult
+        public List<ConnectionCandidate> GetNeighborCandidates(CubeCoord coord)
         {
-            public Tile toTile;
-            public SideGate fromGate;
-        }
-
-        public List<TileQueryResult> GetNeighborCandidates(CubeCoord coord)
-        {
-            List<TileQueryResult> candidates = new List<TileQueryResult>();
+            List<ConnectionCandidate> candidates = new List<ConnectionCandidate>();
 
             foreach (var s in segments)
                 candidates.AddRange(s.GetCandidates(coord));
 
             return candidates;
-        }     
-        
-        public void GetPossibleConnections(SideGate againstGate, SideGate.ConnectionCandidates candidatesResult)
+        }  
+
+        public SideGate[] GetAlignedGatesAgainst(SideGate gate)
         {
+            List<SideGate> alignedGates = new();
+
             for (int i = 0; i < segments.Length; ++i)
-                segments[i].GetPossibleConnections(againstGate, candidatesResult);
+                segments[i].GetAlignedGatesAgainst(gate, alignedGates);
+
+            return alignedGates.ToArray();
         }
 
         public void Disconnect()
         {
             for (int i = 0; i < segments.Length; ++i)
-            {
                 segments[i].Disconnect();
-            }
         }
 
 #if UNITY_EDITOR

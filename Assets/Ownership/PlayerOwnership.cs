@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-
 using System;
 using UnityEngine;
 
@@ -28,14 +27,7 @@ namespace HexaLinks.Ownership
 
         public Owner? PendingOwner { protected set; get; } = null;
 
-        public event Action OnOnwerChanged = delegate { };
-
-        //private Colors colors = null;
-
-        //private void Start()
-        //{
-        //    colors = Game.Instance.GetSystem<Configuration>().colors;
-        //}
+        public event Action OnOnwerChanged = delegate { };       
 
         public void InstantOwnerChange(Owner newOwnership)
         {

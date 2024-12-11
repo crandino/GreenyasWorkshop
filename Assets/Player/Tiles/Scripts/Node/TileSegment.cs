@@ -2,7 +2,6 @@ using Greenyas.Hexagon;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static HexaLinks.Tile.TileConnectivity;
 
 namespace HexaLinks.Tile
 {
@@ -16,36 +15,31 @@ namespace HexaLinks.Tile
         public uint Hash => HashFunction(this);
         public uint HashFunction(TileSegment s) => s.transform.GetTransformUpUntil<Tile>().GetComponent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
 
-        public List<TileQueryResult> GetCandidates(CubeCoord fromCoord)
+        public List<ConnectionCandidate> GetCandidates(CubeCoord fromCoord)
         {
-            List<TileQueryResult> candidates = new List<TileQueryResult>();
+            List<ConnectionCandidate> candidates = new List<ConnectionCandidate>();
 
             for (int i = 0; i < SideGates.Length; ++i)
             {
                 CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(SideGates[i].WorldSide);
 
                 if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
-                    candidates.Add(new()
-                    {
-                        toTile = neighborTileData,
-                        fromGate = SideGates[i]
-                    });
+                    candidates.Add(new(neighborTileData, SideGates[i]));
             }
 
             return candidates;
         }
 
-        public void GetPossibleConnections(SideGate againstGate, SideGate.ConnectionCandidates candidatesResult)
+        public void GetAlignedGatesAgainst(SideGate gate, List<SideGate> alignedGates)
         {
             foreach (var fromGate in SideGates)
-                fromGate.GetPossibleConnections(againstGate, candidatesResult);
+                fromGate.GetAlignedGatesAgainst(gate, alignedGates);
         }
 
         public void Disconnect()
         {
-            //TODO: Completar la desconexión
-            //foreach (var from in SideGates)
-            //    from.Disconnect();
+            foreach (var gate in SideGates)
+                SideGate.Disconnect(gate);
         }
 
         public Gate GoThrough(Gate enterGate)

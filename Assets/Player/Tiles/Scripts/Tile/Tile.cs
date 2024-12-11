@@ -8,12 +8,12 @@ namespace HexaLinks.Tile
         [SerializeField]
         private TileManipulator manipulator;
         [SerializeField]
+        protected TileCoordinates coordinates;
+        [SerializeField]
         protected TileConnectivity connectivity;
 
-        [SerializeField]
-        protected TileCoordinates coordinates;
-
         public CubeCoord Coord => coordinates.Coord;
+        public TileConnectivity Connectivity => connectivity;
 
         public virtual void Initialize()
         {
@@ -32,37 +32,24 @@ namespace HexaLinks.Tile
 
         public virtual bool TryRelease()
         {
-            SideGate.ConnectionCandidates connectionCandidates = GetPossibleConnections();
-            if (!connectionCandidates.Check(SideGate.ConnectionCandidates.AtLeastOneConnection))
-                return false;
+            ConnectionCandidate[] connectionCandidates = connectivity.GetNeighborCandidates(Coord).ToArray();
 
-            manipulator.Release();
-            Game.Instance.GetSystem<HexMap>().AddTile(this);
+            if(connectionCandidates.AreValid())
+            {
+                manipulator.Release();
+                Game.Instance.GetSystem<HexMap>().AddTile(this);
 
-            connectionCandidates.Connect();           
+                connectionCandidates.Connect();
+                return true;
+            }
 
-            return true;
+            return false;
         }
 
         public void Connect()
         {
-            GetPossibleConnections().Connect();
-        }
-
-        private SideGate.ConnectionCandidates GetPossibleConnections()
-        {
-            TileConnectivity.TileQueryResult[] neighborTiles = GetNeighborCandidates();
-            
-            SideGate.ConnectionCandidates candidates = new();
-            for (int i = 0; i < neighborTiles.Length; ++i)
-                neighborTiles[i].toTile.connectivity.GetPossibleConnections(neighborTiles[i].fromGate, candidates);
-
-            return candidates;
-        }
-
-        private TileConnectivity.TileQueryResult[] GetNeighborCandidates()
-        {
-            return connectivity.GetNeighborCandidates(Coord).ToArray();
+            ConnectionCandidate[] connectionCandidates = connectivity.GetNeighborCandidates(Coord).ToArray();
+            connectionCandidates.Connect();
         }
 
         public void Disconnect()

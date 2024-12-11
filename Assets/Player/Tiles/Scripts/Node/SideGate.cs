@@ -1,10 +1,9 @@
 using Greenyas.Hexagon;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
-using System;
+using System.Collections.Generic;
+
 using static Greenyas.Hexagon.HexSide;
-using HexaLinks.Tile.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +13,8 @@ using HexaLinks.Tile.Extensions.Hexside;
 
 namespace HexaLinks.Tile
 {
+    using Events;
+
     [System.Serializable]
     public class SideGate : Gate
     {
@@ -32,68 +33,36 @@ namespace HexaLinks.Tile
             }
         }
 
-        public class ConnectionCandidates
+        public void GetAlignedGatesAgainst(SideGate gate, List<SideGate> alignedGates)
         {
-            private readonly struct ConnectionPair
-            {
-                private readonly SideGate gate;
-                private readonly SideGate otherGate;
-
-                public ConnectionPair(SideGate gate, SideGate otherGate)
-                {
-                    this.gate = gate;
-                    this.otherGate = otherGate;
-                }
-
-                public void Connect()
-                {
-                    gate.outwardGates.Add(otherGate);
-                    otherGate.outwardGates.Add(gate);
-                    TileEvents.OnSegmentConnected.Call(null);
-                }
-            }
-
-            private ConnectionPair[] candidates = new ConnectionPair[0];
-
-            public static Func<ConnectionCandidates, bool> AtLeastOneConnection => (c) => Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || c.candidates.Length > 0;
-
-            public bool Check(Func<ConnectionCandidates, bool> predicate) => predicate(this);
-
-            public void Connect()
-            {
-                for (int i = 0; i < candidates.Length; ++i)
-                    candidates[i].Connect();
-            }
-
-            public void AddPair(SideGate gate, SideGate otherGate)
-            {
-                candidates = candidates.Append(new(gate, otherGate)).ToArray();
-            }
-
-
-            //public void Disconnect()
-            //{
-            //    foreach (Gate conn in outwardGates)
-            //        conn.outwardGates.Clear();
-
-            //    outwardGates.Clear();
-            //}
+            if (AreFacingEachOther(this, gate) && !AreConnected(this, gate))
+                alignedGates.Add(this);
         }
 
-        public void GetPossibleConnections(SideGate againstGate, ConnectionCandidates candidatesResult)
+        private static bool AreFacingEachOther(SideGate gateA, SideGate gateB)
         {
-            // There's any previous connection between those gates
-            if (outwardGates.Contains(againstGate) && againstGate.outwardGates.Where(g => g == againstGate).Count() == 0)
-                return;
-
-            if (IsFacingOtherGate(againstGate))
-                candidatesResult.AddPair(this, againstGate);
+            Assert.IsTrue(gateA.parentSegment != gateB.parentSegment, "Error: We're on the same Tile");
+            return gateA.WorldSide.IsOpposite(gateB.WorldSide);
         }
 
-        private bool IsFacingOtherGate(SideGate gateTo)
+        private static bool AreConnected(SideGate gateA, SideGate gateB)
         {
-            Assert.IsTrue(parentSegment != gateTo.parentSegment);
-            return WorldSide.IsOpposite(gateTo.WorldSide);
+            return gateA.outwardGates.Contains(gateB) && gateB.outwardGates.Contains(gateA);
+        }
+
+        public static void Connect(SideGate gateA, SideGate gateB)
+        {
+            gateA.outwardGates.Add(gateB);
+            gateB.outwardGates.Add(gateA);
+            TileEvents.OnSegmentConnected.Call(null);
+        }
+
+        public static void Disconnect(SideGate gate)
+        {
+            foreach(SideGate otherGate in gate.outwardGates)
+                otherGate.outwardGates.Clear();
+
+            gate.outwardGates.Clear();
         }
 
 #if UNITY_EDITOR

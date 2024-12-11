@@ -22,6 +22,9 @@ namespace HexaLinks.Path.Finder
 
             public void Add(Path newPath)
             {
+                if (stepUsedHashes.Contains(newPath.HashID))
+                    return;
+
                 paths.Add(newPath);
                 stepUsedHashes.Add(newPath.HashID);
 
