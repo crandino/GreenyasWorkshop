@@ -13,7 +13,7 @@ namespace HexaLinks.Path.Finder
 
         public static void Init(TilePropagator initialTile)
         {
-            current = new PathIterationStep(steps.Count);
+            current = new PathIterationStep(steps.Count, initialTile);
             steps.Add(current);
 
             PathIterator.FindPathsFrom(initialTile);
@@ -32,10 +32,7 @@ namespace HexaLinks.Path.Finder
 
         public static void StartPropagation()
         {
-            List<Link[]> unifiedPath = current.UnifyPaths();
-
-            if (unifiedPath != null)
-                Game.Instance.GetSystem<PropagationManager>().Start(unifiedPath);
+            Game.Instance.GetSystem<PropagationManager>().Start(current);
         }       
     }
 }

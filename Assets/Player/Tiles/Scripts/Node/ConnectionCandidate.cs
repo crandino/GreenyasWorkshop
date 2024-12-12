@@ -5,8 +5,8 @@ namespace HexaLinks.Tile
 {
     public class ConnectionCandidate
 	{
-        private readonly List<ConnectionPair> connectionPairs = new List<ConnectionPair>();
-        private static Func<ConnectionCandidate, bool> AtLeastOneConnection => (c) => Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || c.connectionPairs.Count > 0;
+        private readonly List<ConnectionPair> pairs = new List<ConnectionPair>();
+        private static Func<ConnectionCandidate, bool> AtLeastOneConnection => (c) => Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || c.pairs.Count > 0;
 
         public bool AreValid => AtLeastOneConnection(this);
 
@@ -15,13 +15,13 @@ namespace HexaLinks.Tile
             SideGate[] possibleGates = toTile.Connectivity.GetAlignedGatesAgainst(fromGate);
 
             for (int i = 0; i < possibleGates.Length; i++)
-                connectionPairs.Add(new(fromGate, possibleGates[i]));
+                pairs.Add(new(fromGate, possibleGates[i]));
         }
 
         public void Connect()
         {
-            for(int i = 0; i < connectionPairs.Count; ++i)
-                SideGate.Connect(connectionPairs[i].fromGate, connectionPairs[i].toGate);
+            for(int i = 0; i < pairs.Count; ++i)
+                SideGate.Connect(pairs[i].fromGate, pairs[i].toGate);
         }
 
         private readonly struct ConnectionPair

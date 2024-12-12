@@ -1,5 +1,6 @@
 using HexaLinks.Ownership;
 using HexaLinks.UI.PlayerHand;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,19 +28,12 @@ public class HandUI : MonoBehaviour
         List<Button> buttons = playerHandUI.rootVisualElement.Query<Button>().ToList();
         playerOptions = new HandTileOption[buttons.Count];
 
-        HandTileOption option;
-
         for (int i = 0; i < 3; ++i)
-        {
-            option = new(buttons[i], deck.TraversalDeck);
-            option.Draw(emptyTile);
-            playerOptions[i] = option;
-        }
+            playerOptions[i] = new(buttons[i], deck.TraversalDeck);
 
-        option = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("TileCounter"), deck.PropagatorDeck, ownership);
-        option.Set(emptyTile);
-        playerOptions[^1] = option;
+        playerOptions[^1] = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("TileCounter"), deck.PropagatorDeck, ownership);
 
+        Draw();
         Deactivate();
     }
 
@@ -62,10 +56,9 @@ public class HandUI : MonoBehaviour
 
     public void Draw()
     {
-        var options = playerOptions.Where(o => o.DrawingPending);
-        foreach (var o in options)
+        foreach (HandTileOption option in playerOptions)
         {
-            o.Draw(emptyTile);
+            option.Draw(EmptyTile);
         }
     }
 }

@@ -39,10 +39,11 @@ public static class TileEditorManipulator
     public static void Unset()
     {
         selectedTileTextField.text = "None";
+
         callbackPlaceholder?.UnregisterCallback<KeyDownEvent>(ManipulateTile);
+        callbackPlaceholder = null;
         
         Selection.activeObject = null;
-        callbackPlaceholder = null;
         tile = null;
     }
 

@@ -1,5 +1,6 @@
 using HexaLinks.Path.Finder;
 using HexaLinks.Tile.Events;
+using HexaLinks.Turn;
 using UnityEngine;
 using static HexaLinks.Tile.Events.TileEvents;
 
@@ -12,46 +13,58 @@ namespace HexaLinks.Tile
 		[SerializeField]
 		private int maxPropagatorStrength;
 
-        [HideInInspector]
-		public int currentPropagatorStrength = 0;
+		public int CurrentStrength { private set; get; }
 
         public Gate.ExposedGate StartingGate => new Gate.ExposedGate(GetComponentInChildren<Gate>());												  
 
         public override void Initialize()
         {
             base.Initialize();
-            currentPropagatorStrength = maxPropagatorStrength;
-            OnTurnEnded.RegisterPermamentCallback(IncreaseStrength);
+            CurrentStrength = maxPropagatorStrength;
+
+            propagatorLabel = PropagatorPopUpHelper.Show(CurrentStrength, transform);
+            OnTurnEnded.RegisterCallback(IncreaseStrength);
+
+        }
+
+        public override void Terminate()
+        {
+            base.Terminate();
+            PropagatorPopUpHelper.Hide(propagatorLabel);
+            OnTurnEnded.UnregisterCallback(IncreaseStrength);
         }
 
         public override bool TryRelease()
         {
             if (base.TryRelease())
             {
-                propagatorLabel = PropagatorPopUpHelper.Show(currentPropagatorStrength, transform);
-
-                OnPropagationStep.RegisterVolatileCallback(DecreaseStrength);
-
-                PathFinder.Reset();
-                PathFinder.Init(this);
+                Propagate();
                 return true;
             }
 
             return false;
         }
 
-        private PropagatorPopUp.PropagatorLabel propagatorLabel;
+        public void Propagate()
+        {
+            propagatorLabel.SetColor(PropagatorPopUpHelper.CurrentLabelColor);
+            propagatorLabel.SetText(CurrentStrength.ToString());
+            OnPropagationStep.RegisterCallback(this, DecreaseStrength);
+            PathFinder.Init(this);
+        }
+
+        private PropagatorPopUp.PropagatorLabel propagatorLabel = null;
 
         private void IncreaseStrength(EmptyArgs? noArgs)
         {
-            currentPropagatorStrength = Mathf.Clamp(currentPropagatorStrength + 1, 0, maxPropagatorStrength);
-            propagatorLabel.SetText(currentPropagatorStrength.ToString());
+            CurrentStrength = Mathf.Clamp(CurrentStrength + 1, 0, maxPropagatorStrength);
+            propagatorLabel.SetText(CurrentStrength.ToString());
         }
 
         private void DecreaseStrength(EmptyArgs? args)
         {
-            currentPropagatorStrength = Mathf.Clamp(currentPropagatorStrength - 1, 0, maxPropagatorStrength);
-            propagatorLabel.SetText(currentPropagatorStrength.ToString());
+            CurrentStrength = Mathf.Clamp(CurrentStrength - 1, 0, maxPropagatorStrength);
+            propagatorLabel.SetText(CurrentStrength.ToString());
         }
 
 #if UNITY_EDITOR

@@ -34,7 +34,12 @@ public class PropagatorPopUp : GameSystemMonobehaviour
         public void SetPosition()
         {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            label.transform.position = new Vector2(screenPos.x, 1080 - screenPos.y);
+            SetPosition(new Vector2(screenPos.x, 1080 - screenPos.y));
+        }
+
+        public void SetPosition(Vector2 screenPos)
+        {
+            label.transform.position = screenPos;
         }
             
         public void SetColor(Color color) => label.style.color = color;
@@ -47,12 +52,18 @@ public class PropagatorPopUp : GameSystemMonobehaviour
         pool.InitPool();
     }
 
-    public PropagatorLabel PopUpNumber(int number, Color color, Transform transform)
+    public PropagatorLabel Show(int number, Color color, Transform transform)
     {
         var label = pool.Get();
         label.Initialize(number.ToString(), color, transform);
         labels.Add(label);
         return label;
+    }
+
+    public void Hide(PropagatorLabel label)
+    {
+        labels.Remove(label);
+        label.Remove();
     }
 
     private void Update()
@@ -61,8 +72,6 @@ public class PropagatorPopUp : GameSystemMonobehaviour
         //{
         //    PopUpNumber(5, testTransform.position, Color.blue);
         //}
-
-
         foreach (var label in labels)
         {
             label.SetPosition();

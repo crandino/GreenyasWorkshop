@@ -33,6 +33,22 @@ namespace HexaLinks.Tile
             }
         }
 
+        public static void Connect(SideGate gateA, SideGate gateB)
+        {
+            gateA.outwardGates.Add(gateB);
+            gateB.outwardGates.Add(gateA);
+
+            TileEvents.OnSegmentConnected.Call(null);
+        }
+
+        public static void Disconnect(SideGate gate)
+        {
+            foreach (SideGate otherGate in gate.outwardGates)
+                otherGate.outwardGates.Clear();
+
+            gate.outwardGates.Clear();
+        }
+
         public void GetAlignedGatesAgainst(SideGate gate, List<SideGate> alignedGates)
         {
             if (AreFacingEachOther(this, gate) && !AreConnected(this, gate))
@@ -48,22 +64,7 @@ namespace HexaLinks.Tile
         private static bool AreConnected(SideGate gateA, SideGate gateB)
         {
             return gateA.outwardGates.Contains(gateB) && gateB.outwardGates.Contains(gateA);
-        }
-
-        public static void Connect(SideGate gateA, SideGate gateB)
-        {
-            gateA.outwardGates.Add(gateB);
-            gateB.outwardGates.Add(gateA);
-            TileEvents.OnSegmentConnected.Call(null);
-        }
-
-        public static void Disconnect(SideGate gate)
-        {
-            foreach(SideGate otherGate in gate.outwardGates)
-                otherGate.outwardGates.Clear();
-
-            gate.outwardGates.Clear();
-        }
+        }        
 
 #if UNITY_EDITOR
 

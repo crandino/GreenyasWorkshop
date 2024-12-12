@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 
 using System.Collections.Generic;
+using static HexaLinks.Path.Finder.PathFinder;
 using static HexaLinks.Path.Finder.PathFinder.Path;
 
 namespace HexaLinks.Propagation
@@ -11,16 +12,16 @@ namespace HexaLinks.Propagation
 
     public class PropagationManager : Game.IGameSystem
     {
-        private List<List<Link[]>> unifiedPaths;
+        private List<PathIterationStep> stepsToPropagate;
 
         public void InitSystem()
         {
-            unifiedPaths = new List<List<Link[]>>();
+            stepsToPropagate = new();
         }
 
-        public void Start(List<Link[]> path)
+        public void Start(PathIterationStep iterationStep)
         {
-            unifiedPaths.Add(path);
+            stepsToPropagate.Add(iterationStep);
 
             if (Propagating)
                 return;
@@ -34,33 +35,36 @@ namespace HexaLinks.Propagation
         {
             Propagating = true;
 
-            for (int i = 0; i < unifiedPaths.Count; i++)
+            for (int i = 0; i < stepsToPropagate.Count; i++)
             {
-                //Owner propagationOwner = ((InitialPlayerOwnership)unifiedPaths[i][0][0].Ownership).Owner;
-                Owner propagationOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
-                SetNewOwnershipAlongPath(propagationOwner, unifiedPaths[i]);
-                await UpdatePropagation(unifiedPaths[i]);
-                TileEvents.OnPropagationStep.Call(null);
+                PathIterationStep step = stepsToPropagate[i];
+                step.Combine();
+
+                SetNewOwnershipAlongPath(step);
+                await UpdatePropagation(step);
+                TileEvents.OnPropagationStep.UnregisterCallbacks(stepsToPropagate[i].PropagatorPrecursorTile);
             }
 
-            unifiedPaths.Clear();
+            stepsToPropagate.Clear();
             Propagating = false;
 
             TileEvents.OnPropagationEnded.Call(null);
         }
 
-        private static void SetNewOwnershipAlongPath(Owner newOwner, List<Link[]> unifiedPath)
+        private static void SetNewOwnershipAlongPath(PathIterationStep step)
         {
-            foreach (Link[] pathLinks in unifiedPath)
+            Owner newOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
+
+            foreach (Link[] pathLinks in step.CombinedPaths)
             {
                 foreach (Link c in pathLinks)
                    c.Ownership.PrepareOwnerChange(newOwner);
             }
         }
 
-        private async static UniTask UpdatePropagation(List<Link[]> unifiedPath)
+        private async static UniTask UpdatePropagation(PathIterationStep step)
         {
-            foreach (Link[] pathLinks in unifiedPath)
+            foreach (Link[] pathLinks in step.CombinedPaths)
             {
                 List<UniTask> tasks = new();
 
@@ -69,6 +73,8 @@ namespace HexaLinks.Propagation
 
                 await UniTask.SwitchToMainThread();
                 await UniTask.WhenAll(tasks);
+
+                TileEvents.OnPropagationStep.Call(step.PropagatorPrecursorTile, null);
             }
         }
     }

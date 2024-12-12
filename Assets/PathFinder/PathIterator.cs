@@ -14,7 +14,7 @@ namespace HexaLinks.Path.Finder
             TileStepTracker<Gate> gateTracker = new TileStepTracker<Gate>();
 
             Gate initialGate = initialTile.StartingGate;
-            int maxPropagationSteps = initialTile.currentPropagatorStrength;
+            int maxPropagationSteps = initialTile.CurrentStrength;
 
             gateTracker.AddStep(initialGate);
             gateTracker.MoveNext();

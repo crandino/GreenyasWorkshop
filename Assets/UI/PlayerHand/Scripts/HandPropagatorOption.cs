@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 namespace HexaLinks.UI.PlayerHand
 {
     using Configuration;
+    using Cysharp.Threading.Tasks;
     using Ownership;
     using Tile.Events;
 
@@ -34,12 +35,19 @@ namespace HexaLinks.UI.PlayerHand
             this.owner = owner;
 
             connectionsToUnlock = Game.Instance.GetSystem<Configuration>().parameters.NumOfConnectionsToUnlockPropagator;
-
             InitializeCountdown();
         }
 
         private void InitializeCountdown()
         {
+#if DEBUG
+            if (connectionsToUnlock == 0)
+            {
+                counterLabel.visible = false;
+                return;
+            }
+#endif
+
             Counter = connectionsToUnlock;
             counterLabel.visible = true;
             DrawingPending = false;
@@ -49,6 +57,9 @@ namespace HexaLinks.UI.PlayerHand
 
         private void OnSegmentConnected(TileEvents.EmptyArgs? noArgs)
         {
+#if DEBUG
+            if (connectionsToUnlock == 0) return;
+#endif
             --Counter;
 
             if (CountdownReached)
@@ -76,13 +87,13 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.Activate();
             if(!DrawingPending)
-                TileEvents.OnSegmentConnected.RegisterPermamentCallback(OnSegmentConnected);
+                TileEvents.OnSegmentConnected.RegisterCallback(OnSegmentConnected);
         }
 
         public override void Deactivate()
         {
             base.Deactivate();
-            TileEvents.OnSegmentConnected.UnregisterPermamentCallback(OnSegmentConnected);
+            TileEvents.OnSegmentConnected.UnregisterCallback(OnSegmentConnected);
         }
 
         private void RegisterCallbacks()

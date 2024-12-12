@@ -10,7 +10,7 @@ namespace HexaLinks.UI.PlayerHand
 
         private TileResource tileResource = null;
 
-        public bool DrawingPending { protected set; get; }
+        public bool DrawingPending { protected set; get; } = true;
 
         public HandTileOption(Button tileButton, DeckContent.Deck.DrawableDeck drawableDeck)
         {
@@ -43,7 +43,8 @@ namespace HexaLinks.UI.PlayerHand
 
         public void Draw(TileResource fallback)
         {
-            Set(deck.Draw(fallback));
+            if(DrawingPending)
+                Set(deck.Draw(fallback));
             DrawingPending = false;
         }
 

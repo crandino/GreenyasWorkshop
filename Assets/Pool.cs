@@ -19,6 +19,11 @@ public class Pool : MonoBehaviour
         pool = new(OnCreate, null, OnRelease);
     }
 
+    public PropagatorLabel Get()
+    {
+        return pool.Get();
+    }
+
     private PropagatorLabel OnCreate()
     {
         var pooledObject = numberTemplate.Instantiate();
@@ -31,11 +36,8 @@ public class Pool : MonoBehaviour
 
     private void OnRelease(PropagatorLabel label)
     {
-        //label.SetPosition(OUT_OF_CANVAS_POSITION);
+        label.SetPosition(OUT_OF_CANVAS_POSITION);
     }
 
-    public PropagatorLabel Get()
-    {
-        return pool.Get();
-    }   
+    
 }

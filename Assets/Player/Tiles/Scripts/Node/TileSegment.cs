@@ -42,10 +42,10 @@ namespace HexaLinks.Tile
                 SideGate.Disconnect(gate);
         }
 
-        public Gate GoThrough(Gate enterGate)
-        {
-            return gates.Where(g => g != enterGate).First();
-        }
+        //public Gate GoThrough(Gate enterGate)
+        //{
+        //    return gates.Where(g => g != enterGate).First();
+        //}
 
         public bool IsTraversalForward(Gate enterGate) => gates[0] == enterGate;
 

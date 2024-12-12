@@ -16,14 +16,14 @@ namespace HexaLinks.Turn
         public override void Begin(TurnManager.PlayerContext context)
         {
             if (propagation.Propagating)
-                TileEvents.OnPropagationEnded.RegisterPermamentCallback(EndStep);
+                TileEvents.OnPropagationEnded.RegisterCallback(EndStep);
             else
                 End();
         }
 
         protected override void End()
         {
-            TileEvents.OnPropagationEnded.UnregisterPermamentCallback(EndStep);
+            TileEvents.OnPropagationEnded.UnregisterCallback(EndStep);
             base.End();
         }
 

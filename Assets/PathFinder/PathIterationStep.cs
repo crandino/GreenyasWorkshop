@@ -1,3 +1,4 @@
+using HexaLinks.Tile;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,16 +8,19 @@ namespace HexaLinks.Path.Finder
 {
     public static partial class PathFinder
     {
-        private class PathIterationStep
+        public class PathIterationStep
         {
-            public int id;
-            public List<Path> paths;
+            public readonly int id;
+            public TilePropagator PropagatorPrecursorTile { private set; get; }
+            public List<Link[]> CombinedPaths { private set; get; }
 
+            private List<Path> paths;
             private readonly List<uint> stepUsedHashes = new();
 
-            public PathIterationStep(int id)
+            public PathIterationStep(int id, TilePropagator precursor)
             {
                 this.id = id;
+                PropagatorPrecursorTile = precursor;
                 paths = new List<Path>();
             }
 
@@ -41,10 +45,10 @@ namespace HexaLinks.Path.Finder
              * https://en.wikibooks.org/wiki/A-level_Computing/AQA/Paper_1/Fundamentals_of_data_structures/Hash_tables_and_hashing
              */
 
-            public List<Link[]> UnifyPaths()
+            public void Combine()
             {
                 if (paths.Count == 0)
-                    return null;
+                    return;
 
                 int longestPath = paths.Max(p => p.Links.Length);
                 List<Link>[] upath = new List<Link>[longestPath];
@@ -54,7 +58,6 @@ namespace HexaLinks.Path.Finder
 
                 for (int i = 0; i < paths.Count; ++i)
                 {
-                    //for (int j = 0; j < paths[i].Links[paths[i].PropagationRange].Length; ++j)          
                     for (int j = 0; j < paths[i].Links.Length; ++j)
                     {
                         if (paths[i].Equals(paths[i].Links[j]))
@@ -64,7 +67,7 @@ namespace HexaLinks.Path.Finder
                     }
                 }
 
-                return upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
+                CombinedPaths = upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
             }
 
             class PathLinkComparer : IEqualityComparer<Link>

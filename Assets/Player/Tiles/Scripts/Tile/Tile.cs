@@ -20,7 +20,7 @@ namespace HexaLinks.Tile
             manipulator.Initialize(coordinates);
         }
 
-        public void Terminate()
+        public virtual void Terminate()
         {
             manipulator.Terminate();
         }

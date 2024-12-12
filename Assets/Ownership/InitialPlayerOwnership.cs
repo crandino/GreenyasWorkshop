@@ -17,7 +17,7 @@ namespace HexaLinks.Ownership
         private void TriggerNewPropagation()
         {
             TilePropagator parentTile = transform.GetTransformUpUntil<TilePropagator>().GetComponent<TilePropagator>();
-            Path.Finder.PathFinder.Init(parentTile);
+            parentTile.Propagate();
         }
 
         // -------------------------------------------------------------------------------------

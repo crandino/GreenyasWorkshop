@@ -58,9 +58,7 @@ namespace HexaLinks.Tile
         public void ConnectAll()
         {
             foreach(var tile in gridData.Values)
-            {
                 tile.Connect();
-            }
         }
 
         [ContextMenu("Clear Grid")]

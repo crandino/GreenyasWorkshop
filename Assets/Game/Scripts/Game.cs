@@ -1,5 +1,6 @@
 using Greenyas.Input;
 using HexaLinks.Propagation;
+using HexaLinks.Turn;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,9 @@ public class Game : SingletonMonobehaviour<Game>
             RegisterSystem(system);
 
         foreach (var system in gameSystemMonobehaviour)
-            RegisterSystem(system);   
+            RegisterSystem(system);
+
+        GetSystem<TurnManager>().StartGame();
     }
 
     private void RegisterSystem<T>() where T : IGameSystem, new()
