@@ -1,7 +1,6 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace HexaLinks.Tile.Events
 {
@@ -15,6 +14,7 @@ namespace HexaLinks.Tile.Events
         public static EventType<EmptyArgs> OnSegmentConnected = new(); 
         public static EventType<EmptyArgs> OnPropagationStep = new();
         public static EventType<EmptyArgs> OnPropagationEnded = new();
+        public static EventType<EmptyArgs> OnPropagationStepEnded = new();
 
         public static EventType<OnSegmentPropagatedArgs> OnSegmentPropagated = new();  
         

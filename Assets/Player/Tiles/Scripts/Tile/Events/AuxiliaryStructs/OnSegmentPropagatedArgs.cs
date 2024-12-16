@@ -2,10 +2,10 @@ using HexaLinks.Ownership;
 
 namespace HexaLinks.Tile.Events
 {
-    public struct OnSegmentPropagatedArgs
+    public readonly struct OnSegmentPropagatedArgs
     {
-        private Owner lastSegmentOwner;
-        private Owner newSegmentOwner;
+        private readonly Owner lastSegmentOwner;
+        private readonly Owner newSegmentOwner;
 
         public OnSegmentPropagatedArgs(Owner lastOwner, Owner newOwner)
         {

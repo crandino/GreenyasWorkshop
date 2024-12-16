@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class ExportMesh : MonoBehaviour
 {
     [SerializeField]
@@ -19,4 +20,5 @@ public class ExportMesh : MonoBehaviour
     {
         meshFilter = gameObject.GetComponent<MeshFilter>();
     }
-}
+} 
+#endif

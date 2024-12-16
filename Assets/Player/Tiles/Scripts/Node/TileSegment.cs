@@ -13,7 +13,7 @@ namespace HexaLinks.Tile
         protected SideGate[] SideGates => gates.Where(g => g is SideGate).Cast<SideGate>().ToArray();
 
         public uint Hash => HashFunction(this);
-        public uint HashFunction(TileSegment s) => s.transform.GetTransformUpUntil<Tile>().GetComponent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
+        public uint HashFunction(TileSegment s) => s.GetComponentInParent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
 
         public List<ConnectionCandidate> GetCandidates(CubeCoord fromCoord)
         {

@@ -2,80 +2,52 @@ using Cysharp.Threading.Tasks;
 
 using System.Collections.Generic;
 using static HexaLinks.Path.Finder.PathFinder;
-using static HexaLinks.Path.Finder.PathFinder.Path;
 
 namespace HexaLinks.Propagation
 {
+    using HexaLinks.Tile;
     using Ownership;
+    using System.Linq;
     using Tile.Events;
     using Turn;
 
     public class PropagationManager : Game.IGameSystem
     {
-        private List<PathIterationStep> stepsToPropagate;
-
         public void InitSystem()
         {
-            stepsToPropagate = new();
-        }
+            //Nothing here!            
+        }       
 
-        public void Start(PathIterationStep iterationStep)
+        public async void TriggerPropagation(PathIterationStep iterationStep)
         {
-            stepsToPropagate.Add(iterationStep);
-
-            if (Propagating)
-                return;
-
-            TriggerPropagation();           
-        }
-
-        public bool Propagating { private set; get; }
-
-        private async void TriggerPropagation()
-        {
-            Propagating = true;
-
-            for (int i = 0; i < stepsToPropagate.Count; i++)
-            {
-                PathIterationStep step = stepsToPropagate[i];
-                step.Combine();
-
-                SetNewOwnershipAlongPath(step);
-                await UpdatePropagation(step);
-                TileEvents.OnPropagationStep.UnregisterCallbacks(stepsToPropagate[i].PropagatorPrecursorTile);
-            }
-
-            stepsToPropagate.Clear();
-            Propagating = false;
-
-            TileEvents.OnPropagationEnded.Call(null);
-        }
-
-        private static void SetNewOwnershipAlongPath(PathIterationStep step)
-        {
-            Owner newOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
-
-            foreach (Link[] pathLinks in step.CombinedPaths)
-            {
-                foreach (Link c in pathLinks)
-                   c.Ownership.PrepareOwnerChange(newOwner);
-            }
-        }
+            iterationStep.Combine();
+            await UpdatePropagation(iterationStep);
+            
+            TileEvents.OnPropagationStepEnded.Call(null);           
+        }       
 
         private async static UniTask UpdatePropagation(PathIterationStep step)
         {
-            foreach (Link[] pathLinks in step.CombinedPaths)
-            {
-                List<UniTask> tasks = new();
+            Owner newOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
 
-                foreach (Link c in pathLinks)
-                    tasks.Add(c.Ownership.UpdatePropagation(c.ForwardTraversal));
+            foreach (Gate.ReadOnlyGate[] pathGates in step.CombinedPaths)
+            {
+                List<UniTask<bool>> tasks = new();
+
+                foreach (Gate.ReadOnlyGate c in pathGates)
+                    tasks.Add(c.Ownership.UpdatePropagation(newOwner, c.ForwardTraversalDir));
 
                 await UniTask.SwitchToMainThread();
-                await UniTask.WhenAll(tasks);
+                bool[] successfulPropagations = await UniTask.WhenAll(tasks);                
 
-                TileEvents.OnPropagationStep.Call(step.PropagatorPrecursorTile, null);
+                if (successfulPropagations.Any(x => x))
+                {
+                    UnityEngine.Debug.Log("DEcreasing");
+                    TileEvents.OnPropagationStep.Call(step.Precursor, null);
+                }
             }
+
+            TileEvents.OnPropagationStep.UnregisterCallbacks(step.Precursor);
         }
     }
 }

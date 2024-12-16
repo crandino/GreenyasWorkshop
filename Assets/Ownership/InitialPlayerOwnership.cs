@@ -10,14 +10,14 @@ namespace HexaLinks.Ownership
         
         private void Awake()
         {
-            foreach (var child in childrenOwnership)
-                child.OnOnwerChanged += TriggerNewPropagation;
+            //foreach (var child in childrenOwnership)
+            //    child.OnOnwerChanged += TriggerNewPropagation;
         }   
 
         private void TriggerNewPropagation()
         {
-            TilePropagator parentTile = transform.GetTransformUpUntil<TilePropagator>().GetComponent<TilePropagator>();
-            parentTile.Propagate();
+            //TilePropagator parentTile = transform.GetTransformUpUntil<TilePropagator>().GetComponent<TilePropagator>();
+            //parentTile.PreparePropagation();
         }
 
         // -------------------------------------------------------------------------------------

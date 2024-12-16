@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using System;
 using UnityEngine;
 
 namespace HexaLinks.Ownership
@@ -18,33 +17,32 @@ namespace HexaLinks.Ownership
     public class PlayerOwnership : MonoBehaviour
     {
         [SerializeField]
+        private bool computesInPropagation = true;
+
+        [SerializeField]
         private ColorPropagator highligther;
 
         [SerializeField]
         private Owner owner = Owner.None;
 
-        public Owner Owner => PendingOwner.HasValue ? PendingOwner.Value : owner;
+        public bool ComputesInPropagation => computesInPropagation;
+
+        public Owner Owner => PendingOwner ?? owner;
 
         public Owner? PendingOwner { protected set; get; } = null;
-
-        public event Action OnOnwerChanged = delegate { };       
 
         public void InstantOwnerChange(Owner newOwnership)
         {
             owner = newOwnership;
             highligther.InstantPropagation(Game.Instance.GetSystem<Configuration>().colors[owner].pathColor);
-        }     
-        
-        public void PrepareOwnerChange(Owner newOwnership)
-        {
-            if(owner != newOwnership)
-                PendingOwner = newOwnership;
         }
 
-        public async UniTask UpdatePropagation(bool forwardPropagation)
+        public async UniTask<bool> UpdatePropagation(Owner newOwnership, bool forwardPropagation)
         {
-            if (!PendingOwner.HasValue)
-                return;
+            if (owner == newOwnership)
+                return false;
+
+            PendingOwner = newOwnership;
 
             OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
 
@@ -52,14 +50,16 @@ namespace HexaLinks.Ownership
             await highligther.UpdatePropagation();
             highligther.PostPropagation();
 
-            owner = PendingOwner.Value;
-            PendingOwner = null;
+            if(PendingOwner.HasValue)
+            {
+                owner = PendingOwner ?? owner;
+                PendingOwner = null;
 
-            TileEvents.OnSegmentPropagated.Call(args);
+                if(computesInPropagation)
+                    TileEvents.OnSegmentPropagated.Call(args);
+            }           
 
-            OnOnwerChanged();
-
-            return;
+            return computesInPropagation && true;
         }
 
 #if UNITY_EDITOR

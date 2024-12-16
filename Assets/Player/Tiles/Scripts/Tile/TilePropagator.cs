@@ -1,6 +1,4 @@
 using HexaLinks.Path.Finder;
-using HexaLinks.Tile.Events;
-using HexaLinks.Turn;
 using UnityEngine;
 using static HexaLinks.Tile.Events.TileEvents;
 
@@ -15,7 +13,7 @@ namespace HexaLinks.Tile
 
 		public int CurrentStrength { private set; get; }
 
-        public Gate.ExposedGate StartingGate => new Gate.ExposedGate(GetComponentInChildren<Gate>());												  
+        public Gate.ReadOnlyGate StartingGate => new Gate.ReadOnlyGate(GetComponentInChildren<Gate>());												  
 
         public override void Initialize()
         {
@@ -23,7 +21,7 @@ namespace HexaLinks.Tile
             CurrentStrength = maxPropagatorStrength;
 
             propagatorLabel = PropagatorPopUpHelper.Show(CurrentStrength, transform);
-            OnTurnEnded.RegisterCallback(IncreaseStrength);
+            //OnTurnEnded.RegisterCallback(IncreaseStrength);
 
         }
 
@@ -31,26 +29,26 @@ namespace HexaLinks.Tile
         {
             base.Terminate();
             PropagatorPopUpHelper.Hide(propagatorLabel);
-            OnTurnEnded.UnregisterCallback(IncreaseStrength);
+            //OnTurnEnded.UnregisterCallback(IncreaseStrength);
         }
 
         public override bool TryRelease()
         {
             if (base.TryRelease())
             {
-                Propagate();
+                PathIterator.QueueSearch(this);
                 return true;
             }
 
             return false;
         }
 
-        public void Propagate()
+        public void PreparePropagation()
         {
             propagatorLabel.SetColor(PropagatorPopUpHelper.CurrentLabelColor);
             propagatorLabel.SetText(CurrentStrength.ToString());
+
             OnPropagationStep.RegisterCallback(this, DecreaseStrength);
-            PathFinder.Init(this);
         }
 
         private PropagatorPopUp.PropagatorLabel propagatorLabel = null;

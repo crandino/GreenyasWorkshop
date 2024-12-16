@@ -117,6 +117,8 @@ public static class TileEditorManipulator
             tile.GetComponentInChildren<MeshCollider>().enabled = true; // hot fix
             hexMap.AddTile(tile);
 
+            tile.AddMeaningfulName();
+
             if (Application.isPlaying)
                 tile.Connect();
         }

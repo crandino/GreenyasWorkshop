@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445c63b02eed60d4abf192ee0cd71237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  computesInPropagation: 0
   highligther: {fileID: 4287136758590898612}
   owner: 0
   childrenOwnership:
@@ -380,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  computesInPropagation: 0
   highligther: {fileID: 1080812222842220942}
   owner: 0
 --- !u!1 &6196911437298342113
@@ -578,6 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  computesInPropagation: 0
   highligther: {fileID: 245107387377853587}
   owner: 0
 --- !u!1001 &2281048710470588753
@@ -711,8 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manipulator: {fileID: 4907364627098854713}
-  connectivity: {fileID: 1887364499805977745}
   coordinates:
     tileTransform: {fileID: 3726045746631969225}
+  connectivity: {fileID: 1887364499805977745}
   maxPropagatorStrength: 6
-  currentPropagatorStrength: 0

@@ -1,5 +1,4 @@
 using HexaLinks.Tile;
-using UnityEditor;
 using UnityEngine;
 
 namespace Greenyas.Hexagon
@@ -25,16 +24,6 @@ namespace Greenyas.Hexagon
 
         public static class Convertor
         {
-            //private readonly static Side[] Sides = new Side[]
-            //{
-            //    Side.North,
-            //    Side.NorthEast,
-            //    Side.SouthEast,
-            //    Side.South,
-            //    Side.SouthWest,
-            //    Side.NorthWest
-            //};
-
             public static Side GetWorldSide(Side localSide, Transform transform)
             {
                 int rotationSteps = (int)transform.eulerAngles.y / 60;
@@ -66,75 +55,6 @@ namespace Greenyas.Hexagon
                     return (Side)TOTAL_SIDES - rotationSteps;
                 return localSide;
             }
-        }
-
-        
-
-        
-    }
-
-    // TODO: Move to a separate file
-
-    [CustomPropertyDrawer(typeof(HexSide))]
-    public class CubeCoordPropertyDrawer : PropertyDrawer
-    {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            ShowHexSideCarousel(position, property);
-        }
-
-        //public override void OnInspectorGUI()
-        //{
-        //    ShowHexSideCarousel()
-        //    serializedObject.Update();
-
-        //    //EditorGUILayout.ObjectField(properties.meshRenderer);
-
-        //    ++EditorGUI.indentLevel;
-        //    for (int i = 0; i < properties.gates.Length; i++)
-        //    {
-        //        EditorGUILayout.BeginHorizontal();
-        //        EditorGUILayout.LabelField($"Gate {i + 1}");
-
-        //        ++EditorGUI.indentLevel;
-        //        ShowHexSideCarousel(ref properties.gates[i]);
-        //        --EditorGUI.indentLevel;
-
-        //        EditorGUILayout.EndHorizontal();
-        //    }
-        //    --EditorGUI.indentLevel;
-
-        //    if (serializedObject.hasModifiedProperties)
-        //        serializedObject.ApplyModifiedProperties();
-        //}
-
-        private void ShowHexSideCarousel(Rect position, SerializedProperty property)
-        {
-            SerializedProperty localSide = property.FindPropertyRelative("localSide");
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("<"))
-                PreviousOrientation(localSide);
-            EditorGUILayout.LabelField(localSide.enumDisplayNames[localSide.enumValueIndex]);
-            if (GUILayout.Button(">"))
-                NextOrientation(localSide);
-            EditorGUILayout.EndHorizontal();
-
-        }
-
-        private void PreviousOrientation(SerializedProperty property)
-        {
-            property.enumValueIndex = (int)HexSide.Convertor.GetWorldSideAfterRotStep((HexSide.Side)property.enumValueIndex, -1);
-        }
-
-        private void NextOrientation(SerializedProperty property)
-        {
-            property.enumValueIndex = (int)HexSide.Convertor.GetWorldSideAfterRotStep((HexSide.Side)property.enumValueIndex, 1);
-        }
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return 0f;
         }
     }
 }

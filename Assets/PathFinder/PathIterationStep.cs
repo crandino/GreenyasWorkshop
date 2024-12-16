@@ -1,8 +1,7 @@
 using HexaLinks.Tile;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using static HexaLinks.Path.Finder.PathFinder.Path;
+using static HexaLinks.Tile.Gate;
 
 namespace HexaLinks.Path.Finder
 {
@@ -10,79 +9,42 @@ namespace HexaLinks.Path.Finder
     {
         public class PathIterationStep
         {
-            public readonly int id;
-            public TilePropagator PropagatorPrecursorTile { private set; get; }
-            public List<Link[]> CombinedPaths { private set; get; }
+            public TilePropagator Precursor { private set; get; }
+            public ReadOnlyGate[][] CombinedPaths { private set; get; }
+            public int MaxLengthPath => paths.Max(p => p.links.Length);
+            public bool PathsFound => paths != null && paths.Count > 0;
 
-            private List<Path> paths;
-            private readonly List<uint> stepUsedHashes = new();
+            private readonly List<Path> paths = new List<Path>();
 
-            public PathIterationStep(int id, TilePropagator precursor)
+            public PathIterationStep(TilePropagator tile)
             {
-                this.id = id;
-                PropagatorPrecursorTile = precursor;
-                paths = new List<Path>();
+                UnityEngine.Debug.Log($"New precursor added: {tile}");
+                Precursor = tile;
             }
 
-            public void Add(Path newPath)
+            public void AddPath(Path path)
             {
-                if (stepUsedHashes.Contains(newPath.HashID))
-                    return;
-
-                paths.Add(newPath);
-                stepUsedHashes.Add(newPath.HashID);
-
-                Debug.Log($"On step {id}, added {newPath}");
+                UnityEngine.Debug.Log($"Added {path}");
+                paths.Add(path);
             }
-
-            /*
-             * TODO: Que hacemos con los hashes? Un nuevo propagator puede arrancar de nuevo el camino 
-             * inverso ya hecho. 
-             * EL InitialPlayerOwnership debería suscribir eventos en los PlayerOwnership y que el camino no llegue al centro.
-             * Si que salga de él, pero no llegue. Que sean los PlayerOwnership de alrededor los que disparen una nueva
-             * búsqueda. 
-             * Los Hashes, echar un ojo a esto a ver si da ideas:
-             * https://en.wikibooks.org/wiki/A-level_Computing/AQA/Paper_1/Fundamentals_of_data_structures/Hash_tables_and_hashing
-             */
 
             public void Combine()
             {
-                if (paths.Count == 0)
-                    return;
+                CombinedPaths = new ReadOnlyGate[MaxLengthPath][];
 
-                int longestPath = paths.Max(p => p.Links.Length);
-                List<Link>[] upath = new List<Link>[longestPath];
-
-                for (int i = 0; i < upath.Length; ++i)
-                    upath[i] = new List<Link>();
-
-                for (int i = 0; i < paths.Count; ++i)
+                for (int i = 0; i < CombinedPaths.Length; ++i)
                 {
-                    for (int j = 0; j < paths[i].Links.Length; ++j)
+                    List<ReadOnlyGate> gatesCombined = new List<ReadOnlyGate>();
+
+                    foreach (var path in paths)
                     {
-                        if (paths[i].Equals(paths[i].Links[j]))
-                            break;
-
-                        upath[j].Add(paths[i].Links[j]);
+                        if (i < path.links.Length && !gatesCombined.Contains(path.links[i]))
+                            gatesCombined.Add(path.links[i]);
                     }
-                }
 
-                CombinedPaths = upath.Select(p => p.Distinct(new PathLinkComparer()).ToArray()).ToList();
-            }
-
-            class PathLinkComparer : IEqualityComparer<Link>
-            {
-                public bool Equals(Link x, Link y)
-                {
-                    return x.Ownership == y.Ownership && x.ForwardTraversal == y.ForwardTraversal;
-                }
-
-                public int GetHashCode(Link product)
-                {
-                    return product.Ownership.GetHashCode();
+                    CombinedPaths[i] = gatesCombined.ToArray();
                 }
             }
         }
     }
-
 }

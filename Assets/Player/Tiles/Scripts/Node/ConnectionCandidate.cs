@@ -6,7 +6,7 @@ namespace HexaLinks.Tile
     public class ConnectionCandidate
 	{
         private readonly List<ConnectionPair> pairs = new List<ConnectionPair>();
-        private static Func<ConnectionCandidate, bool> AtLeastOneConnection => (c) => Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || c.pairs.Count > 0;
+        private static Func<ConnectionCandidate, bool> AtLeastOneConnection => (c) => c.pairs.Count > 0;
 
         public bool AreValid => AtLeastOneConnection(this);
 

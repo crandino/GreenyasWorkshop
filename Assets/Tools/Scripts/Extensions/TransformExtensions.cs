@@ -10,12 +10,15 @@ public static class TransformExtensions
         return t;
     }
 
-    public static Transform GetTransformUpUntil<T>(this Transform t) where T : Component
+    public static T GetTransformUpUntil<T>(this Transform t) where T : Component
     {
+        T component;
+
         do
         {
-            if (t.gameObject.GetComponent<T>() != null)
-                return t;
+            component = t.gameObject.GetComponent<T>();
+            if (component != null)
+                return component;
         }
         while ((t = t.parent) != null);
 

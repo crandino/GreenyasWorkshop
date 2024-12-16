@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,9 +55,9 @@ namespace HexaLinks.Path.Finder.Tools
             return (T)iteratedStack.Peek().Current;
         }
 
-        public bool Empty => iteratedStack.Count == 0;
+        private bool Empty => iteratedStack.Count == 0;
 
-        public int NumAccumulatedSteps => iteratedStack.Count;
+        public int NumAccumulatedSteps(Func<T, bool> predicate) => iteratedStack.Count(o => predicate((T)o.Current));
 
         public bool MoveNext()
         {

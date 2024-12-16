@@ -88,7 +88,7 @@ Material:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ForegroundColor: {r: 0, g: 0.5019608, b: 0, a: 1}
-    - _ForwardForegroundColor: {r: 0.35220122, g: 0.05870017, b: 0.05870017, a: 1}
+    - _ForwardForegroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _NewSelectionColor: {r: 1, g: 1, b: 1, a: 1}
     - _OldSelectionColor: {r: 1, g: 1, b: 1, a: 1}
     - _PathSelectionColor: {r: 0, g: 0.5, b: 0, a: 1}

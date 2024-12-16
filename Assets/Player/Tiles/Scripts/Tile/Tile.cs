@@ -34,12 +34,15 @@ namespace HexaLinks.Tile
         {
             ConnectionCandidate[] connectionCandidates = connectivity.GetNeighborCandidates(Coord).ToArray();
 
-            if(connectionCandidates.AreValid())
+            if(Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || connectionCandidates.AreValid())
             {
                 manipulator.Release();
                 Game.Instance.GetSystem<HexMap>().AddTile(this);
 
                 connectionCandidates.Connect();
+#if DEBUG
+                this.AddMeaningfulName();
+#endif
                 return true;
             }
 
@@ -77,7 +80,6 @@ namespace HexaLinks.Tile
         private void OnDrawGizmos()
         {
             manipulator.DrawDebugInfo();
-            //connectivity.DrawDebugInfo();
         }
 #endif
     }

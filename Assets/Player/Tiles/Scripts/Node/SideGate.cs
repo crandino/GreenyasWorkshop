@@ -2,13 +2,13 @@ using Greenyas.Hexagon;
 using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections.Generic;
+using HexaLinks.Tile.Extensions.Hexside;
 
 using static Greenyas.Hexagon.HexSide;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using Hexagon.Tile.Debug;
-using HexaLinks.Tile.Extensions.Hexside;
 #endif
 
 namespace HexaLinks.Tile
@@ -87,6 +87,6 @@ namespace HexaLinks.Tile
                 Handles.ArrowHandleCap(0, WorldPos, arrowOrientatinon, 0.2f, UnityEngine.EventType.Repaint);
             }
         }
-    }
 #endif
+    }
 }
