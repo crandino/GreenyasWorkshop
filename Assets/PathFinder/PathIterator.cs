@@ -18,7 +18,7 @@ namespace HexaLinks.Path.Finder
 
         private readonly static Queue<PathIterationStep> pendingSearches = new();
 
-        public static bool ArePendingSearches => pendingSearches.Count > 0;
+        private static bool ArePendingSearches => pendingSearches.Count > 0;
 
         public static void QueueSearch(TilePropagator precursor)
         {
@@ -28,7 +28,7 @@ namespace HexaLinks.Path.Finder
 
         public static void TriggerSearch(TileEvents.EmptyArgs? args)
         {
-            if (pendingSearches.Count == 0)
+            if (!ArePendingSearches)
             {
                 TileEvents.OnPropagationEnded.Call(null);
                 return;
@@ -37,7 +37,6 @@ namespace HexaLinks.Path.Finder
             PathIterationStep step = pendingSearches.Dequeue();
             step.Precursor.PreparePropagation();
 
-            //List<TilePropagator> nexts = new List<TilePropagator>();
             TileStepTracker<ReadOnlyGate> gateTracker = new TileStepTracker<ReadOnlyGate>();
 
             ReadOnlyGate initialGate = step.Precursor.StartingGate;

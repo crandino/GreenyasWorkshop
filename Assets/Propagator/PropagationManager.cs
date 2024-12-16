@@ -41,10 +41,7 @@ namespace HexaLinks.Propagation
                 bool[] successfulPropagations = await UniTask.WhenAll(tasks);                
 
                 if (successfulPropagations.Any(x => x))
-                {
-                    UnityEngine.Debug.Log("DEcreasing");
                     TileEvents.OnPropagationStep.Call(step.Precursor, null);
-                }
             }
 
             TileEvents.OnPropagationStep.UnregisterCallbacks(step.Precursor);
