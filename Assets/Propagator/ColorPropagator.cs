@@ -49,7 +49,7 @@ namespace HexaLinks.Propagation
             }
         }
 
-        private readonly List<int> pathProgressIDs = new List<int>();
+        private readonly List<int> pathProgressIDs = new();
 
         public void PrePropagation(Color newColor, bool forwardPropagation)
         {

@@ -63,27 +63,7 @@ namespace HexaLinks.Ownership
 
         public void UpdatePropagation(float normalizedTime)
         {
-            //if (owner == newOwnership)
-            //    return false;
-
-            //PendingOwner = newOwnership;
-
-            //OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
-
-            //highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value].pathColor, forwardPropagation);
-            highligther.UpdatePropagation(normalizedTime);
-            //highligther.PostPropagation();
-
-            //if(PendingOwner.HasValue)
-            //{
-            //    owner = PendingOwner ?? owner;
-            //    PendingOwner = null;
-
-            //    if(computesInPropagation)
-            //        TileEvents.OnSegmentPropagated.Call(args);
-            //}           
-
-            //return computesInPropagation && true;
+            highligther.UpdatePropagation(normalizedTime);            
         }
 
 #if UNITY_EDITOR

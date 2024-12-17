@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class NormalizedTimer
 {
-    private readonly float inverseTime;
+    private float currentInverseTime;
+    private float targetInverseTime;
+
+    private float velocity = 0f;
+
     private float currentTime = 0f;
-    public float NormalizedTime => Mathf.Clamp01(currentTime * inverseTime);
+    public float NormalizedTime => Mathf.Clamp01(currentTime * currentInverseTime);
 
     public float Time => NormalizedTime;
-    public bool IsCompleted => GetNormalizedTime() >= 1.0f;
+    //public bool IsCompleted => GetNormalizedTime() >= 1.0f;
+
+    public float TotalTime
+    {
+        set
+        {
+            targetInverseTime = 1f / value;
+        }
+    }
 
     private class TimeEvent
     {
@@ -31,10 +43,11 @@ public class NormalizedTimer
 
     private readonly List<TimeEvent> events = new List<TimeEvent>();
 
-    public NormalizedTimer(float totalTime, float initialTime = 0f)
+    public NormalizedTimer(float totalTime)
     {
-        inverseTime = 1f / totalTime;
-        currentTime = initialTime / inverseTime;
+        TotalTime = totalTime;
+        currentTime = 0.0f;
+        currentInverseTime = 1f;
     }
 
     public void AddEvent(float normalizedTime, Action timeCallback)
@@ -54,10 +67,9 @@ public class NormalizedTimer
             events[i].ResetCallbacks();
     }
 
-    private float GetNormalizedTime() => NormalizedTime;
-
     public void Step(float deltaTime)
     {
+        currentInverseTime = Mathf.SmoothDamp(currentInverseTime, targetInverseTime, ref velocity, 1f);
         currentTime += deltaTime;
 
         for (int i = 0; i < events.Count; i++)

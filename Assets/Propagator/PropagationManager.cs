@@ -24,10 +24,10 @@ namespace HexaLinks.Propagation
             public NormalizedTimer timer;
             public bool Computes;
 
-            public GateSet(Gate.ReadOnlyGate[] gates, float initialTime = 0f)
+            public GateSet(Gate.ReadOnlyGate[] gates)
             {
                 this.gates = gates;
-                timer = new NormalizedTimer(1f, initialTime);
+                timer = new NormalizedTimer(1f);
                 Computes = gates.Any(o => o.Ownership.ComputesInPropagation);
             }
         }
