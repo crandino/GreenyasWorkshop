@@ -31,35 +31,59 @@ namespace HexaLinks.Ownership
 
         public Owner? PendingOwner { protected set; get; } = null;
 
+        private OnSegmentPropagatedArgs segmentPropagationArgs;
+
         public void InstantOwnerChange(Owner newOwnership)
         {
             owner = newOwnership;
             highligther.InstantPropagation(Game.Instance.GetSystem<Configuration>().colors[owner].pathColor);
         }
 
-        public async UniTask<bool> UpdatePropagation(Owner newOwnership, bool forwardPropagation)
+        public void PreparePropagation(Owner newOwner, bool forwardPropagation)
         {
-            if (owner == newOwnership)
-                return false;
+            if(owner == newOwner)
+                PendingOwner = newOwner;
 
-            PendingOwner = newOwnership;
+            highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[newOwner].pathColor, forwardPropagation);
+            segmentPropagationArgs = new OnSegmentPropagatedArgs(owner, newOwner, computesInPropagation);
+        }
 
-            OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
-
-            highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value].pathColor, forwardPropagation);
-            await highligther.UpdatePropagation();
+        public void FinalizePropagation()
+        {
             highligther.PostPropagation();
 
-            if(PendingOwner.HasValue)
+            if (PendingOwner.HasValue)
             {
-                owner = PendingOwner ?? owner;
+                owner = PendingOwner.Value;
                 PendingOwner = null;
+            }
 
-                if(computesInPropagation)
-                    TileEvents.OnSegmentPropagated.Call(args);
-            }           
+            TileEvents.OnSegmentPropagated.Call(segmentPropagationArgs);
+        }
 
-            return computesInPropagation && true;
+        public void UpdatePropagation(float normalizedTime)
+        {
+            //if (owner == newOwnership)
+            //    return false;
+
+            //PendingOwner = newOwnership;
+
+            //OnSegmentPropagatedArgs args = new OnSegmentPropagatedArgs(owner, PendingOwner.Value);
+
+            //highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[PendingOwner.Value].pathColor, forwardPropagation);
+            highligther.UpdatePropagation(normalizedTime);
+            //highligther.PostPropagation();
+
+            //if(PendingOwner.HasValue)
+            //{
+            //    owner = PendingOwner ?? owner;
+            //    PendingOwner = null;
+
+            //    if(computesInPropagation)
+            //        TileEvents.OnSegmentPropagated.Call(args);
+            //}           
+
+            //return computesInPropagation && true;
         }
 
 #if UNITY_EDITOR

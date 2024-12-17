@@ -2,10 +2,6 @@ Shader "Custom/ColorPropagator"
 {
     Properties
     {
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
-
         _BackgroundColor ("Background Color", Color) = (0,0,0,1)
 
         _ForwardForegroundColor ("Forward Foreground Color", Color) = (0,0,0,1)
@@ -14,7 +10,9 @@ Shader "Custom/ColorPropagator"
         _BackwardForegroundColor ("Backward Foreground Color", Color) = (0,0,0,1)
         _BackwardPathProgress ("Backward Progress", Range(0,1)) = 1.0
 
+        _PropagationWidth("Propagation Width", Range(0,1)) = 0.1
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -22,12 +20,10 @@ Shader "Custom/ColorPropagator"
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+        #pragma surface surf Standard fullforwardshadows vertex:vert
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
-
-        sampler2D _MainTex;
 
         fixed4 _BackgroundColor;
 
@@ -37,13 +33,50 @@ Shader "Custom/ColorPropagator"
         fixed4 _BackwardForegroundColor;
         fixed _BackwardPathProgress;
 
+        fixed _PropagationWidth;    
+
         struct Input
         {
-            float2 uv_MainTex;
+            fixed forwardProgressRemapped;
+            fixed backwardsProgressRemapped;
+            fixed2 texCoord;
         };
 
-        half _Glossiness;
-        half _Metallic;
+        float remap(float value, float low1, float high1, float low2, float high2)
+        {
+            return low2 + ((value - low1) * (high2 - low2) / (high1 - low1));
+        }
+
+        // float displacement(fixed texCoordX, fixed progress)
+        // {
+        //     fixed lowRemapped = remap(texCoordX - _PropagationWidth, 0, 1 , - _PropagationWidth, 1 + _PropagationWidth);
+        //     fixed highRemapped = remap(texCoordX + _PropagationWidth, 0, 1 , - _PropagationWidth, 1 + _PropagationWidth);
+
+        //     return smoothstep(lowRemapped, highRemapped, progress) *
+        //            smoothstep(highRemapped, lowRemapped, progress);
+        // }
+
+        void vert (inout appdata_base v, out Input IN)
+        {
+            IN.forwardProgressRemapped = remap(_ForwardPathProgress, 0, 1, -_PropagationWidth, 1 + _PropagationWidth);
+
+            float displ = 
+                smoothstep(v.texcoord.x - _PropagationWidth, v.texcoord.x + _PropagationWidth, IN.forwardProgressRemapped) *
+                smoothstep(v.texcoord.x + _PropagationWidth, v.texcoord.x - _PropagationWidth, IN.forwardProgressRemapped);
+
+            v.vertex.xyz += v.normal * displ * 0.1;
+
+            IN.backwardsProgressRemapped = remap(1 - _BackwardPathProgress, 0, 1, -_PropagationWidth, 1 + _PropagationWidth);
+
+            displ = 
+                smoothstep(v.texcoord.x - _PropagationWidth, v.texcoord.x + _PropagationWidth, IN.backwardsProgressRemapped) *
+                smoothstep(v.texcoord.x + _PropagationWidth, v.texcoord.x - _PropagationWidth, IN.backwardsProgressRemapped);
+
+            v.vertex.xyz += v.normal * displ * 0.1;
+
+            IN.texCoord = v.texcoord;
+        }      
+
         fixed4 _Color;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -55,19 +88,15 @@ Shader "Custom/ColorPropagator"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            fixed forwardStep = step(IN.uv_MainTex.x, _ForwardPathProgress);
+            fixed forwardStep = step(IN.texCoord.x, IN.forwardProgressRemapped);
             fixed4 forwardColor = lerp(_BackgroundColor, _ForwardForegroundColor, forwardStep);
             
-            fixed backwardStep = 1 - step(IN.uv_MainTex.x, 1 - _BackwardPathProgress);
+            fixed backwardStep = 1 - step(IN.texCoord.x, IN.backwardsProgressRemapped);
             fixed4 backwardColor = lerp(_BackgroundColor, _BackwardForegroundColor, backwardStep);
 
             fixed4 finalColor = lerp(backwardColor, forwardColor, step(backwardStep, forwardStep));
 
             o.Albedo = finalColor.rgb;
-
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
             o.Alpha = 1;
         }
         ENDCG

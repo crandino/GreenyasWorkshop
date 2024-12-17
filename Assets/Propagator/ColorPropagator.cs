@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,20 +74,10 @@ namespace HexaLinks.Propagation
             CurrentMaterial.SetFloat(backwardPathProgressID, 0f);
         }
 
-        public IEnumerator UpdatePropagation()
+        public void UpdatePropagation(float normalizedTime)
         {
-            NormalizedTimer timer = new(segmentLength / PROPAGATION_SPEED);
-           
-            while (!timer.IsCompleted)
-            {
-                foreach (var p in pathProgressIDs)
-                    renderer.material.SetFloat(p, timer.Time);
-                timer.Step(Time.deltaTime);
-                yield return null;
-            }
-
             foreach (var p in pathProgressIDs)
-                renderer.material.SetFloat(p, Mathf.Clamp01(timer.Time));
+                renderer.material.SetFloat(p, normalizedTime);
         }
 
 #if UNITY_EDITOR

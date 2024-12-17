@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-
 using System.Collections.Generic;
 using static HexaLinks.Path.Finder.PathFinder;
 
@@ -7,44 +5,97 @@ namespace HexaLinks.Propagation
 {
     using HexaLinks.Tile;
     using Ownership;
-    using System.Linq;
     using Tile.Events;
     using Turn;
+    using UnityEngine;
 
-    public class PropagationManager : Game.IGameSystem
+    public class PropagationManager : Game.GameSystemMonobehaviour
     {
-        public void InitSystem()
-        {
-            //Nothing here!            
-        }       
+        private PathIterationStep iterationStep;
+        private readonly List<GateSet> gateSetStep = new();
+        private int stepIndex = 0;
 
-        public async void TriggerPropagation(PathIterationStep iterationStep)
-        {
-            iterationStep.Combine();
-            await UpdatePropagation(iterationStep);
-            
-            TileEvents.OnPropagationStepEnded.Call(null);           
-        }       
+        private Owner propagationOwner;
 
-        private async static UniTask UpdatePropagation(PathIterationStep step)
+        private class GateSet
         {
-            Owner newOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
+            public Gate.ReadOnlyGate[] gates;
+            public NormalizedTimer timer;
 
-            foreach (Gate.ReadOnlyGate[] pathGates in step.CombinedPaths)
+            public GateSet(Gate.ReadOnlyGate[] gates, float initialTime = 0f)
             {
-                List<UniTask<bool>> tasks = new();
-
-                foreach (Gate.ReadOnlyGate c in pathGates)
-                    tasks.Add(c.Ownership.UpdatePropagation(newOwner, c.ForwardTraversalDir));
-
-                await UniTask.SwitchToMainThread();
-                bool[] successfulPropagations = await UniTask.WhenAll(tasks);                
-
-                if (successfulPropagations.Any(x => x))
-                    TileEvents.OnPropagationStep.Call(step.Precursor, null);
+                this.gates = gates;
+                timer = new NormalizedTimer(1.6f, initialTime);
             }
+        }
 
-            TileEvents.OnPropagationStep.UnregisterCallbacks(step.Precursor);
+        public override void InitSystem()
+        {
+            //timer = new NormalizedTimer(1f);      
+        }
+        
+        public void TriggerPropagation(PathIterationStep iterationStep)
+        {
+            this.iterationStep = iterationStep;
+
+            enabled = true;
+            stepIndex = -1;
+
+            propagationOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
+
+            iterationStep.Combine();
+            AddNewStep();
+        }
+
+        public void TerminatePropagation()
+        {
+            enabled = false;
+            TileEvents.OnPropagationStep.UnregisterCallbacks(iterationStep.Precursor);
+            currentSet = null;
+        }
+
+        private GateSet currentSet;
+
+        private void Update()
+        {
+            for(int i = 0; i < gateSetStep.Count; i++)
+            {
+                currentSet = gateSetStep[i];
+                UpdateStep(currentSet);
+                currentSet.timer.Step(Time.deltaTime);
+            }
+        }
+        
+        private void AddNewStep()
+        {
+            if (++stepIndex >= iterationStep.MaxLengthPath)
+                return;
+
+            GateSet set = new(iterationStep.CombinedPaths[stepIndex]);
+            set.timer.AddEvent(0.8f, AddNewStep);
+            set.timer.AddEvent(1.0f, RemoveLastStep);
+
+            foreach (var gate in set.gates)
+                gate.Ownership.PreparePropagation(propagationOwner, gate.ForwardTraversalDir);
+
+            gateSetStep.Add(set);
+        }
+
+        private void RemoveLastStep()
+        {
+            foreach (var gate in gateSetStep[0].gates)
+                gate.Ownership.FinalizePropagation();
+
+            gateSetStep.RemoveAt(0);
+
+            if (gateSetStep.Count == 0)
+                TerminatePropagation();
+        }
+        
+        private void UpdateStep(GateSet setStep)
+        {
+            for (int i = 0; i < setStep.gates.Length; i++)
+                setStep.gates[i].Ownership.UpdatePropagation(setStep.timer.NormalizedTime);
         }
     }
 }

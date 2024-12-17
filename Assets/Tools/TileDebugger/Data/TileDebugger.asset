@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40f53d7131d13e4ba17050ed611cdad, type: 3}
   m_Name: TileDebugger
   m_EditorClassIdentifier: 
-  showNodes: 1
-  showSegments: 1
-  showConnections: 1
+  showNodes: 0
+  showSegments: 0
+  showConnections: 0

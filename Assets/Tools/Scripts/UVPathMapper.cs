@@ -25,7 +25,7 @@ public class UVPathMapper : MonoBehaviour
         string[] guids = AssetDatabase.FindAssets(meshFilter.sharedMesh.name);
         string path = AssetDatabase.GUIDToAssetPath(guids[0]);
 
-        string newMeshName = meshFilter.sharedMesh.name + "_customUV.asset";
+        //string newMeshName = meshFilter.sharedMesh.name + "_customUV.asset";
 
         Mesh mesh = UnityEngine.ProBuilder.MeshUtility.DeepCopy(meshFilter.sharedMesh);
 
@@ -45,7 +45,9 @@ public class UVPathMapper : MonoBehaviour
         }
 
         mesh.SetUVs(0, newUVs);
-        AssetDatabase.CreateAsset(mesh, path.Substring(0, path.LastIndexOf(".asset")) + "_customUV.asset");
+
+        path = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(gameObject.name)[0]);
+        AssetDatabase.CreateAsset(mesh, "Assets/Player/Tiles/Pieces/MeshSegments/" + gameObject.name + ".asset");
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = mesh;
     }
