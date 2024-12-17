@@ -5,6 +5,7 @@ namespace HexaLinks.Propagation
 {
     using HexaLinks.Tile;
     using Ownership;
+    using System.Linq;
     using Tile.Events;
     using Turn;
     using UnityEngine;
@@ -21,18 +22,18 @@ namespace HexaLinks.Propagation
         {
             public Gate.ReadOnlyGate[] gates;
             public NormalizedTimer timer;
+            public bool Computes;
 
             public GateSet(Gate.ReadOnlyGate[] gates, float initialTime = 0f)
             {
                 this.gates = gates;
-                timer = new NormalizedTimer(1.6f, initialTime);
+                timer = new NormalizedTimer(1f, initialTime);
+                Computes = gates.Any(o => o.Ownership.ComputesInPropagation);
             }
         }
 
         public override void InitSystem()
-        {
-            //timer = new NormalizedTimer(1f);      
-        }
+        { }
         
         public void TriggerPropagation(PathIterationStep iterationStep)
         {
@@ -51,6 +52,7 @@ namespace HexaLinks.Propagation
         {
             enabled = false;
             TileEvents.OnPropagationStep.UnregisterCallbacks(iterationStep.Precursor);
+            TileEvents.OnPropagationStepEnded.Call(null);
             currentSet = null;
         }
 
@@ -87,6 +89,9 @@ namespace HexaLinks.Propagation
                 gate.Ownership.FinalizePropagation();
 
             gateSetStep.RemoveAt(0);
+
+            if(currentSet.Computes)
+                TileEvents.OnPropagationStep.Call(iterationStep.Precursor, null);
 
             if (gateSetStep.Count == 0)
                 TerminatePropagation();
