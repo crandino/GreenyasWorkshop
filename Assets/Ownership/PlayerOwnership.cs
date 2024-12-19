@@ -18,20 +18,20 @@ namespace HexaLinks.Ownership
     {
         [SerializeField]
         private bool computesInPropagation = true;
+        public bool ComputesInPropagation => computesInPropagation;
 
         [SerializeField]
         private ColorPropagator highligther;
 
         [SerializeField]
         private Owner owner = Owner.None;
+        public Owner Owner => /*PendingOwner ?? */owner;
 
-        public bool ComputesInPropagation => computesInPropagation;
-
-        public Owner Owner => PendingOwner ?? owner;
-
-        public Owner? PendingOwner { protected set; get; } = null;
+        private Owner? PendingOwner { set; get; } = null;
 
         private OnSegmentPropagatedArgs segmentPropagationArgs;
+
+        public bool IsSameOwner(Owner owner) => this.owner == owner;
 
         public void InstantOwnerChange(Owner newOwnership)
         {
@@ -41,24 +41,22 @@ namespace HexaLinks.Ownership
 
         public void PreparePropagation(Owner newOwner, bool forwardPropagation)
         {
-            if(owner == newOwner)
+            if(owner != newOwner)
                 PendingOwner = newOwner;
 
             highligther.PrePropagation(Game.Instance.GetSystem<Configuration>().colors[newOwner].pathColor, forwardPropagation);
-            segmentPropagationArgs = new OnSegmentPropagatedArgs(owner, newOwner, computesInPropagation);
         }
 
         public void FinalizePropagation()
         {
             highligther.PostPropagation();
+            TileEvents.OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
 
             if (PendingOwner.HasValue)
             {
                 owner = PendingOwner.Value;
                 PendingOwner = null;
             }
-
-            TileEvents.OnSegmentPropagated.Call(segmentPropagationArgs);
         }
 
         public void UpdatePropagation(float normalizedTime)

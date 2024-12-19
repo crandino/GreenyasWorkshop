@@ -39,22 +39,25 @@ namespace HexaLinks.Propagation
             }
         }
 
-        private Color CurrentColor
-        {
-            get
-            {
-                if (CurrentMaterial.GetFloat(forwardPathProgressID) > 0.5f)
-                    return CurrentMaterial.GetColor(forwardPlayerColorID);
-                return CurrentMaterial.GetColor(backwardPlayerColorID);
-            }
-        }
+        //private Color CurrentColor
+        //{
+        //    get
+        //    {
+        //        if (CurrentMaterial.GetFloat(forwardPathProgressID) > 0.5f)
+        //            return CurrentMaterial.GetColor(forwardPlayerColorID);
+        //        return CurrentMaterial.GetColor(backwardPlayerColorID);
+        //    }
+        //}
 
         private readonly List<int> pathProgressIDs = new();
+        private Color propagationColor = Color.black;
 
         public void PrePropagation(Color newColor, bool forwardPropagation)
         {
+            propagationColor = newColor;
+
             pathProgressIDs.Add(forwardPropagation ? forwardPathProgressID : backwardPathProgressID);
-            CurrentMaterial.SetColor(forwardPropagation ? forwardPlayerColorID : backwardPlayerColorID, newColor);
+            CurrentMaterial.SetColor(forwardPropagation ? forwardPlayerColorID : backwardPlayerColorID, propagationColor);
 
             CurrentMaterial.SetFloat(forwardPathProgressID, 0f);
             CurrentMaterial.SetFloat(backwardPathProgressID, 0f);
@@ -63,7 +66,7 @@ namespace HexaLinks.Propagation
         public void PostPropagation()
         {
             pathProgressIDs.Clear();
-            InstantPropagation(CurrentColor);
+            InstantPropagation(propagationColor);
         }
 
         public void InstantPropagation(Color color)

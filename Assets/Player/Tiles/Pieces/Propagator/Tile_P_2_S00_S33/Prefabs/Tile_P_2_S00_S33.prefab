@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6234650519740450572}
   - component: {fileID: 2155232568605210759}
   - component: {fileID: 4561228286680848292}
-  - component: {fileID: 3483833458080089058}
+  - component: {fileID: 7616886910132067468}
   m_Layer: 6
   m_Name: Center
   m_TagString: Untagged
@@ -67,7 +67,7 @@ MonoBehaviour:
   outwardGates:
   - {fileID: 7208856221945222616}
   - {fileID: 127103331707196355}
---- !u!114 &3483833458080089058
+--- !u!114 &7616886910132067468
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,15 +76,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1587197438825415131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 445c63b02eed60d4abf192ee0cd71237, type: 3}
+  m_Script: {fileID: 11500000, guid: be3b83852486bd244b5ee11f19aae8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   computesInPropagation: 0
   highligther: {fileID: 4287136758590898612}
   owner: 0
-  childrenOwnership:
-  - {fileID: 2469102542773394377}
-  - {fileID: 2276376986643655668}
 --- !u!1 &4402616732234105687
 GameObject:
   m_ObjectHideFlags: 0

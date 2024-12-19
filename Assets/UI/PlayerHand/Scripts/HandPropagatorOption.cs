@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 namespace HexaLinks.UI.PlayerHand
 {
     using Configuration;
-    using Cysharp.Threading.Tasks;
+    using HexaLinks.Turn;
     using Ownership;
     using Tile.Events;
 
@@ -27,13 +27,9 @@ namespace HexaLinks.UI.PlayerHand
 
         private bool CountdownReached => Counter <= 0;
 
-        private Owner owner;
-
-        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck, Owner owner) : base(button, deck)
+        public HandPropagatorOption(Button button, Label counter, DeckContent.Deck.DrawableDeck deck) : base(button, deck)
         {
             counterLabel = counter;
-            this.owner = owner;
-
             connectionsToUnlock = Game.Instance.GetSystem<Configuration>().parameters.NumOfConnectionsToUnlockPropagator;
             InitializeCountdown();
         }
@@ -66,7 +62,7 @@ namespace HexaLinks.UI.PlayerHand
             {
                 counterLabel.visible = false;
                 DrawingPending = true;
-                Counter = connectionsToUnlock;
+                //Counter = connectionsToUnlock;
             }
         }
 
@@ -79,14 +75,14 @@ namespace HexaLinks.UI.PlayerHand
         protected override void PrepareTile(Tile.Tile tile)
         {
             base.PrepareTile(tile);
-            tile.GetComponentInChildren<InitialPlayerOwnership>().InstantOwnerChange(owner);
+            tile.GetComponentInChildren<PlayerOwnership>().InstantOwnerChange(TurnManager.CurrentPlayer);
             RegisterCallbacks();
         }
 
         public override void Activate()
         {
             base.Activate();
-            if(!DrawingPending)
+            if(!CountdownReached)
                 TileEvents.OnSegmentConnected.RegisterCallback(OnSegmentConnected);
         }
 

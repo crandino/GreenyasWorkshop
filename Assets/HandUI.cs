@@ -21,7 +21,7 @@ public class HandUI : MonoBehaviour
     private HandTileOption[] playerOptions = null;
     public static TileResource EmptyTile;
 
-    public void Initialize(Deck deck, Owner ownership)
+    public void Initialize(Deck deck)
     {
         EmptyTile = emptyTile;
 
@@ -31,7 +31,7 @@ public class HandUI : MonoBehaviour
         for (int i = 0; i < 3; ++i)
             playerOptions[i] = new(buttons[i], deck.TraversalDeck);
 
-        playerOptions[^1] = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("TileCounter"), deck.PropagatorDeck, ownership);
+        playerOptions[^1] = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("TileCounter"), deck.PropagatorDeck);
 
         Draw();
         Deactivate();
@@ -41,8 +41,8 @@ public class HandUI : MonoBehaviour
     {
         foreach (HandTileOption option in playerOptions)
         {
-            option.Reset();
             option.Activate();
+            option.Reset();
         }
     }
 

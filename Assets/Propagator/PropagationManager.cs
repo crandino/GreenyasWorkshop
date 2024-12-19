@@ -16,8 +16,6 @@ namespace HexaLinks.Propagation
         private readonly List<GateSet> gateSetStep = new();
         private int stepIndex = 0;
 
-        private Owner propagationOwner;
-
         private class GateSet
         {
             public Gate.ReadOnlyGate[] gates;
@@ -41,8 +39,6 @@ namespace HexaLinks.Propagation
 
             enabled = true;
             stepIndex = -1;
-
-            propagationOwner = Game.Instance.GetSystem<TurnManager>().CurrentPlayer;
 
             iterationStep.Combine();
             AddNewStep();
@@ -78,7 +74,7 @@ namespace HexaLinks.Propagation
             set.timer.AddEvent(1.0f, RemoveLastStep);
 
             foreach (var gate in set.gates)
-                gate.Ownership.PreparePropagation(propagationOwner, gate.ForwardTraversalDir);
+                gate.Ownership.PreparePropagation(TurnManager.CurrentPlayer, gate.ForwardTraversalDir);
 
             gateSetStep.Add(set);
         }

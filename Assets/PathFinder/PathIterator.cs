@@ -39,6 +39,8 @@ namespace HexaLinks.Path.Finder
 
             TileStepTracker<ReadOnlyGate> gateTracker = new TileStepTracker<ReadOnlyGate>();
 
+            UnityEngine.Debug.Log($"Searching paths for {step.Precursor}");
+
             ReadOnlyGate initialGate = step.Precursor.StartingGate;
             int maxPropagationSteps = step.Precursor.CurrentStrength;
 
@@ -67,10 +69,10 @@ namespace HexaLinks.Path.Finder
                 }
             }
 
-            if (step.PathsFound)
+            if (step.ExistsPropagation())
                 Game.Instance.GetSystem<PropagationManager>().TriggerPropagation(step);
             else
-                TileEvents.OnPropagationEnded.Call(null);
+                TriggerSearch(null);
 
         }
 

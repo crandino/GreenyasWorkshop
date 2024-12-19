@@ -68,10 +68,6 @@ public class PropagatorPopUp : GameSystemMonobehaviour
 
     private void Update()
     {
-        //if (Keyboard.current.gKey.wasPressedThisFrame)
-        //{
-        //    PopUpNumber(5, testTransform.position, Color.blue);
-        //}
         foreach (var label in labels)
         {
             label.SetPosition();

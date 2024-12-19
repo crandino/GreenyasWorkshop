@@ -4,15 +4,13 @@ using UnityEngine;
 
 public static class PropagatorPopUpHelper
 {
-    private static readonly TurnManager turnManager;
     private static readonly PropagatorPopUp propagatorPopUp;
     private static readonly Colors colors;
 
-    public static Color CurrentLabelColor => colors[turnManager.CurrentPlayer].labelColor;
+    public static Color CurrentLabelColor => colors[TurnManager.CurrentPlayer].labelColor;
 
     static PropagatorPopUpHelper()
     {
-        turnManager = Game.Instance.GetSystem<TurnManager>();
         propagatorPopUp = Game.Instance.GetSystem<PropagatorPopUp>();
         colors = Game.Instance.GetSystem<Configuration>().colors;
     }

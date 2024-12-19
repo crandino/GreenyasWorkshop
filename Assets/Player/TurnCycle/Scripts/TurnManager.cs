@@ -20,7 +20,7 @@ namespace HexaLinks.Turn
 
             public void Init()
             {
-                hand.Initialize(ownerShip);
+                hand.Initialize();
                 score.Initialize();
 
                 TileEvents.OnSegmentPropagated.RegisterCallback(UpdateScore);
@@ -36,7 +36,7 @@ namespace HexaLinks.Turn
         private PlayerContext playerOneContext, playerTwoContext;
         private static PlayerContext Current { set; get; } = null;
 
-        public Owner CurrentPlayer => Current != null ? Current.ownerShip : Owner.None;
+        public static Owner CurrentPlayer { private set; get; } = Owner.None;
 
         public override void InitSystem()
         {
@@ -47,12 +47,14 @@ namespace HexaLinks.Turn
         public void StartGame()
         {
             Current = playerOneContext;
+            CurrentPlayer = Current.ownerShip;
             new TurnSteps(this);
         }
 
         private void ChangePlayer()
         {
             Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
+            CurrentPlayer = Current.ownerShip;
         }
 
         public class TurnSteps

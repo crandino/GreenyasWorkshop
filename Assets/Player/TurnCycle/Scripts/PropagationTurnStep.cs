@@ -16,12 +16,6 @@ namespace HexaLinks.Turn
             PathIterator.TriggerSearch(null);
         }
 
-        //protected override void End()
-        //{
-        //    //TileEvents.OnPropagationEnded.UnregisterCallback(EndStep);
-        //    base.End();
-        //}
-
         private void EndStep(TileEvents.EmptyArgs? args) => base.End();
     }
 

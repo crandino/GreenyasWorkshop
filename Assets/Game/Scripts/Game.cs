@@ -16,7 +16,6 @@ public class Game : SingletonMonobehaviour<Game>
     {
         RegisterSystem<InputManager>();
         RegisterSystem<TilePlacement>();
-        //RegisterSystem<PropagationManager>();
 
         foreach (var system in gameSystemScriptableObject)
             RegisterSystem(system);

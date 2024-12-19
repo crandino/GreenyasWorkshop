@@ -2,8 +2,7 @@ using HexaLinks.Ownership;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using NUnit.Framework;
-
+using UnityEngine.Assertions;
 
 #if UNITY_EDITOR
 using Hexagon.Tile.Debug;
@@ -123,17 +122,5 @@ namespace HexaLinks.Tile
             parentSegment = GetComponentInParent<TileSegment>();
         }
 #endif
-    }
-
-    // TODO: Out of here!
-    public static class GateExtensions
-    {
-        public static Gate.ReadOnlyGate[] ToExposedGates(this IList<Gate> gates)
-        {
-            //if (gates.Count == 0)
-            //    return new Gate.ReadOnlyGate[0];
-            //else
-            return gates.Select(g => new Gate.ReadOnlyGate(g)).ToArray();
-        }
     }
 }
