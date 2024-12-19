@@ -49,18 +49,14 @@ namespace HexaLinks.Propagation
             enabled = false;
             TileEvents.OnPropagationStep.UnregisterCallbacks(iterationStep.Precursor);
             TileEvents.OnPropagationStepEnded.Call(null);
-            currentSet = null;
         }
-
-        private GateSet currentSet;
 
         private void Update()
         {
             for(int i = 0; i < gateSetStep.Count; i++)
             {
-                currentSet = gateSetStep[i];
-                UpdateStep(currentSet);
-                currentSet.timer.Step(Time.deltaTime);
+                UpdateStep(gateSetStep[i]);
+                gateSetStep[i].timer.Step(Time.deltaTime);
             }
         }
         
@@ -76,6 +72,9 @@ namespace HexaLinks.Propagation
             foreach (var gate in set.gates)
                 gate.Ownership.PreparePropagation(TurnManager.CurrentPlayer, gate.ForwardTraversalDir);
 
+            if (set.Computes)
+                TileEvents.OnPropagationStep.Call(iterationStep.Precursor, null);
+
             gateSetStep.Add(set);
         }
 
@@ -84,10 +83,7 @@ namespace HexaLinks.Propagation
             foreach (var gate in gateSetStep[0].gates)
                 gate.Ownership.FinalizePropagation();
 
-            gateSetStep.RemoveAt(0);
-
-            if(currentSet.Computes)
-                TileEvents.OnPropagationStep.Call(iterationStep.Precursor, null);
+            gateSetStep.RemoveAt(0);            
 
             if (gateSetStep.Count == 0)
                 TerminatePropagation();

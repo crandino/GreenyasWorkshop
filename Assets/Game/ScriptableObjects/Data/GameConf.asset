@@ -20,4 +20,4 @@ MonoBehaviour:
     labelPlayerOneColor: {r: 0.49984172, g: 0.7987421, b: 0.49984172, a: 1}
     labelPlayerTwoColor: {r: 0.9559748, g: 0.92249995, b: 0.5260867, a: 1}
   parameters:
-    numOfConnectionsToUnlockPropagator: 0
+    numOfConnectionsToUnlockPropagator: 3

@@ -1,43 +1,37 @@
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.UIElements;
-using static PropagatorPopUp;
 
-public class Pool : MonoBehaviour
+[CreateAssetMenu(fileName = "StrengthIndicatorPool")]
+public class Pool : ScriptableObject
 {
     [SerializeField]
-    private UIDocument canvas;
+    private StrenghtIndicator indicatorTemplate;
 
-    [SerializeField]
-    private VisualTreeAsset numberTemplate;
-
-    private ObjectPool<PropagatorLabel> pool = null;
-    private readonly static Vector3 OUT_OF_CANVAS_POSITION = new Vector3(5000, 5000, 0);
+    private ObjectPool<StrenghtIndicator> pool = null;
 
     public void InitPool()
     {
         pool = new(OnCreate, null, OnRelease);
     }
 
-    public PropagatorLabel Get()
+    public StrenghtIndicator Get()
     {
         return pool.Get();
     }
 
-    private PropagatorLabel OnCreate()
+    public void Release(StrenghtIndicator indicator)
     {
-        var pooledObject = numberTemplate.Instantiate();
-        Label l = pooledObject.Q<Label>();
-        canvas.rootVisualElement.Add(l);
-
-        PropagatorLabel item = new PropagatorLabel(l, pool);
-        return item;
+        pool.Release(indicator);
     }
 
-    private void OnRelease(PropagatorLabel label)
+    private StrenghtIndicator OnCreate()
     {
-        label.SetPosition(OUT_OF_CANVAS_POSITION);
+        return Instantiate(indicatorTemplate);
     }
 
-    
+    private void OnRelease(StrenghtIndicator indicator)
+    {
+        indicator.SetText("");
+        indicator.TransformToFollow = null;
+    }    
 }

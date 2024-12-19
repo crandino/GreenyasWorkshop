@@ -51,7 +51,7 @@ namespace HexaLinks.Tile
             OnPropagationStep.RegisterCallback(this, DecreaseStrength);
         }
 
-        private PropagatorPopUp.PropagatorLabel propagatorLabel = null;
+        private StrenghtIndicator propagatorLabel = null;
 
         private void IncreaseStrength(EmptyArgs? noArgs)
         {

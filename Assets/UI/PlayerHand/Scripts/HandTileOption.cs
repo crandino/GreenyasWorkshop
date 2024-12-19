@@ -8,6 +8,7 @@ namespace HexaLinks.UI.PlayerHand
         private readonly Button button;
         private readonly DeckContent.Deck.DrawableDeck deck;
 
+        protected readonly TilePlacement tilePlacement = null;
         private TileResource tileResource = null;
 
         public bool DrawingPending { protected set; get; } = true;
@@ -17,6 +18,8 @@ namespace HexaLinks.UI.PlayerHand
             button = tileButton;
             button.clicked += LoadTile;
             deck = drawableDeck;
+
+            tilePlacement = Game.Instance.GetSystem<TilePlacement>();
         }
 
         public void Set(TileResource resource)
@@ -62,7 +65,7 @@ namespace HexaLinks.UI.PlayerHand
         
         protected virtual void PrepareTile(Tile.Tile tile)
         {
-            Game.Instance.GetSystem<TilePlacement>().Start(tile);
+            tilePlacement.Start(tile);
         }
     } 
 }

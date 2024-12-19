@@ -15,12 +15,12 @@ public static class PropagatorPopUpHelper
         colors = Game.Instance.GetSystem<Configuration>().colors;
     }
 
-    public static PropagatorPopUp.PropagatorLabel Show(int number, Transform transform)
+    public static StrenghtIndicator Show(int number, Transform transform)
     {
         return propagatorPopUp.Show(number, CurrentLabelColor, transform);
     }
 
-    public static void Hide(PropagatorPopUp.PropagatorLabel label)
+    public static void Hide(StrenghtIndicator label)
     {
         propagatorPopUp.Hide(label);
     }

@@ -36,6 +36,8 @@ namespace HexaLinks.UI.PlayerHand
 
         private void InitializeCountdown()
         {
+            Counter = connectionsToUnlock;
+
 #if DEBUG
             if (connectionsToUnlock == 0)
             {
@@ -43,8 +45,7 @@ namespace HexaLinks.UI.PlayerHand
                 return;
             }
 #endif
-
-            Counter = connectionsToUnlock;
+            
             counterLabel.visible = true;
             DrawingPending = false;
 
@@ -62,7 +63,6 @@ namespace HexaLinks.UI.PlayerHand
             {
                 counterLabel.visible = false;
                 DrawingPending = true;
-                //Counter = connectionsToUnlock;
             }
         }
 
@@ -94,14 +94,12 @@ namespace HexaLinks.UI.PlayerHand
 
         private void RegisterCallbacks()
         {
-            Game.Instance.GetSystem<TilePlacement>().OnSuccessPlacement += OnTilePlaced;
-            Game.Instance.GetSystem<TilePlacement>().OnFailurePlacement += UnregisterCallbacks;
+            tilePlacement.AddEvents(OnTilePlaced, UnregisterCallbacks);
         }
 
         private void UnregisterCallbacks()
         {
-            Game.Instance.GetSystem<TilePlacement>().OnSuccessPlacement -= OnTilePlaced;
-            Game.Instance.GetSystem<TilePlacement>().OnFailurePlacement -= UnregisterCallbacks;
+            tilePlacement.RemoveEvents(OnTilePlaced, UnregisterCallbacks);
         }
     }
 }

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HexaLinks.Ownership
@@ -25,11 +24,9 @@ namespace HexaLinks.Ownership
 
         [SerializeField]
         private Owner owner = Owner.None;
-        public Owner Owner => /*PendingOwner ?? */owner;
+        public Owner Owner => owner;
 
         private Owner? PendingOwner { set; get; } = null;
-
-        private OnSegmentPropagatedArgs segmentPropagationArgs;
 
         public bool IsSameOwner(Owner owner) => this.owner == owner;
 

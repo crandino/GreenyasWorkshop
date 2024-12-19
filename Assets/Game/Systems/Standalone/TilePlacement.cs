@@ -8,8 +8,8 @@ public class TilePlacement : Game.IGameSystem
     private Tile currentSelectedTile = null;
     private InputManager input = null;
 
-    public event Action OnSuccessPlacement;
-    public event Action OnFailurePlacement;
+    private event Action OnSuccessPlacement;
+    private event Action OnFailurePlacement;
 
     public void InitSystem()
     {
@@ -23,8 +23,22 @@ public class TilePlacement : Game.IGameSystem
         tile.Initialize();
         tile.PickUp();
 
-        input.TilePlacement.OnButtonPressed += TryReleaseTile;
-        input.TilePlacementCancellation.OnButtonPressed += CancelTile;
+        input.TilePlacement.OnButtonPressed += TryPlacement;
+        input.TilePlacementCancellation.OnButtonPressed += CancelPlacement;
+    }
+
+    public void AddEvents(Action onSuccess, Action onFailure = null)
+    {
+        OnSuccessPlacement += onSuccess;
+        if(onFailure != null)
+            OnFailurePlacement += onFailure;
+    }
+
+    public void RemoveEvents(Action onSuccess, Action onFailure = null)
+    {
+        OnSuccessPlacement -= onSuccess;
+        if (onFailure != null)
+            OnFailurePlacement -= onFailure;
     }
 
     // Include that as a DEBUG feature
@@ -36,29 +50,29 @@ public class TilePlacement : Game.IGameSystem
         }       
     }
 
-    private void TryReleaseTile()
+    private void TryPlacement()
     {
         if (!TileRaycast.CursorRaycastToTile() && currentSelectedTile.TryRelease())
         {
             OnSuccessPlacement();
-            Finish();
+            FinishPlacement();
         }
     }
 
-    private void CancelTile()
+    private void CancelPlacement()
     {
         currentSelectedTile.Terminate();
         GameObject.Destroy(currentSelectedTile.gameObject);
 
         OnFailurePlacement();
-        Finish();
+        FinishPlacement();
     }
 
-    private void Finish()
+    private void FinishPlacement()
     {
         currentSelectedTile = null;
 
-        input.TilePlacement.OnButtonPressed -= TryReleaseTile;
-        input.TilePlacementCancellation.OnButtonPressed -= CancelTile;
+        input.TilePlacement.OnButtonPressed -= TryPlacement;
+        input.TilePlacementCancellation.OnButtonPressed -= CancelPlacement;
     }
 }

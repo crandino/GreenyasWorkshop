@@ -19,16 +19,13 @@ namespace HexaLinks.Turn
             hand = context.hand;
             hand.Activate();
 
-            tilePlacement.OnSuccessPlacement += End;
-            tilePlacement.OnFailurePlacement += hand.Activate;
+            tilePlacement.AddEvents(End, hand.Activate);
         }
 
         protected override void End()
         {
             hand.Deactivate();
-
-            tilePlacement.OnSuccessPlacement -= End;
-            tilePlacement.OnFailurePlacement -= hand.Activate;
+            tilePlacement.RemoveEvents(End, hand.Activate);
 
             base.End();
         }
