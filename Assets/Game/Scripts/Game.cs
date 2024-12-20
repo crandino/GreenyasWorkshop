@@ -1,9 +1,11 @@
 using Greenyas.Input;
-using HexaLinks.Propagation;
+using HexaLinks.Tile.Events;
 using HexaLinks.Turn;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Game : SingletonMonobehaviour<Game>
 {
@@ -14,6 +16,8 @@ public class Game : SingletonMonobehaviour<Game>
 
     protected override void OnInitialization()
     {
+        TileEvents.Clear();
+
         RegisterSystem<InputManager>();
         RegisterSystem<TilePlacement>();
 
@@ -49,6 +53,14 @@ public class Game : SingletonMonobehaviour<Game>
             Debug.LogError(e.Message);
             return default;
         }
+    }
+
+    private void Update()
+    {
+#if DEBUG
+        if (Keyboard.current.f5Key.wasPressedThisFrame)
+            SceneManager.LoadScene("Assets/Scenes/Playground.unity");
+#endif
     }
 
     public interface IGameSystem 

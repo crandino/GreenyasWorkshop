@@ -29,8 +29,8 @@ namespace HexaLinks.Tile
 
         public override void InitSystem()
         {
-            // Nothing!
-        }
+            // Nothing here!
+        }  
 
         public bool AddTile(Tile tile)
         {

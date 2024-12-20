@@ -16,6 +16,13 @@ public class TilePlacement : Game.IGameSystem
         input = Game.Instance.GetSystem<InputManager>();
     }
 
+    public void TerminateSystem()
+    {
+        OnSuccessPlacement = null;
+        OnFailurePlacement = null;
+        input = null;
+    }
+
     public void Start(Tile tile)
     {
         currentSelectedTile = tile;

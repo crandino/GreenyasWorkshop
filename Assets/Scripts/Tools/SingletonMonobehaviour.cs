@@ -6,7 +6,7 @@ public class SingletonMonobehaviour<T> : MonoBehaviour where T : Object
 
     private static void TryAutoInitialization()
     {
-        Instance ??= FindAnyObjectByType<T>();
+        Instance = FindAnyObjectByType<T>();
     }
 
     private void Awake()

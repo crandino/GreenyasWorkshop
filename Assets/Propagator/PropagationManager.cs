@@ -32,7 +32,7 @@ namespace HexaLinks.Propagation
 
         public override void InitSystem()
         { }
-        
+
         public void TriggerPropagation(PathIterationStep iterationStep)
         {
             this.iterationStep = iterationStep;

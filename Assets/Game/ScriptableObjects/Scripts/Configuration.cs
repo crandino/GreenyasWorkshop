@@ -12,6 +12,6 @@ namespace HexaLinks.Configuration
         public override void InitSystem()
         {
             colors.Init();
-        }
+        }       
     } 
 }

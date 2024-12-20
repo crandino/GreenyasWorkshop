@@ -18,6 +18,8 @@ namespace Greenyas.Input
             TilePlacementCancellation = new InputButtonCallback(actions.InGame.CancelTilePlacement);
             OnAxis = new InputDeltaCallback(actions.InGame.RotatePiece);
         }
+
+        public void TerminateSystem() { }
     }    
 }
 

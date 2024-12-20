@@ -69,35 +69,23 @@ namespace HexaLinks.Tile.Events
                 lockCallbacks[index].Callbacks?.Invoke(args);
             }
 
-            //public void UnregisterPermamentCallback(Action<T?> callback) => Callbacks -= callback;
-
+            public void Clear()
+            {
+                unlockCallbacks.Callbacks = null;
+                lockCallbacks.ForEach(l => l.Callbacks = null);
+            }
         }
 
-        //public class EventTypeArgs<T> where T : struct
-        //{
-        //    private event Action<T?> Callbacks, VolatileCallbacks;
+        public static void Clear()
+        {
+            OnTurnEnded.Clear();
+            OnSegmentConnected.Clear();
+            OnPropagationStep.Clear();
+            OnPropagationEnded.Clear();
+            OnPropagationStepEnded.Clear();
 
-        //    public void RegisterPermamentCallback(Action<T?> callback) => Callbacks += callback;
-        //    public void UnregisterPermamentCallback(Action<T?> callback) => Callbacks -= callback;
-
-        //    public void RegisterVolatileCallback(Action<T?> callback) => VolatileCallbacks += callback;
-
-        //    public void Clean(bool includePermanent = false)
-        //    {
-        //        UnityEngine.Assertions.Assert.IsTrue(VolatileCallbacks.GetInvocationList().Length > 0, "There's no volatile callback to clean. Is that intended?");
-                
-        //        VolatileCallbacks = null;
-        //        if (includePermanent)
-        //            Callbacks = null;
-        //    }
-
-        //    public void Call(T? args = EmptyArgs)
-        //    {
-        //        Callbacks?.Invoke(args);
-        //        VolatileCallbacks?.Invoke(args);
-        //    }
-        //}
-
+            OnSegmentPropagated.Clear();
+        }
     }
 }
 

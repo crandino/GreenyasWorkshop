@@ -38,17 +38,19 @@ namespace HexaLinks.Turn
 
         public static Owner CurrentPlayer { private set; get; } = Owner.None;
 
+        private TurnSteps steps = null;
+
         public override void InitSystem()
         {
             playerOneContext.Init();
-            playerTwoContext.Init();
+            playerTwoContext.Init();           
         }
 
         public void StartGame()
         {
             Current = playerOneContext;
             CurrentPlayer = Current.ownerShip;
-            new TurnSteps(this);
+            steps = new TurnSteps();
         }
 
         private void ChangePlayer()
@@ -59,16 +61,13 @@ namespace HexaLinks.Turn
 
         public class TurnSteps
         {
-            private readonly TurnManager turnManager;
-            private readonly TurnStep[] steps;
+            private readonly TurnStep[] steps = null;
             private int stepIndex = 0;
 
             private TurnStep Step => steps[stepIndex];
 
-            public TurnSteps(TurnManager turnManager)
+            public TurnSteps()
             {
-                this.turnManager = turnManager;
-
                 steps = new TurnStep[]
                 {
                     new TileSelectionTurnStep(NextStep),
@@ -92,7 +91,7 @@ namespace HexaLinks.Turn
                 else
                 {
                     TileEvents.OnTurnEnded.Call(null);
-                    turnManager.ChangePlayer();
+                    Game.Instance.GetSystem<TurnManager>().ChangePlayer();
                     Initialize();
                 }
             }
