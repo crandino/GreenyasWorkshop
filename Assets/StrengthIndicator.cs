@@ -30,31 +30,12 @@ public class StrenghtIndicator : MonoBehaviour
         indicator.transform.position = screenPos;
     }
 
-    //public StrenghtIndicator(Label label, ObjectPool<TextMeshProUGUI> pool)
-    //{
-    //    this.label = label;
-    //    this.pool = pool;
-    //}
-
-    public void Initialize(string text, Color color, Transform transformRef)
+    public void Update(string text, Color color, Transform transformRef)
     {
         SetText(text);
-        SetColor(color);
+        indicator.color = color;
         TransformToFollow = transformRef;
-        //SetPosition();
     }
 
-    //public void SetPosition()
-    //{
-    //    Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-    //    SetPosition(new Vector2(screenPos.x, 1080 - screenPos.y));
-    //}
-
-    //public void SetPosition(Vector2 screenPos)
-    //{
-    //    label.transform.position = screenPos;
-    //}
-
-    public void SetColor(Color color) => indicator.color = color;
     public void SetText(string text) => indicator.text = text;
 }

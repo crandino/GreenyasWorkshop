@@ -13,22 +13,25 @@ namespace HexaLinks.Tile
 
 		public int CurrentStrength { private set; get; }
 
-        public Gate.ReadOnlyGate StartingGate => new Gate.ReadOnlyGate(GetComponentInChildren<Gate>());												  
+        public Gate.ReadOnlyGate StartingGate => new Gate.ReadOnlyGate(GetComponentInChildren<Gate>());
+
+        private StrengthIndicatorCanvas propagatorPopUp = null;
+        private StrenghtIndicator strengthIndicator = null;
 
         public override void Initialize()
         {
             base.Initialize();
             CurrentStrength = maxPropagatorStrength;
 
-            propagatorLabel = PropagatorPopUpHelper.Show(CurrentStrength, transform);
+            propagatorPopUp = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
+            strengthIndicator = propagatorPopUp.Get(CurrentStrength, transform);
             //OnTurnEnded.RegisterCallback(IncreaseStrength);
-
         }
 
         public override void Terminate()
         {
             base.Terminate();
-            PropagatorPopUpHelper.Hide(propagatorLabel);
+            Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
             //OnTurnEnded.UnregisterCallback(IncreaseStrength);
         }
 
@@ -45,24 +48,20 @@ namespace HexaLinks.Tile
 
         public void PreparePropagation()
         {
-            propagatorLabel.SetColor(PropagatorPopUpHelper.CurrentLabelColor);
-            propagatorLabel.SetText(CurrentStrength.ToString());
-
+            strengthIndicator.Update(CurrentStrength.ToString(), propagatorPopUp.CurrentLabel, transform);
             OnPropagationStep.RegisterCallback(this, DecreaseStrength);
         }
-
-        private StrenghtIndicator propagatorLabel = null;
 
         private void IncreaseStrength(EmptyArgs? noArgs)
         {
             CurrentStrength = Mathf.Clamp(CurrentStrength + 1, 0, maxPropagatorStrength);
-            propagatorLabel.SetText(CurrentStrength.ToString());
+            strengthIndicator.SetText(CurrentStrength.ToString());
         }
 
         private void DecreaseStrength(EmptyArgs? args)
         {
             CurrentStrength = Mathf.Clamp(CurrentStrength - 1, 0, maxPropagatorStrength);
-            propagatorLabel.SetText(CurrentStrength.ToString());
+            strengthIndicator.SetText(CurrentStrength.ToString());
         }
 
 #if UNITY_EDITOR

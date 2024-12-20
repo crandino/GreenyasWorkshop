@@ -16,25 +16,54 @@ namespace HexaLinks.Path.Finder
             TileEvents.OnPropagationStepEnded.RegisterCallback(TriggerSearch);
         }
 
-        private readonly static Queue<PathIterationStep> pendingSearches = new();
+        private readonly static Searches searches = new Searches();        
 
-        private static bool ArePendingSearches => pendingSearches.Count > 0;
-
-        public static void QueueSearch(TilePropagator precursor)
+        private class Searches
         {
-            if (!IsAlreadyProcessed(precursor))
-                pendingSearches.Enqueue(new PathIterationStep(precursor));
+            private readonly Queue<PathIterationStep> pending = new();
+            private readonly List<PathIterationStep> archive = new();
+
+            public bool ArePendingSearches => pending.Count > 0;
+
+            public PathIterationStep GetSearch() => pending.Dequeue();
+                
+            public void AddSearch(TilePropagator precursor)
+            {
+                if (!IsAlreadyProcessed(precursor))
+                    pending.Enqueue(new PathIterationStep(precursor));
+            }
+
+            public void Archive(PathIterationStep step)
+            {
+                archive.Add(step);
+            }
+
+            public void Clear()
+            {
+                pending.Clear();
+                archive.Clear();
+            }
+
+            private bool IsAlreadyProcessed(TilePropagator tile)
+            {
+                return pending.Any(o => o.Precursor == tile) || archive.Any(o => o.Precursor == tile);
+            }
+        }    
+        
+        public static void QueueSearch(TilePropagator tile)
+        {
+            searches.AddSearch(tile);
         }
 
         public static void TriggerSearch(TileEvents.EmptyArgs? args)
         {
-            if (!ArePendingSearches)
+            if (!searches.ArePendingSearches)
             {
-                TileEvents.OnPropagationEnded.Call(null);
+                StopSearch();
                 return;
             }
 
-            PathIterationStep step = pendingSearches.Dequeue();
+            PathIterationStep step = searches.GetSearch();
             step.Precursor.PreparePropagation();
 
             TileStepTracker<ReadOnlyGate> gateTracker = new TileStepTracker<ReadOnlyGate>();
@@ -69,16 +98,18 @@ namespace HexaLinks.Path.Finder
                 }
             }
 
+            searches.Archive(step);
+
             if (step.ExistsPropagation())
                 Game.Instance.GetSystem<PropagationManager>().TriggerPropagation(step);
             else
                 TriggerSearch(null);
-
         }
 
-        private static bool IsAlreadyProcessed(TilePropagator tile)
+        private static void StopSearch()
         {
-            return pendingSearches.Any(o => o.Precursor == tile);
-        }
+            TileEvents.OnPropagationEnded.Call(null);
+            searches.Clear();
+        }       
     }
 }
