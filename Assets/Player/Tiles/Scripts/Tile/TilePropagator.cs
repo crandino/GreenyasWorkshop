@@ -25,7 +25,7 @@ namespace HexaLinks.Tile
             CurrentStrength = maxPropagatorStrength;
 
             propagatorPopUp = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
-            strengthIndicator = propagatorPopUp.Get(CurrentStrength, transform);
+            strengthIndicator = propagatorPopUp.Show(CurrentStrength, transform);
             //OnTurnEnded.RegisterCallback(IncreaseStrength);
         }
 
@@ -49,7 +49,7 @@ namespace HexaLinks.Tile
 
         public void PreparePropagation()
         {
-            strengthIndicator.Update(CurrentStrength.ToString(), propagatorPopUp.CurrentLabel, transform);
+            strengthIndicator.UpdateValues(CurrentStrength.ToString(), propagatorPopUp.CurrentLabel, transform);
             OnPropagationStep.Register(DecreaseStrength);
         }
 

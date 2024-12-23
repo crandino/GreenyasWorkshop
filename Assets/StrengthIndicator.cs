@@ -1,19 +1,16 @@
+using HexaLinks.Extensions.Vector;
 using TMPro;
 using UnityEngine;
 
 public class StrenghtIndicator : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI indicator = null;
-    [SerializeField] private Pool pool = null;
+    [SerializeField] new private Animation animation;
 
     private Transform transformToFollow = null;
 
-    // TODO: 
-    /* Añadir tiempos de vida de estos indicadores
-     * Añadir animaciones para:
-     *   - Cambio de texto
-     *   - Resaltar la aparición
-     */
+    private const float NO_TIME = -1;
+    private float timeCountDown = NO_TIME;
 
     public Transform TransformToFollow
     {
@@ -24,17 +21,29 @@ public class StrenghtIndicator : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void SetTimeToHide(float timeInSeconds)
     {
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(transformToFollow.position);
-        indicator.transform.position = screenPos;
+        timeCountDown = timeInSeconds;
+        animation.Play();
     }
 
-    public void Update(string text, Color color, Transform transformRef)
+    public bool Update()
+    {
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(transformToFollow.position).GetXY();
+        indicator.transform.position = screenPos;
+
+        if(timeCountDown != NO_TIME)
+            timeCountDown -= Time.deltaTime;
+
+        return timeCountDown == NO_TIME || timeCountDown > 0f;
+    }
+
+    public void UpdateValues(string text, Color color, Transform transformRef)
     {
         SetText(text);
         indicator.color = color;
         TransformToFollow = transformRef;
+        timeCountDown = NO_TIME;
     }
 
     public void SetText(string text) => indicator.text = text;

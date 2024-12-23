@@ -12,13 +12,11 @@ namespace HexaLinks.Events
 
         public void Unregister(object target)
         {
-            Delegate[] delegates = callbacks.GetInvocationList().Where(l => l.Target != target).ToArray();
-            UnityEngine.Debug.Log($"Before: {delegates.Length}");
+            Delegate[] delegates = callbacks.GetInvocationList().Where(l => l.Target == target).ToArray();
             foreach (Delegate del in delegates)
             {
                 callbacks -= (Action)del;
             }
-            UnityEngine.Debug.Log($"After: {callbacks.GetInvocationList().Where(l => l.Target != target).ToArray().Length}");
         }
 
         public void Call(object onlyTarget)
@@ -34,6 +32,11 @@ namespace HexaLinks.Events
         {
             callbacks.DynamicInvoke();
         }
+
+        public void Clear()
+        {
+            callbacks = delegate { };
+        }
     }
 
     public class EventTypeArg<T> where T : struct
@@ -42,14 +45,6 @@ namespace HexaLinks.Events
 
         public void Register(Action<T> callback) => callbacks += callback;
         public void Unregister(Action<T> callback) => callbacks -= callback;
-
-        //public void Unregister(object target)
-        //{
-        //    Delegate[] delegates = callbacks.GetInvocationList().Where(l => l.Target == target).ToArray();
-        //    foreach (Delegate del in delegates)
-        //    {
-        //        callbacks.;
-        //    }
 
         public void Call(object target, T args)
         {
@@ -63,6 +58,11 @@ namespace HexaLinks.Events
         public void Call(T args)
         {
             callbacks.DynamicInvoke(args);
+        }
+
+        public void Clear()
+        {
+            callbacks = delegate { };
         }
     }
 }

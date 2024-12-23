@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace HexaLinks.Propagation
 {
-    using Tile;
-    using Turn;
     using Events;
     using Events.Arguments;
+    using Tile;
+    using Turn;
     using static Path.Finder.PathFinder;
 
     public class PropagationManager : Game.GameSystemMonobehaviour
@@ -15,6 +15,7 @@ namespace HexaLinks.Propagation
         private PathIterationStep iterationStep;
         private readonly List<GateSet> gateSetStep = new();
         private int stepIndex = 0;
+        private int strength = 0;
 
         private class GateSet
         {
@@ -31,14 +32,19 @@ namespace HexaLinks.Propagation
         }
 
         public override void InitSystem()
-        { }
+        {
+            Events.Clear();               
+        }
 
         public void TriggerPropagation(PathIterationStep iterationStep)
         {
             this.iterationStep = iterationStep;
 
             enabled = true;
-            stepIndex = -1;
+            stepIndex = 0;
+
+            strength = 0;
+            Events.OnPropagationStep.Register(ShowStrength);
 
             iterationStep.Combine();
             AddNewStep();
@@ -48,6 +54,8 @@ namespace HexaLinks.Propagation
         {
             enabled = false;
             Events.OnPropagationStep.Unregister(iterationStep.Precursor);
+            Events.OnPropagationStep.Unregister(ShowStrength);
+
             Events.OnPropagationStepEnded.Call();
         }
 
@@ -69,13 +77,13 @@ namespace HexaLinks.Propagation
             set.timer.AddEvent(0.8f, AddNewStep);
             set.timer.AddEvent(1.0f, RemoveLastStep);
 
+            gateSetStep.Add(set);
+
             foreach (var gate in set.gates)
                 gate.Ownership.PreparePropagation(TurnManager.CurrentPlayer, gate.ForwardTraversalDir);
 
             if (set.Computes)
-                Events.OnPropagationStep.Call(iterationStep.Precursor);
-
-            gateSetStep.Add(set);
+                Events.OnPropagationStep.Call();
         }
 
         private void RemoveLastStep()
@@ -95,6 +103,18 @@ namespace HexaLinks.Propagation
                 setStep.gates[i].Ownership.UpdatePropagation(setStep.timer.NormalizedTime);
         }
 
+        private void ShowStrength()
+        {
+            strength++;
+            StrengthIndicatorCanvas canvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
+
+            foreach (var gate in gateSetStep.Last().gates)
+            {
+                if (gate.Ownership.ComputesInPropagation)
+                    canvas.ShowWithCountdown($"+{strength}", gate.Ownership.transform, 4f);
+            }
+        }
+
         public static class Events
         {
             public readonly static EventType OnPropagationStep = new();         // Each propagation step (set of gates) completed. Reduce strength of TilePropagator
@@ -102,6 +122,14 @@ namespace HexaLinks.Propagation
             public readonly static EventType OnPropagationEnded = new();        // When there's no more pending propagations
 
             public readonly static EventTypeArg<OnSegmentPropagatedArgs> OnSegmentPropagated = new();
+
+            public static void Clear()
+            {
+                OnPropagationStep.Clear();
+                OnPropagationStepEnded.Clear();
+                OnPropagationEnded.Clear();
+                OnSegmentPropagated.Clear();
+            }
         }
-}
+    }
 }

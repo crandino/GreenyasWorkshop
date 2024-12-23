@@ -38,14 +38,15 @@ namespace HexaLinks.Turn
         private PlayerContext playerOneContext, playerTwoContext;
         private static PlayerContext Current { set; get; } = null;
 
-        public static Owner CurrentPlayer { private set; get; } = Owner.None;
+        public static Owner CurrentPlayer { private set; get; }
 
         private TurnSteps steps = null;
 
         public override void InitSystem()
         {
             playerOneContext.Init();
-            playerTwoContext.Init();           
+            playerTwoContext.Init();
+            CurrentPlayer = Owner.None;
         }
 
         public void StartGame()

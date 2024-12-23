@@ -12,6 +12,7 @@ public class Pool : ScriptableObject
     public void InitPool()
     {
         pool = new(OnCreate, null, OnRelease);
+        pool.Clear();
     }
 
     public StrenghtIndicator Get()
@@ -34,4 +35,18 @@ public class Pool : ScriptableObject
         indicator.SetText("");
         indicator.TransformToFollow = null;
     }    
+
+    private void OnDestroy()
+    {
+        pool.Clear();
+    }
+
+#if UNITY_EDITOR
+    [ContextMenu("Show Info")]
+    private void ShowInformation()
+    {
+        Debug.Log($"CountAll: {pool.CountAll}: {pool.CountActive} active and {pool.CountInactive} inactive");
+    }
+
+#endif
 }

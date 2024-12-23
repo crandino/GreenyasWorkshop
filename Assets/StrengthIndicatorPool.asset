@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4639a683ee014634a8252c96b327496b, type: 3}
   m_Name: StrengthIndicatorPool
   m_EditorClassIdentifier: 
-  indicatorTemplate: {fileID: 5108476659316756949, guid: 2ad1a42dae99a4648a464cc3d9bb01f3, type: 3}
+  indicatorTemplate: {fileID: 1684255616913663577, guid: 97d55dc4c4681bc479da9778dcd3f65c, type: 3}
