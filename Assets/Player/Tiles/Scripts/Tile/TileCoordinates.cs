@@ -40,4 +40,8 @@ public class TileCoordinates
         this.tileTransform = tileTransform;
         Position = tileTransform.position;
     }
+
+    public TileCoordinates() { }
+
+    public void HolaTile() => Debug.Log("Hola Tile");
 }

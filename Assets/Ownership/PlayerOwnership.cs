@@ -4,7 +4,8 @@ namespace HexaLinks.Ownership
 {
     using Configuration;
     using Propagation;
-    using Tile.Events;
+    using static Propagation.PropagationManager.Events;
+    using Events.Arguments;
 
     public enum Owner
     {
@@ -47,7 +48,7 @@ namespace HexaLinks.Ownership
         public void FinalizePropagation()
         {
             highligther.PostPropagation();
-            TileEvents.OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
+            OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
 
             if (PendingOwner.HasValue)
             {

@@ -1,19 +1,21 @@
-using HexaLinks.Path.Finder.Tools;
-using HexaLinks.Propagation;
-using HexaLinks.Tile;
-using HexaLinks.Tile.Events;
 using System.Collections.Generic;
 using System.Linq;
-using static HexaLinks.Path.Finder.PathFinder;
 using ReadOnlyGate = HexaLinks.Tile.Gate.ReadOnlyGate;
 
 namespace HexaLinks.Path.Finder
 {
+
+    using Path.Finder.Tools;
+    using static Path.Finder.PathFinder;
+    using Propagation;
+    using static Propagation.PropagationManager.Events;
+    using Tile;
+
     public static class PathIterator
     {
         static PathIterator()
         {
-            TileEvents.OnPropagationStepEnded.RegisterCallback(TriggerSearch);
+            OnPropagationStepEnded.Register(TriggerSearch);
         }
 
         private readonly static Searches searches = new Searches();        
@@ -55,7 +57,7 @@ namespace HexaLinks.Path.Finder
             searches.AddSearch(tile);
         }
 
-        public static void TriggerSearch(TileEvents.EmptyArgs? args)
+        public static void TriggerSearch()
         {
             if (!searches.ArePendingSearches)
             {
@@ -103,12 +105,12 @@ namespace HexaLinks.Path.Finder
             if (step.ExistsPropagation())
                 Game.Instance.GetSystem<PropagationManager>().TriggerPropagation(step);
             else
-                TriggerSearch(null);
+                TriggerSearch();
         }
 
         private static void StopSearch()
         {
-            TileEvents.OnPropagationEnded.Call(null);
+            OnPropagationEnded.Call();
             searches.Clear();
         }       
     }

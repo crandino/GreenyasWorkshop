@@ -1,9 +1,10 @@
 using HexaLinks.Path.Finder;
 using UnityEngine;
-using static HexaLinks.Tile.Events.TileEvents;
 
 namespace HexaLinks.Tile
 {
+    using static Propagation.PropagationManager.Events;
+
     public class TilePropagator : Tile
 	{
 		private const int MAX_PROPAGATOR_STRENGTH = 12;
@@ -49,16 +50,16 @@ namespace HexaLinks.Tile
         public void PreparePropagation()
         {
             strengthIndicator.Update(CurrentStrength.ToString(), propagatorPopUp.CurrentLabel, transform);
-            OnPropagationStep.RegisterCallback(this, DecreaseStrength);
+            OnPropagationStep.Register(DecreaseStrength);
         }
 
-        private void IncreaseStrength(EmptyArgs? noArgs)
+        private void IncreaseStrength()
         {
             CurrentStrength = Mathf.Clamp(CurrentStrength + 1, 0, maxPropagatorStrength);
             strengthIndicator.SetText(CurrentStrength.ToString());
         }
 
-        private void DecreaseStrength(EmptyArgs? args)
+        private void DecreaseStrength()
         {
             CurrentStrength = Mathf.Clamp(CurrentStrength - 1, 0, maxPropagatorStrength);
             strengthIndicator.SetText(CurrentStrength.ToString());

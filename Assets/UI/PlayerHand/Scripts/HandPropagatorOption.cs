@@ -3,9 +3,9 @@ using UnityEngine.UIElements;
 namespace HexaLinks.UI.PlayerHand
 {
     using Configuration;
-    using HexaLinks.Turn;
+    using Tile;
+    using Turn;
     using Ownership;
-    using Tile.Events;
 
     public class HandPropagatorOption : HandTileOption
     {
@@ -52,7 +52,7 @@ namespace HexaLinks.UI.PlayerHand
             Set(HandUI.EmptyTile);
         }
 
-        private void OnSegmentConnected(TileEvents.EmptyArgs? noArgs)
+        private void OnSegmentConnected()
         {
 #if DEBUG
             if (connectionsToUnlock == 0) return;
@@ -72,7 +72,7 @@ namespace HexaLinks.UI.PlayerHand
             UnregisterCallbacks();
         }
 
-        protected override void PrepareTile(Tile.Tile tile)
+        protected override void PrepareTile(Tile tile)
         {
             base.PrepareTile(tile);
             tile.GetComponentInChildren<PlayerOwnership>().InstantOwnerChange(TurnManager.CurrentPlayer);
@@ -83,13 +83,13 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.Activate();
             if(!CountdownReached)
-                TileEvents.OnSegmentConnected.RegisterCallback(OnSegmentConnected);
+                SideGate.Events.OnSegmentConnected.Register(OnSegmentConnected);
         }
 
         public override void Deactivate()
         {
             base.Deactivate();
-            TileEvents.OnSegmentConnected.UnregisterCallback(OnSegmentConnected);
+            SideGate.Events.OnSegmentConnected.Unregister(OnSegmentConnected);
         }
 
         private void RegisterCallbacks()

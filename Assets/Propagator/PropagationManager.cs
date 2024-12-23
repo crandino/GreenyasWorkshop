@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using static HexaLinks.Path.Finder.PathFinder;
+using System.Linq;
+using UnityEngine;
 
 namespace HexaLinks.Propagation
 {
-    using HexaLinks.Tile;
-    using Ownership;
-    using System.Linq;
-    using Tile.Events;
+    using Tile;
     using Turn;
-    using UnityEngine;
+    using Events;
+    using Events.Arguments;
+    using static Path.Finder.PathFinder;
 
     public class PropagationManager : Game.GameSystemMonobehaviour
     {
@@ -47,19 +47,19 @@ namespace HexaLinks.Propagation
         public void TerminatePropagation()
         {
             enabled = false;
-            TileEvents.OnPropagationStep.UnregisterCallbacks(iterationStep.Precursor);
-            TileEvents.OnPropagationStepEnded.Call(null);
+            Events.OnPropagationStep.Unregister(iterationStep.Precursor);
+            Events.OnPropagationStepEnded.Call();
         }
 
         private void Update()
         {
-            for(int i = 0; i < gateSetStep.Count; i++)
+            for (int i = 0; i < gateSetStep.Count; i++)
             {
                 UpdateStep(gateSetStep[i]);
                 gateSetStep[i].timer.Step(Time.deltaTime);
             }
         }
-        
+
         private void AddNewStep()
         {
             if (++stepIndex >= iterationStep.MaxLengthPath)
@@ -73,7 +73,7 @@ namespace HexaLinks.Propagation
                 gate.Ownership.PreparePropagation(TurnManager.CurrentPlayer, gate.ForwardTraversalDir);
 
             if (set.Computes)
-                TileEvents.OnPropagationStep.Call(iterationStep.Precursor, null);
+                Events.OnPropagationStep.Call(iterationStep.Precursor);
 
             gateSetStep.Add(set);
         }
@@ -83,16 +83,25 @@ namespace HexaLinks.Propagation
             foreach (var gate in gateSetStep[0].gates)
                 gate.Ownership.FinalizePropagation();
 
-            gateSetStep.RemoveAt(0);            
+            gateSetStep.RemoveAt(0);
 
             if (gateSetStep.Count == 0)
                 TerminatePropagation();
         }
-        
+
         private void UpdateStep(GateSet setStep)
         {
             for (int i = 0; i < setStep.gates.Length; i++)
                 setStep.gates[i].Ownership.UpdatePropagation(setStep.timer.NormalizedTime);
         }
-    }
+
+        public static class Events
+        {
+            public readonly static EventType OnPropagationStep = new();         // Each propagation step (set of gates) completed. Reduce strength of TilePropagator
+            public readonly static EventType OnPropagationStepEnded = new();    // When a complete propagation for a initial TilePropagator ends
+            public readonly static EventType OnPropagationEnded = new();        // When there's no more pending propagations
+
+            public readonly static EventTypeArg<OnSegmentPropagatedArgs> OnSegmentPropagated = new();
+        }
+}
 }

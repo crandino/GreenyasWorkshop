@@ -3,9 +3,11 @@ using static Game;
 
 namespace HexaLinks.Turn
 {
-    using Tile.Events;
+    using Events;
+    using Events.Arguments;
+    using Ownership;
+    using Propagation;
     using UI.PlayerHand;
-    using Ownership;   
 
     public class TurnManager : GameSystemMonobehaviour
     {
@@ -23,12 +25,12 @@ namespace HexaLinks.Turn
                 hand.Initialize();
                 score.Initialize();
 
-                TileEvents.OnSegmentPropagated.RegisterCallback(UpdateScore);
+                PropagationManager.Events.OnSegmentPropagated.Register(UpdateScore);
             }
 
-            private void UpdateScore(OnSegmentPropagatedArgs? args)
+            private void UpdateScore(OnSegmentPropagatedArgs args)
             {
-                score.Value += args.Value.GetScoreIncrement(ownerShip);
+                score.Value += args.GetScoreIncrement(ownerShip);
             }
         }
 
@@ -90,11 +92,16 @@ namespace HexaLinks.Turn
                     Step.Begin(Current);
                 else
                 {
-                    TileEvents.OnTurnEnded.Call(null);
+                    Events.OnTurnEnded.Call();
                     Game.Instance.GetSystem<TurnManager>().ChangePlayer();
                     Initialize();
                 }
             }
+        }
+
+        public static class Events
+        {
+            public readonly static EventType OnTurnEnded = new();
         }
     }
 

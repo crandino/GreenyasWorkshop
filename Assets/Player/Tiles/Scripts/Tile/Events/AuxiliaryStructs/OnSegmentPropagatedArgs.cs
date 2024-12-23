@@ -1,6 +1,6 @@
 using HexaLinks.Ownership;
 
-namespace HexaLinks.Tile.Events
+namespace HexaLinks.Events.Arguments
 {
     public readonly struct OnSegmentPropagatedArgs
     {

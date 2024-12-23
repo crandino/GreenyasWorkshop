@@ -1,5 +1,4 @@
 using Greenyas.Input;
-using HexaLinks.Tile.Events;
 using HexaLinks.Turn;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ public class Game : SingletonMonobehaviour<Game>
 
     protected override void OnInitialization()
     {
-        TileEvents.Clear();
+        //TileEvents.Clear();
 
         RegisterSystem<InputManager>();
         RegisterSystem<TilePlacement>();
