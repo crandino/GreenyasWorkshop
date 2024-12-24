@@ -4,21 +4,26 @@ using ReadOnlyGate = HexaLinks.Tile.Gate.ReadOnlyGate;
 
 namespace HexaLinks.Path.Finder
 {
-
     using Path.Finder.Tools;
     using static Path.Finder.PathFinder;
     using Propagation;
     using static Propagation.PropagationManager.Events;
     using Tile;
 
-    public static class PathIterator
+    public class PathIterator : Game.IGameSystem
     {
-        static PathIterator()
+        public void InitSystem()
         {
             OnPropagationStepEnded.Register(TriggerSearch);
         }
 
-        private readonly static Searches searches = new Searches();        
+        public void TerminateSystem()
+        {
+            OnPropagationStepEnded.Unregister(TriggerSearch);
+            searches.Clear();
+        }
+
+        private readonly Searches searches = new Searches();        
 
         private class Searches
         {
@@ -52,12 +57,12 @@ namespace HexaLinks.Path.Finder
             }
         }    
         
-        public static void QueueSearch(TilePropagator tile)
+        public void QueueSearch(TilePropagator tile)
         {
             searches.AddSearch(tile);
         }
 
-        public static void TriggerSearch()
+        public void TriggerSearch()
         {
             if (!searches.ArePendingSearches)
             {
@@ -108,7 +113,7 @@ namespace HexaLinks.Path.Finder
                 TriggerSearch();
         }
 
-        private static void StopSearch()
+        private void StopSearch()
         {
             OnPropagationEnded.Call();
             searches.Clear();

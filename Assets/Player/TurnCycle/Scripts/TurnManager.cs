@@ -28,10 +28,17 @@ namespace HexaLinks.Turn
                 PropagationManager.Events.OnSegmentPropagated.Register(UpdateScore);
             }
 
+            public void Terminate()
+            {
+                PropagationManager.Events.OnSegmentPropagated.Unregister(UpdateScore);
+            }
+
             private void UpdateScore(OnSegmentPropagatedArgs args)
             {
-                score.Value += args.GetScoreIncrement(ownerShip);
+                score.Value += args.GetScoreVariation(ownerShip);
             }
+
+            public bool IsMaxScoreReached => score.IsMaxScoreReached;
         }
 
         [SerializeField]
@@ -49,6 +56,13 @@ namespace HexaLinks.Turn
             CurrentPlayer = Owner.None;
         }
 
+        public override void TerminateSystem()
+        {
+            playerOneContext.Terminate();
+            playerTwoContext.Terminate();
+            Events.OnTurnEnded.Clear();
+        }
+
         public void StartGame()
         {
             Current = playerOneContext;
@@ -60,6 +74,15 @@ namespace HexaLinks.Turn
         {
             Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
             CurrentPlayer = Current.ownerShip;
+        }
+
+
+        private bool IsGameEnded
+        {
+            get
+            {
+                return playerOneContext.IsMaxScoreReached || playerTwoContext.IsMaxScoreReached;
+            }
         }
 
         public class TurnSteps
@@ -92,9 +115,23 @@ namespace HexaLinks.Turn
                 if (++stepIndex < steps.Length)
                     Step.Begin(Current);
                 else
+                    PrepareNextPlayer();
+            }
+
+            private void PrepareNextPlayer()
+            {
+                Events.OnTurnEnded.Call();
+
+                TurnManager turnManager = Game.Instance.GetSystem<TurnManager>();
+
+                if (turnManager.IsGameEnded)
                 {
-                    Events.OnTurnEnded.Call();
-                    Game.Instance.GetSystem<TurnManager>().ChangePlayer();
+                    Current = null;
+                    CurrentPlayer = Owner.None;
+                }
+                else
+                {
+                    turnManager.ChangePlayer();
                     Initialize();
                 }
             }
@@ -105,5 +142,4 @@ namespace HexaLinks.Turn
             public readonly static EventType OnTurnEnded = new();
         }
     }
-
 }

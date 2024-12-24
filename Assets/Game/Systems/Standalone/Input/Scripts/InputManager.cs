@@ -19,7 +19,9 @@ namespace Greenyas.Input
             OnAxis = new InputDeltaCallback(actions.InGame.RotatePiece);
         }
 
-        public void TerminateSystem() { }
+        public void TerminateSystem() 
+        {
+        }
     }    
 }
 

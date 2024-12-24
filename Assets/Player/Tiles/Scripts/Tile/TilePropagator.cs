@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HexaLinks.Tile
 {
-    using static Propagation.PropagationManager.Events;
+    using static Propagation.PropagationManager;
 
     public class TilePropagator : Tile
 	{
@@ -16,7 +16,7 @@ namespace HexaLinks.Tile
 
         public Gate.ReadOnlyGate StartingGate => new Gate.ReadOnlyGate(GetComponentInChildren<Gate>());
 
-        private StrengthIndicatorCanvas propagatorPopUp = null;
+        private StrengthIndicatorCanvas strengthCanvas = null;
         private StrenghtIndicator strengthIndicator = null;
 
         public override void Initialize()
@@ -24,8 +24,8 @@ namespace HexaLinks.Tile
             base.Initialize();
             CurrentStrength = maxPropagatorStrength;
 
-            propagatorPopUp = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
-            strengthIndicator = propagatorPopUp.Show(CurrentStrength, transform);
+            strengthCanvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
+            strengthIndicator = strengthCanvas.Show(CurrentStrength, transform);
             //OnTurnEnded.RegisterCallback(IncreaseStrength);
         }
 
@@ -40,7 +40,7 @@ namespace HexaLinks.Tile
         {
             if (base.TryRelease())
             {
-                PathIterator.QueueSearch(this);
+                Game.Instance.GetSystem<PathIterator>().QueueSearch(this);
                 return true;
             }
 
@@ -49,8 +49,8 @@ namespace HexaLinks.Tile
 
         public void PreparePropagation()
         {
-            strengthIndicator.UpdateValues(CurrentStrength.ToString(), propagatorPopUp.CurrentLabel, transform);
-            OnPropagationStep.Register(DecreaseStrength);
+            strengthIndicator.UpdateValues(CurrentStrength.ToString(), strengthCanvas.CurrentLabel, transform);
+            Events.OnPropagationStep.Register(DecreaseStrength);
         }
 
         private void IncreaseStrength()

@@ -29,12 +29,12 @@ public class CoroutineManager : MonoBehaviour
         Instance.StopCoroutine(coroutine);
     }
 
-    private void OnDestroy()
-    {
-        if (instance != null)
-            Destroy(instance.gameObject);
-        instance = null;
-    }
+    //private void OnDestroy()
+    //{
+    //    if (instance != null)
+    //        Destroy(instance.gameObject);
+    //    instance = null;
+    //}
 
     private static void TryInitialize()
     {

@@ -31,7 +31,7 @@ namespace HexaLinks.Propagation
             }
         }
 
-        public override void InitSystem()
+        public override void TerminateSystem()
         {
             Events.Clear();               
         }

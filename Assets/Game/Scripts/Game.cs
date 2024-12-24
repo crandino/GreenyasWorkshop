@@ -1,4 +1,5 @@
 using Greenyas.Input;
+using HexaLinks.Path.Finder;
 using HexaLinks.Turn;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,9 @@ public class Game : SingletonMonobehaviour<Game>
 
     protected override void OnInitialization()
     {
-        //TileEvents.Clear();
-
         RegisterSystem<InputManager>();
         RegisterSystem<TilePlacement>();
+        RegisterSystem<PathIterator>();
 
         foreach (var system in gameSystemScriptableObject)
             RegisterSystem(system);
@@ -41,6 +41,14 @@ public class Game : SingletonMonobehaviour<Game>
         systems.Add(system.GetType(), system);
     }
 
+    private void UnregisterAll()
+    {
+        foreach(var system in systems.Values)
+            system.TerminateSystem();
+
+        systems.Clear();
+    }
+
     public T GetSystem<T>() where T : IGameSystem
     {
         try
@@ -58,23 +66,29 @@ public class Game : SingletonMonobehaviour<Game>
     {
 #if DEBUG
         if (Keyboard.current.f5Key.wasPressedThisFrame)
+        {
+            UnregisterAll();
             SceneManager.LoadScene("Assets/Scenes/Playground.unity");
+        }
 #endif
     }
 
     public interface IGameSystem 
     {
         void InitSystem();
-    }   
-    
+        void TerminateSystem();
+    }
+
     public abstract class GameSystemMonobehaviour : MonoBehaviour, IGameSystem
     {
-        public abstract void InitSystem();
+        public virtual void InitSystem() { }
+        public virtual void TerminateSystem() { }
     }
 
     public abstract class GameSystemScriptableObject : ScriptableObject, IGameSystem
     {
-        public abstract void InitSystem();
+        public virtual void InitSystem() { }
+        public virtual void TerminateSystem() { }
     }
 
 }

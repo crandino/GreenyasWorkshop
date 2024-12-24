@@ -1,15 +1,12 @@
 using Greenyas.Input;
 using HexaLinks.Tile;
-using System;
 using UnityEngine;
+using EventType = HexaLinks.Events.EventType;
 
 public class TilePlacement : Game.IGameSystem
 {
-    private Tile currentSelectedTile = null;
     private InputManager input = null;
-
-    private event Action OnSuccessPlacement;
-    private event Action OnFailurePlacement;
+    private Tile currentSelectedTile = null;
 
     public void InitSystem()
     {
@@ -18,9 +15,8 @@ public class TilePlacement : Game.IGameSystem
 
     public void TerminateSystem()
     {
-        OnSuccessPlacement = null;
-        OnFailurePlacement = null;
-        input = null;
+        FinishPlacement();
+        Events.Clear();
     }
 
     public void Start(Tile tile)
@@ -32,20 +28,6 @@ public class TilePlacement : Game.IGameSystem
 
         input.TilePlacement.OnButtonPressed += TryPlacement;
         input.TilePlacementCancellation.OnButtonPressed += CancelPlacement;
-    }
-
-    public void AddEvents(Action onSuccess, Action onFailure = null)
-    {
-        OnSuccessPlacement += onSuccess;
-        if(onFailure != null)
-            OnFailurePlacement += onFailure;
-    }
-
-    public void RemoveEvents(Action onSuccess, Action onFailure = null)
-    {
-        OnSuccessPlacement -= onSuccess;
-        if (onFailure != null)
-            OnFailurePlacement -= onFailure;
     }
 
     // Include that as a DEBUG feature
@@ -61,7 +43,7 @@ public class TilePlacement : Game.IGameSystem
     {
         if (!TileRaycast.CursorRaycastToTile() && currentSelectedTile.TryRelease())
         {
-            OnSuccessPlacement();
+            Events.OnSuccessPlacement.Call();
             FinishPlacement();
         }
     }
@@ -71,7 +53,7 @@ public class TilePlacement : Game.IGameSystem
         currentSelectedTile.Terminate();
         GameObject.Destroy(currentSelectedTile.gameObject);
 
-        OnFailurePlacement();
+        Events.OnFailurePlacement.Call();
         FinishPlacement();
     }
 
@@ -81,5 +63,17 @@ public class TilePlacement : Game.IGameSystem
 
         input.TilePlacement.OnButtonPressed -= TryPlacement;
         input.TilePlacementCancellation.OnButtonPressed -= CancelPlacement;
+    }
+
+    public static class Events
+    {
+        public readonly static EventType OnSuccessPlacement = new();
+        public readonly static EventType OnFailurePlacement = new();
+
+        public static void Clear()
+        {
+            OnSuccessPlacement.Clear();
+            OnFailurePlacement.Clear();
+        }
     }
 }

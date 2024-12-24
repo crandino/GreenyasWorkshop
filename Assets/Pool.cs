@@ -12,6 +12,10 @@ public class Pool : ScriptableObject
     public void InitPool()
     {
         pool = new(OnCreate, null, OnRelease);
+    }
+
+    public void Clear()
+    {
         pool.Clear();
     }
 
@@ -35,11 +39,6 @@ public class Pool : ScriptableObject
         indicator.SetText("");
         indicator.TransformToFollow = null;
     }    
-
-    private void OnDestroy()
-    {
-        pool.Clear();
-    }
 
 #if UNITY_EDITOR
     [ContextMenu("Show Info")]

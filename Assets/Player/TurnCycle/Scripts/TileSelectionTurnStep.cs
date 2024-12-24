@@ -6,26 +6,26 @@ namespace HexaLinks.Turn
 
     public class TileSelectionTurnStep : TurnStep
     {
-        private readonly TilePlacement tilePlacement;
         private Hand hand;
 
         public TileSelectionTurnStep(Action endTurnStep) : base(endTurnStep)
-        {
-            tilePlacement = Game.Instance.GetSystem<TilePlacement>();
-        }
+        { }
 
         public override void Begin(TurnManager.PlayerContext context)
         {
             hand = context.hand;
             hand.Activate();
 
-            tilePlacement.AddEvents(End, hand.Activate);
+            TilePlacement.Events.OnSuccessPlacement.Register(End);
+            TilePlacement.Events.OnFailurePlacement.Register(hand.Activate);
         }
 
         protected override void End()
         {
             hand.Deactivate();
-            tilePlacement.RemoveEvents(End, hand.Activate);
+
+            TilePlacement.Events.OnSuccessPlacement.Unregister(End);
+            TilePlacement.Events.OnFailurePlacement.Unregister(hand.Activate);
 
             base.End();
         }

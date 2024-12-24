@@ -94,12 +94,14 @@ namespace HexaLinks.UI.PlayerHand
 
         private void RegisterCallbacks()
         {
-            tilePlacement.AddEvents(OnTilePlaced, UnregisterCallbacks);
+            TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
+            TilePlacement.Events.OnFailurePlacement.Register(UnregisterCallbacks);
         }
 
         private void UnregisterCallbacks()
         {
-            tilePlacement.RemoveEvents(OnTilePlaced, UnregisterCallbacks);
+            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
+            TilePlacement.Events.OnFailurePlacement.Unregister(UnregisterCallbacks);
         }
     }
 }

@@ -21,6 +21,12 @@ public class StrengthIndicatorCanvas : GameSystemMonobehaviour
         colors = Game.Instance.GetSystem<Configuration>().colors;
     }
 
+    public override void TerminateSystem()
+    {
+        activeIndicators.Clear();
+        pool.Clear();
+    }
+
     public StrenghtIndicator Show(int number, Transform transformToFollow)
     {
         StrenghtIndicator ind = Get();

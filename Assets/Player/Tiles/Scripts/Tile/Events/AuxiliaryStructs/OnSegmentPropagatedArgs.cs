@@ -15,7 +15,7 @@ namespace HexaLinks.Events.Arguments
             computePropagation = compute;
         }
 
-        public readonly int GetScoreIncrement(Owner scoreOwner)
+        public readonly int GetScoreVariation(Owner scoreOwner)
         {
             if (computePropagation && lastSegmentOwner != newSegmentOwner)
             {

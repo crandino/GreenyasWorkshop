@@ -14,7 +14,7 @@ namespace HexaLinks.Turn
 
         public override void Begin(TurnManager.PlayerContext context)
         {
-            PathIterator.TriggerSearch();
+            Game.Instance.GetSystem<PathIterator>().TriggerSearch();
         }       
     }
 }

@@ -1,13 +1,15 @@
+using HexaLinks.Configuration;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Score : MonoBehaviour
 {
     [SerializeField]
+    private UIDocument playerHandUI;
+
     private Label scoreLabel;
 
-    [SerializeField]
-    private UIDocument playerHandUI;
+    public bool IsMaxScoreReached => Value >= Game.Instance.GetSystem<Configuration>().parameters.MinScoreToWin;
 
     public int Value
     {
