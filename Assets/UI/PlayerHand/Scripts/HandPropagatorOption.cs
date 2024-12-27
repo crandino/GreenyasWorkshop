@@ -37,14 +37,6 @@ namespace HexaLinks.UI.PlayerHand
         private void InitializeCountdown()
         {
             Counter = connectionsToUnlock;
-
-#if DEBUG
-            if (connectionsToUnlock == 0)
-            {
-                counterLabel.visible = false;
-                return;
-            }
-#endif
             
             counterLabel.visible = true;
             DrawingPending = false;
@@ -54,9 +46,9 @@ namespace HexaLinks.UI.PlayerHand
 
         private void OnSegmentConnected()
         {
-#if DEBUG
-            if (connectionsToUnlock == 0) return;
-#endif
+            if (!counterLabel.visible)
+                return;
+
             --Counter;
 
             if (CountdownReached)
@@ -66,24 +58,16 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-        private void OnTilePlaced()
+        protected override void OnTilePlaced()
         {
+            base.OnTilePlaced();
             InitializeCountdown();
-            UnregisterCallbacks();
-        }
-
-        protected override void PrepareTile(Tile tile)
-        {
-            base.PrepareTile(tile);
-            tile.GetComponentInChildren<PlayerOwnership>().InstantOwnerChange(TurnManager.CurrentPlayer);
-            RegisterCallbacks();
         }
 
         public override void Activate()
         {
             base.Activate();
-            if(!CountdownReached)
-                SideGate.Events.OnSegmentConnected.Register(OnSegmentConnected);
+            SideGate.Events.OnSegmentConnected.Register(OnSegmentConnected);
         }
 
         public override void Deactivate()
@@ -92,17 +76,22 @@ namespace HexaLinks.UI.PlayerHand
             SideGate.Events.OnSegmentConnected.Unregister(OnSegmentConnected);
         }
 
-        private void RegisterCallbacks()
+        protected override void PrepareTile(Tile tile)
         {
-            TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
-            TilePlacement.Events.OnFailurePlacement.Register(UnregisterCallbacks);
+            base.PrepareTile(tile);
+            tile.GetComponentInChildren<PlayerOwnership>().InstantOwnerChange(TurnManager.CurrentPlayer);
+            //RegisterCallbacks();
         }
 
-        private void UnregisterCallbacks()
-        {
-            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
-            TilePlacement.Events.OnFailurePlacement.Unregister(UnregisterCallbacks);
-        }
+        //private void RegisterCallbacks()
+        //{
+        //    TilePlacement.Events.OnFailurePlacement.Register(UnregisterCallbacks);
+        //}
+
+        //private void UnregisterCallbacks()
+        //{
+        //    TilePlacement.Events.OnFailurePlacement.Unregister(UnregisterCallbacks);
+        //}
     }
 }
    

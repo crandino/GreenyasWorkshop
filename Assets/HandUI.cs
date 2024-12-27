@@ -39,7 +39,6 @@ public class HandUI : MonoBehaviour
         foreach (HandTileOption option in playerOptions)
         {
             option.Activate();
-            option.Reset();
         }
     }
 
@@ -57,5 +56,5 @@ public class HandUI : MonoBehaviour
         {
             option.Draw(EmptyTile);
         }
-    }
+    }   
 }

@@ -19,11 +19,7 @@ namespace HexaLinks.UI.PlayerHand
         }
 
         public void Activate() => ui.Activate();
-        public void Deactivate() => ui.Deactivate();
-        
-        public void Draw()
-        {
-            ui.Draw();
-        }
+        public void Deactivate() => ui.Deactivate();        
+        public void Draw() => ui.Draw();       
     } 
 }

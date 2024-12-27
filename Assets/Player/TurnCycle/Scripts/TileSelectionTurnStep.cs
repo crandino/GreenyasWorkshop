@@ -17,7 +17,6 @@ namespace HexaLinks.Turn
             hand.Activate();
 
             TilePlacement.Events.OnSuccessPlacement.Register(End);
-            TilePlacement.Events.OnFailurePlacement.Register(hand.Activate);
         }
 
         protected override void End()
@@ -25,7 +24,6 @@ namespace HexaLinks.Turn
             hand.Deactivate();
 
             TilePlacement.Events.OnSuccessPlacement.Unregister(End);
-            TilePlacement.Events.OnFailurePlacement.Unregister(hand.Activate);
 
             base.End();
         }

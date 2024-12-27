@@ -12,6 +12,7 @@ namespace HexaLinks.UI.PlayerHand
         private TileResource tileResource = null;
 
         public bool DrawingPending { protected set; get; } = true;
+        protected bool Active => button.enabledSelf;
 
         public HandTileOption(Button tileButton, DeckContent.Deck.DrawableDeck drawableDeck)
         {
@@ -32,6 +33,8 @@ namespace HexaLinks.UI.PlayerHand
         {
             button.iconImage = Background.FromSprite(tileResource.Icon);
             DrawingPending = false;
+
+            UnregisterCallbacks();
         }
 
         public virtual void Activate()
@@ -57,15 +60,38 @@ namespace HexaLinks.UI.PlayerHand
             {
                 PrepareTile(GameObject.Instantiate<Tile.Tile>(tileResource.Prefab));
                 button.iconImage = Background.FromSprite(HandUI.EmptyTile.Icon);
+                
                 Deactivate();
 
                 DrawingPending = true;
             }
         } 
+
+        private void RegisterCallbacks()
+        {
+            TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
+
+            TilePlacement.Events.OnFailurePlacement.Register(Reset);
+            TilePlacement.Events.OnFailurePlacement.Register(Activate);
+        }
+
+        private void UnregisterCallbacks()
+        {
+            TilePlacement.Events.OnFailurePlacement.Unregister(Reset);
+            TilePlacement.Events.OnFailurePlacement.Unregister(Activate);
+
+            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
+        }
         
         protected virtual void PrepareTile(Tile.Tile tile)
         {
+            RegisterCallbacks();
             tilePlacement.Start(tile);
+        }
+
+        protected virtual void OnTilePlaced()
+        {
+            UnregisterCallbacks();
         }
     } 
 }
