@@ -18,11 +18,14 @@
             </ui:GroupBox>
             <ui:GroupBox name="TileGroup">
                 <TileResourceOption tile-resource="project://database/Assets/Player/Tiles/Pieces/Traversal/Threes/Tile_T_3_S01_S23_S45/Tile_T_3_S01_S23_S45_R.asset?fileID=11400000&amp;guid=e76e3c538a4d8254a8f10517a1e3722b&amp;type=2#Tile_T_3_S01_S23_S45_R" style="width: 50px; height: 50px;" />
+                <TileResourceOption tile-resource="project://database/Assets/Player/Tiles/Pieces/Traversal/3_Segment/Tile_T_3_S03_S12_S45/Tile_T_3_S03_S12_S45_R.asset?fileID=11400000&amp;guid=9abed5d7ea371bd4c88360a9d58e5c8c&amp;type=2#Tile_T_3_S03_S12_S45_R" style="width: 50px; height: 50px;" />
             </ui:GroupBox>
         </ui:Foldout>
         <ui:Foldout text="Split" value="true" style="flex-basis: auto; flex-direction: column; background-color: rgb(49, 108, 67);">
             <ui:GroupBox name="TileGroup">
                 <TileResourceOption tile-resource="project://database/Assets/Player/Tiles/Pieces/Traversal/Twos/Tile_T_2_S02_S05/Tile_T_2_S02_S05_R.asset?fileID=11400000&amp;guid=1ac25984f9f4d3e4e9083f5a68498dab&amp;type=2#Tile_T_2_S02_S05_R" style="width: 50px; height: 50px;" />
+                <TileResourceOption tile-resource="project://database/Assets/Player/Tiles/Pieces/Traversal/3_Segment/Tile_T_3_S02_S03_S04/Tile_T_3_S02_S03_S04_R.asset?fileID=11400000&amp;guid=e6dd444bfbd37eb47bea8cc6dd1eff97&amp;type=2#Tile_T_3_S02_S03_S04_R" style="width: 50px; height: 50px;" />
+                <TileResourceOption tile-resource="project://database/Assets/Player/Tiles/Pieces/Traversal/3_Segment/Tile_T_3_S01_S05_S03/Tile_T_3_S01_S05_S03_R.asset?fileID=11400000&amp;guid=11a28aebc1f9b3445aa4c867d0ca0c23&amp;type=2#Tile_T_3_S01_S05_S03_R" style="width: 50px; height: 50px;" />
             </ui:GroupBox>
         </ui:Foldout>
         <ui:Foldout text="Propagator" value="true" style="flex-basis: auto; flex-direction: column; background-color: rgb(159, 113, 46);">

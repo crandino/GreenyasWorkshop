@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HexaLinks.Propagation
 {
-    [RequireComponent(typeof(MeshRenderer))]
+    [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class ColorPropagator : MonoBehaviour
     {
         [SerializeField]

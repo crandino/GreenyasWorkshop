@@ -12,10 +12,10 @@ public class DeckContent : ScriptableObject
         public TileResource tileResource;
         public int amount;
 
-        public TileEntry(TileResource resource)
+        public TileEntry(TileResource resource, int defaultAmount = 5)
         {
             tileResource = resource;
-            amount = 0;
+            amount = defaultAmount;
         }
     }
 

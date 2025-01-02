@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 
 public static class TileEditorManipulator
 {
-    private readonly static HexMap hexMap;
     private readonly static Label selectedTileTextField;
 
     private static Tile tile = null;
@@ -19,7 +18,7 @@ public static class TileEditorManipulator
 
     static TileEditorManipulator()
     {
-        hexMap = GameObject.FindAnyObjectByType<HexMap>();
+        
         selectedTileTextField = EditorWindow.GetWindow<TilePlacerWindow>().rootVisualElement.Q<Label>("SelectedTileName");
     }
 
@@ -111,6 +110,8 @@ public static class TileEditorManipulator
 
     private static void DoPlacement()
     {
+        HexMap hexMap = GameObject.FindAnyObjectByType<HexMap>();
+
         if (!hexMap.TryGetTile(tile.Coordinates.Coord, out Tile _))
         {
             tilePos.AttachToGrid();
@@ -128,6 +129,7 @@ public static class TileEditorManipulator
 
     private static void RemoveTile()
     {
+        HexMap hexMap = GameObject.FindAnyObjectByType<HexMap>();
         hexMap.RemoveTile(tile.Coordinates.Coord);
         if (Application.isPlaying)
             tile.Disconnect();        

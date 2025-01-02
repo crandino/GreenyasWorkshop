@@ -14,21 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traversalContent:
   - tileResource: {fileID: 11400000, guid: ec4b608fa613de64e9b2cff5fa1fcffe, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 9950b61009f0f2342a455fc7e346fb2d, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 5ee38bae914febc429ab6376e7418f46, type: 2}
-    amount: 10
-  - tileResource: {fileID: 11400000, guid: e76e3c538a4d8254a8f10517a1e3722b, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 882b168b8f37118468d7c94910d7b50c, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 3bd880c6ca90123488d8fd62a8ea3af5, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 1ac25984f9f4d3e4e9083f5a68498dab, type: 2}
-    amount: 10
+    amount: 0
   - tileResource: {fileID: 11400000, guid: 87bcf1005848c894d9a3fb30a6667ed8, type: 2}
-    amount: 10
+    amount: 0
+  - tileResource: {fileID: 11400000, guid: 11a28aebc1f9b3445aa4c867d0ca0c23, type: 2}
+    amount: 5
+  - tileResource: {fileID: 11400000, guid: e76e3c538a4d8254a8f10517a1e3722b, type: 2}
+    amount: 0
+  - tileResource: {fileID: 11400000, guid: e6dd444bfbd37eb47bea8cc6dd1eff97, type: 2}
+    amount: 5
+  - tileResource: {fileID: 11400000, guid: 9abed5d7ea371bd4c88360a9d58e5c8c, type: 2}
+    amount: 5
   propagatorContent:
   - tileResource: {fileID: 11400000, guid: 049264b967f683045b3fba0bb02144ec, type: 2}
     amount: 5

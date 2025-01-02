@@ -23,7 +23,7 @@ public class UVPathMapper : MonoBehaviour
     private void Reorganize()
     {
         string[] guids = AssetDatabase.FindAssets(meshFilter.sharedMesh.name);
-        string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+        //string path = AssetDatabase.GUIDToAssetPath(guids[0]);
 
         //string newMeshName = meshFilter.sharedMesh.name + "_customUV.asset";
 
@@ -46,7 +46,7 @@ public class UVPathMapper : MonoBehaviour
 
         mesh.SetUVs(0, newUVs);
 
-        path = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(gameObject.name)[0]);
+        //path = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets(gameObject.name)[0]) ?? "Assets/Player/Tiles/Pieces/";
         AssetDatabase.CreateAsset(mesh, "Assets/Player/Tiles/Pieces/MeshSegments/" + gameObject.name + ".asset");
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = mesh;
