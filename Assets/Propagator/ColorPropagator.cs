@@ -39,16 +39,6 @@ namespace HexaLinks.Propagation
             }
         }
 
-        //private Color CurrentColor
-        //{
-        //    get
-        //    {
-        //        if (CurrentMaterial.GetFloat(forwardPathProgressID) > 0.5f)
-        //            return CurrentMaterial.GetColor(forwardPlayerColorID);
-        //        return CurrentMaterial.GetColor(backwardPlayerColorID);
-        //    }
-        //}
-
         private readonly List<int> pathProgressIDs = new();
         private Color propagationColor = Color.black;
 

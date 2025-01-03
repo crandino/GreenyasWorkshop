@@ -8,6 +8,7 @@ namespace HexaLinks.Turn
     using Ownership;
     using Propagation;
     using UI.PlayerHand;
+    using UnityEngine.InputSystem;
 
     public class TurnManager : GameSystemMonobehaviour
     {
@@ -35,7 +36,8 @@ namespace HexaLinks.Turn
 
             private void UpdateScore(OnSegmentPropagatedArgs args)
             {
-                score.Value += args.GetScoreVariation(ownerShip);
+                CommandHistory.AddCommand(new ModifyScoreCommand(score, args.GetScoreVariation(ownerShip)));
+                //score.Value += args.GetScoreVariation(ownerShip);
             }
 
             public bool IsMaxScoreReached => score.IsMaxScoreReached;
@@ -61,6 +63,20 @@ namespace HexaLinks.Turn
             playerOneContext.Terminate();
             playerTwoContext.Terminate();
             Events.OnTurnEnded.Clear();
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
+            {
+                CommandHistory.Undo();
+
+            }
+            else if(Keyboard.current.rightArrowKey.wasPressedThisFrame)
+            {
+                CommandHistory.Redo();
+
+            }
         }
 
         public void StartGame()
@@ -121,6 +137,7 @@ namespace HexaLinks.Turn
             private void PrepareNextPlayer()
             {
                 Events.OnTurnEnded.Call();
+                CommandHistory.Save();
 
                 TurnManager turnManager = Game.Instance.GetSystem<TurnManager>();
 
