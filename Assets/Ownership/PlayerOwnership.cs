@@ -50,6 +50,8 @@ namespace HexaLinks.Ownership
             highligther.PostPropagation();
             OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
 
+            CommandHistory.RecordCommand(new OwnershipChangeCommand(this, owner, PendingOwner ?? owner));
+
             if (PendingOwner.HasValue)
             {
                 owner = PendingOwner.Value;
@@ -69,5 +71,4 @@ namespace HexaLinks.Ownership
         }
 #endif
     }
-
 }

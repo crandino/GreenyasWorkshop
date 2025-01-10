@@ -48,6 +48,7 @@ namespace HexaLinks.Tile
         public void RemoveTile(CubeCoord coord)
         {
             gridData.Remove(coord);
+            OnGridChanged();
         }
 
         public bool TryGetTile(CubeCoord coord, out Tile tileData)

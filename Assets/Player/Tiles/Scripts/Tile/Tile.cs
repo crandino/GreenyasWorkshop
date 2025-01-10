@@ -34,12 +34,16 @@ namespace HexaLinks.Tile
         {
             ConnectionCandidate[] connectionCandidates = connectivity.GetNeighborCandidates(Coord).ToArray();
 
-            if(Game.Instance.GetSystem<HexMap>().NumOfTiles == 0 || connectionCandidates.AreValid())
+            HexMap hexMap = Game.Instance.GetSystem<HexMap>();
+
+            if (hexMap.NumOfTiles == 0 || connectionCandidates.AreValid())
             {
                 manipulator.Release();
-                Game.Instance.GetSystem<HexMap>().AddTile(this);
 
-                connectionCandidates.Connect();
+                hexMap.AddTile(this);
+                CommandHistory.RecordCommand(new AddTileCommand(hexMap, this));
+
+                Connect(connectionCandidates);
 #if DEBUG
                 this.AddMeaningfulName();
 #endif
@@ -49,13 +53,13 @@ namespace HexaLinks.Tile
             return false;
         }
 
-        public void Connect()
+        public virtual void Connect(ConnectionCandidate[] connectionCandidates = null)
         {
-            ConnectionCandidate[] connectionCandidates = connectivity.GetNeighborCandidates(Coord).ToArray();
+            connectionCandidates ??= connectivity.GetNeighborCandidates(Coord).ToArray();
             connectionCandidates.Connect();
         }
 
-        public void Disconnect()
+        public virtual void Disconnect()
         {
             connectivity.Disconnect();
         }

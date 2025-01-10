@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-using UnityEditor;
-using System.IO;
-using UnityEngine.UIElements;
-using System.Linq;
-using UnityEditor.SearchService;
 using HexaLinks.Tile;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 public static class TileResourceProjectTools
 {

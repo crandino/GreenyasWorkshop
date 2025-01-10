@@ -36,8 +36,10 @@ namespace HexaLinks.Turn
 
             private void UpdateScore(OnSegmentPropagatedArgs args)
             {
-                CommandHistory.AddCommand(new ModifyScoreCommand(score, args.GetScoreVariation(ownerShip)));
-                //score.Value += args.GetScoreVariation(ownerShip);
+                int scoreVariation = args.GetScoreVariation(ownerShip);
+                score.Value += scoreVariation;
+
+                CommandHistory.RecordCommand(new ModifyScoreCommand(score, scoreVariation));
             }
 
             public bool IsMaxScoreReached => score.IsMaxScoreReached;

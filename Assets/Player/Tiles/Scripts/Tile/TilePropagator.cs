@@ -6,13 +6,28 @@ namespace HexaLinks.Tile
     using static Propagation.PropagationManager;
 
     public class TilePropagator : Tile
-	{
-		private const int MAX_PROPAGATOR_STRENGTH = 12;
+    {
+        private const int MAX_PROPAGATOR_STRENGTH = 12;
 
-		[SerializeField]
-		private int maxPropagatorStrength;
+        [SerializeField]
+        private int maxPropagatorStrength;
 
-		public int CurrentStrength { private set; get; }
+        private int currentStrength = 0;
+
+        public int CurrentStrength
+        {
+            set
+            {
+                currentStrength = value;
+                if(strengthIndicator != null)
+                    strengthIndicator.UpdateValues(currentStrength.ToString(), strengthCanvas.CurrentLabel, transform);
+            }
+
+            get
+            {
+                return currentStrength;
+            }
+        }
 
         public Gate.ReadOnlyGate StartingGate => new Gate.ReadOnlyGate(GetComponentInChildren<Gate>());
 
@@ -22,9 +37,8 @@ namespace HexaLinks.Tile
         public override void Initialize()
         {
             base.Initialize();
-            CurrentStrength = maxPropagatorStrength;
-
             strengthCanvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
+            CurrentStrength = maxPropagatorStrength;
             strengthIndicator = strengthCanvas.Show(CurrentStrength, transform);
             //OnTurnEnded.RegisterCallback(IncreaseStrength);
         }
@@ -47,29 +61,44 @@ namespace HexaLinks.Tile
             return false;
         }
 
-        public void PreparePropagation()
+        public override void Connect(ConnectionCandidate[] connectionCandidates)
         {
-            strengthIndicator.UpdateValues(CurrentStrength.ToString(), strengthCanvas.CurrentLabel, transform);
+            base.Connect();
+            if(strengthIndicator == null)
+                strengthIndicator = strengthCanvas.Show(CurrentStrength, transform);
+            strengthIndicator.UpdateValues(currentStrength.ToString(), strengthCanvas.CurrentLabel, transform);
+        }
+
+        public override void Disconnect()
+        {
+            base.Disconnect();
+            Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
+            strengthIndicator = null;
+        }
+
+        public void ShowPropagationEvolution()
+        {
             Events.OnPropagationStep.Register(DecreaseStrength);
         }
 
         private void IncreaseStrength()
         {
-            CurrentStrength = Mathf.Clamp(CurrentStrength + 1, 0, maxPropagatorStrength);
-            strengthIndicator.SetText(CurrentStrength.ToString());
+            currentStrength = Mathf.Clamp(currentStrength + 1, 0, maxPropagatorStrength);
+            strengthIndicator.SetText(currentStrength.ToString());
         }
 
         private void DecreaseStrength()
         {
-            CurrentStrength = Mathf.Clamp(CurrentStrength - 1, 0, maxPropagatorStrength);
-            strengthIndicator.SetText(CurrentStrength.ToString());
+            currentStrength = Mathf.Clamp(currentStrength - 1, 0, maxPropagatorStrength);
+            strengthIndicator.SetText(currentStrength.ToString());
+            CommandHistory.RecordCommand(new ModifyStrengthCommand(this, -1));
         }
 
 #if UNITY_EDITOR
         private void Reset()
         {
-			maxPropagatorStrength = MAX_PROPAGATOR_STRENGTH / (GetComponentsInChildren<TileSegment>().Length - 1); 
+            maxPropagatorStrength = MAX_PROPAGATOR_STRENGTH / (GetComponentsInChildren<TileSegment>().Length - 1);
         }
 #endif
-    } 
+    }
 }

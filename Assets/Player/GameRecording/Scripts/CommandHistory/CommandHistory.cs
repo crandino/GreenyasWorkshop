@@ -34,9 +34,8 @@ public static class CommandHistory
         currentTurn++;
     }
   
-    public static void AddCommand<T>(Command<T> command) where T : class
+    public static void RecordCommand<T>(CommandRecord<T> command) where T : class
     {
-        command.Execute();
         currentRecordingTurn.commands.Add(command);
     }
 

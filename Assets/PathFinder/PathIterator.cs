@@ -71,7 +71,7 @@ namespace HexaLinks.Path.Finder
             }
 
             PathIterationStep step = searches.GetSearch();
-            step.Precursor.PreparePropagation();
+            step.Precursor.ShowPropagationEvolution();
 
             TileStepTracker<ReadOnlyGate> gateTracker = new TileStepTracker<ReadOnlyGate>();
 
