@@ -40,6 +40,7 @@ public class RecordHistory
             foreach (TurnHistory history in historiesToRemove)
                 history.Remove();
             turnHistories.RemoveRange(currentTurn, turnHistories.Count - currentTurn);
+            Debug.Log($"REWRITING From {historiesToRemove.Count + turnHistories.Count} to {turnHistories.Count} turns. Now on {currentTurn + 1}");
         }
 
         turnHistories.Add(currentRecordingTurn);

@@ -24,7 +24,7 @@ namespace HexaLinks.UI.PlayerHand
             tilePlacement = Game.Instance.GetSystem<TilePlacement>();
         }
 
-        public void Set(TileResource resource)
+        public virtual void Set(TileResource resource)
         {
             tileResource = resource;
             Reset();

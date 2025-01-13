@@ -9,6 +9,8 @@ namespace HexaLinks.UI.PlayerHand
 
     public class HandPropagatorOption : HandTileOption
     {
+        private TileResource propagatorResource = null;
+
         private int Counter
         {
             set
@@ -36,12 +38,19 @@ namespace HexaLinks.UI.PlayerHand
 
         private void InitializeCountdown()
         {
-            Counter = connectionsToUnlock;
-            
+            Counter = connectionsToUnlock;            
             counterLabel.visible = true;
-            DrawingPending = false;
+        }
 
-            Set(HandUI.EmptyTile);
+        public override void Set(TileResource resource)
+        {
+            propagatorResource = resource;
+            Set();        
+        }
+
+        private void Set()
+        {
+            base.Set(CountdownReached ? propagatorResource : HandUI.EmptyTile);
         }
 
         private void OnSegmentConnected()
@@ -57,7 +66,7 @@ namespace HexaLinks.UI.PlayerHand
             if (CountdownReached)
             {
                 counterLabel.visible = false;
-                DrawingPending = true;
+                Set();
             }
         }
 
@@ -66,10 +75,7 @@ namespace HexaLinks.UI.PlayerHand
         {
             Counter += increment;
             counterLabel.visible = !CountdownReached;
-            DrawingPending = false;
-
-            //if(!CountdownReached)
-                Set(HandUI.EmptyTile);
+            Set();
         }
 #endif
 
