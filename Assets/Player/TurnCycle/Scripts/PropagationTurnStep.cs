@@ -1,5 +1,3 @@
-using System;
-
 namespace HexaLinks.Turn
 {
     using Path.Finder;
@@ -7,14 +5,24 @@ namespace HexaLinks.Turn
 
     public class PropagationTurnStep : TurnStep
     {
-        public PropagationTurnStep(Action endTurnStep) : base(endTurnStep)
+        public PropagationTurnStep(TurnManager.TurnSteps turnSteps) : base(turnSteps)
+        { }  
+        
+        public override void Begin()
         {
-            PropagationManager.Events.OnPropagationEnded.Register(base.End);
-        }
-
-        public override void Begin(TurnManager.PlayerContext context)
-        {
+            PropagationManager.Events.OnPropagationEnded.Register(OnPropagationEnded);
             Game.Instance.GetSystem<PathIterator>().TriggerSearch();
-        }       
+        }  
+
+        private void OnPropagationEnded()
+        {
+            SafeEnd();
+            turnSteps.NextStep();
+        }
+        
+        public override void SafeEnd()
+        {
+            PropagationManager.Events.OnPropagationEnded.Unregister(OnPropagationEnded);
+        }
     }
 }

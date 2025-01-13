@@ -60,6 +60,7 @@ public class TilePlacement : Game.IGameSystem
     private void FinishPlacement()
     {
         currentSelectedTile = null;
+        Events.OnFinishPlacement.Call();
 
         input.TilePlacement.OnButtonPressed -= TryPlacement;
         input.TilePlacementCancellation.OnButtonPressed -= CancelPlacement;
@@ -69,11 +70,13 @@ public class TilePlacement : Game.IGameSystem
     {
         public readonly static EventType OnSuccessPlacement = new();
         public readonly static EventType OnFailurePlacement = new();
+        public readonly static EventType OnFinishPlacement = new();
 
         public static void Clear()
         {
             OnSuccessPlacement.Clear();
             OnFailurePlacement.Clear();
+            OnFinishPlacement.Clear();
         }
     }
 }

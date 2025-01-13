@@ -1,8 +1,8 @@
-public class ModifyScoreCommand : CommandRecord<Score>
+public class ModifyScoreRecord: Record<Score>
 {
     private readonly int scoreVariation = 0;
 
-    public ModifyScoreCommand(Score score, int scoreVariation) : base(score)
+    public ModifyScoreRecord(Score score, int scoreVariation) : base(score)
     {
         this.scoreVariation = scoreVariation;
     }

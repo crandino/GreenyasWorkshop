@@ -1,10 +1,10 @@
 using HexaLinks.Tile;
 
-public class ModifyStrengthCommand : CommandRecord<TilePropagator>
+public class ModifyStrengthRecord : Record<TilePropagator>
 {
     private readonly int variation = 0;
 
-    public ModifyStrengthCommand(TilePropagator propagator, int variation) : base(propagator)
+    public ModifyStrengthRecord(TilePropagator propagator, int variation) : base(propagator)
     {
         this.variation = variation;
     }

@@ -1,4 +1,6 @@
+using HexaLinks.Ownership;
 using HexaLinks.Path.Finder;
+using HexaLinks.Turn;
 using UnityEngine;
 
 namespace HexaLinks.Tile
@@ -91,7 +93,10 @@ namespace HexaLinks.Tile
         {
             currentStrength = Mathf.Clamp(currentStrength - 1, 0, maxPropagatorStrength);
             strengthIndicator.SetText(currentStrength.ToString());
-            CommandHistory.RecordCommand(new ModifyStrengthCommand(this, -1));
+
+#if UNITY_EDITOR && DEBUG
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyStrengthRecord(this, -1));
+#endif
         }
 
 #if UNITY_EDITOR

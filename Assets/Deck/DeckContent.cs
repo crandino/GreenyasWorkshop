@@ -62,7 +62,7 @@ public class DeckContent : ScriptableObject
         {
             private readonly TileResource[] deck;
             private int discardIndex = 0;
-            public bool EmptyDeck => discardIndex >= deck.Length;
+            public bool EmptyDeck => discardIndex == deck.Length;
 
             public DrawableDeck(TileEntry[] content)
             {
@@ -84,8 +84,12 @@ public class DeckContent : ScriptableObject
             public TileResource Draw(TileResource fallback)
             {
                 return !EmptyDeck ? deck[discardIndex++] : fallback;
-            }
+            }     
+
+            public void FakeDraw() => discardIndex++;
+            public void FakeUndraw() => discardIndex--;
         }
+
         public DrawableDeck TraversalDeck { private set; get; }
         public DrawableDeck PropagatorDeck { private set; get; }
 

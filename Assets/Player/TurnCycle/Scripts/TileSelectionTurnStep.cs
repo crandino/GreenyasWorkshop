@@ -1,32 +1,38 @@
-using System;
-
 namespace HexaLinks.Turn
 {
-    using UI.PlayerHand;
-
     public class TileSelectionTurnStep : TurnStep
     {
-        private Hand hand;
+        private bool successPlacement = false;
 
-        public TileSelectionTurnStep(Action endTurnStep) : base(endTurnStep)
+        public TileSelectionTurnStep(TurnManager.TurnSteps turnSteps) : base(turnSteps)
         { }
 
-        public override void Begin(TurnManager.PlayerContext context)
+        public override void Begin()
         {
-            hand = context.hand;
-            hand.Activate();
+            successPlacement = false;
 
-            TilePlacement.Events.OnSuccessPlacement.Register(End);
+            TilePlacement.Events.OnSuccessPlacement.Register(OnTileSelectionSuccess);
+            TilePlacement.Events.OnFinishPlacement.Register(NextStep);
         }
 
-        protected override void End()
+        private void OnTileSelectionSuccess()
         {
-            hand.Deactivate();
+            successPlacement = true;
+        }
 
-            TilePlacement.Events.OnSuccessPlacement.Unregister(End);
+        private void NextStep()
+        {
+            if (successPlacement)
+            {
+                SafeEnd();
+                turnSteps.NextStep();
+            }
+        }
 
-            base.End();
+        public override void SafeEnd()
+        {
+            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTileSelectionSuccess);
+            TilePlacement.Events.OnFinishPlacement.Unregister(NextStep);
         }
     }
-
 }

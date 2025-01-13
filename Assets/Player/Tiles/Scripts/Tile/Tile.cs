@@ -1,4 +1,5 @@
 using Greenyas.Hexagon;
+using HexaLinks.Turn;
 using UnityEngine;
 
 namespace HexaLinks.Tile
@@ -41,8 +42,10 @@ namespace HexaLinks.Tile
                 manipulator.Release();
 
                 hexMap.AddTile(this);
-                CommandHistory.RecordCommand(new AddTileCommand(hexMap, this));
 
+#if UNITY_EDITOR && DEBUG
+                Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new AddTileRecord(hexMap, this));
+#endif
                 Connect(connectionCandidates);
 #if DEBUG
                 this.AddMeaningfulName();

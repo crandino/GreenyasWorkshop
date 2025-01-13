@@ -4,19 +4,15 @@ namespace HexaLinks.Turn
 {
     public abstract class TurnStep
     {
-        private readonly Action endTurnStep = null;
+        protected readonly TurnManager.TurnSteps turnSteps = null;
 
-        protected TurnStep(Action endTurnStep)
+        protected TurnStep(TurnManager.TurnSteps turnSteps )
         {
-            this.endTurnStep = endTurnStep;
+            this.turnSteps = turnSteps;
         }
 
-        public abstract void Begin(TurnManager.PlayerContext context);
-
-        protected virtual void End()
-        {
-            endTurnStep();
-        }
+        public abstract void Begin();
+        public virtual void SafeEnd() { }
     } 
 }
 

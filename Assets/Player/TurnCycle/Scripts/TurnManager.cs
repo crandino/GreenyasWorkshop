@@ -8,14 +8,16 @@ namespace HexaLinks.Turn
     using Ownership;
     using Propagation;
     using UI.PlayerHand;
-    using UnityEngine.InputSystem;
 
-    public class TurnManager : GameSystemMonobehaviour
+    public partial class TurnManager : GameSystemMonobehaviour
     {
         [System.Serializable]
         public class PlayerContext
         {
-            public Owner ownerShip;
+            [SerializeField]
+            private Owner ownerShip;
+            public Owner Ownership => ownerShip;
+
             public Hand hand;
 
             [SerializeField]
@@ -36,10 +38,12 @@ namespace HexaLinks.Turn
 
             private void UpdateScore(OnSegmentPropagatedArgs args)
             {
-                int scoreVariation = args.GetScoreVariation(ownerShip);
+                int scoreVariation = args.GetScoreVariation(Ownership);
                 score.Value += scoreVariation;
 
-                CommandHistory.RecordCommand(new ModifyScoreCommand(score, scoreVariation));
+#if UNITY_EDITOR && DEBUG
+                Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyScoreRecord(score, scoreVariation));
+#endif
             }
 
             public bool IsMaxScoreReached => score.IsMaxScoreReached;
@@ -48,8 +52,7 @@ namespace HexaLinks.Turn
         [SerializeField]
         private PlayerContext playerOneContext, playerTwoContext;
         private static PlayerContext Current { set; get; } = null;
-
-        public static Owner CurrentPlayer { private set; get; }
+        public static Owner CurrentPlayer => Current != null ? Current.Ownership : Owner.None;       
 
         private TurnSteps steps = null;
 
@@ -57,7 +60,6 @@ namespace HexaLinks.Turn
         {
             playerOneContext.Init();
             playerTwoContext.Init();
-            CurrentPlayer = Owner.None;
         }
 
         public override void TerminateSystem()
@@ -65,35 +67,21 @@ namespace HexaLinks.Turn
             playerOneContext.Terminate();
             playerTwoContext.Terminate();
             Events.OnTurnEnded.Clear();
-        }
-
-        private void Update()
-        {
-            if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
-            {
-                CommandHistory.Undo();
-
-            }
-            else if(Keyboard.current.rightArrowKey.wasPressedThisFrame)
-            {
-                CommandHistory.Redo();
-
-            }
-        }
+        }            
 
         public void StartGame()
         {
             Current = playerOneContext;
-            CurrentPlayer = Current.ownerShip;
+
             steps = new TurnSteps();
+            steps.StartTurn(Current);
         }
 
         private void ChangePlayer()
         {
             Current = (Current == playerOneContext) ? playerTwoContext : playerOneContext;
-            CurrentPlayer = Current.ownerShip;
+            steps.StartTurn(Current);
         }
-
 
         private bool IsGameEnded
         {
@@ -103,55 +91,65 @@ namespace HexaLinks.Turn
             }
         }
 
-        public class TurnSteps
+        public partial class TurnSteps
         {
             private readonly TurnStep[] steps = null;
             private int stepIndex = 0;
 
-            private TurnStep Step => steps[stepIndex];
+            private TurnStep CurrentStep => steps[stepIndex];
+            public PlayerContext CurrentContext { private set; get; }
 
             public TurnSteps()
             {
                 steps = new TurnStep[]
                 {
-                    new TileSelectionTurnStep(NextStep),
-                    new PropagationTurnStep(NextStep),
-                    new DeckDrawingTurnStep(NextStep)
+                    new TileSelectionTurnStep(this),
+                    new PropagationTurnStep(this),
+                    new DeckDrawingTurnStep(this)
                 };
-
-                Initialize();
             }
 
-            private void Initialize()
+            public void StartTurn(PlayerContext currentContext)
             {
                 stepIndex = 0;
-                Step.Begin(Current);
+                CurrentContext = currentContext;
+                CurrentContext.hand.Activate();
+                CurrentStep.Begin();
             }
 
-            private void NextStep()
+            public void FinalizeTurn(bool prematureExit = false)
+            {
+                if (prematureExit)
+                    CurrentStep.SafeEnd();
+
+                CurrentContext.hand.Deactivate();
+                Events.OnTurnEnded.Call();
+            }
+
+            public void NextStep()
             {
                 if (++stepIndex < steps.Length)
-                    Step.Begin(Current);
+                    CurrentStep.Begin();
                 else
                     PrepareNextPlayer();
             }
 
             private void PrepareNextPlayer()
             {
-                Events.OnTurnEnded.Call();
-                CommandHistory.Save();
+                FinalizeTurn();
 
                 TurnManager turnManager = Game.Instance.GetSystem<TurnManager>();
+#if UNITY_EDITOR && DEBUG
+                turnManager.History.Save(); 
+#endif
 
                 if (turnManager.IsGameEnded)
                 {
-                    Current = null;
-                    CurrentPlayer = Owner.None;
+                    TurnManager.Current = null;
                 }
                 else
                 {
                     turnManager.ChangePlayer();
-                    Initialize();
                 }
             }
         }

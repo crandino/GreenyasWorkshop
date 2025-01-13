@@ -6,6 +6,7 @@ namespace HexaLinks.Ownership
     using Propagation;
     using static Propagation.PropagationManager.Events;
     using Events.Arguments;
+    using HexaLinks.Turn;
 
     public enum Owner
     {
@@ -50,7 +51,9 @@ namespace HexaLinks.Ownership
             highligther.PostPropagation();
             OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
 
-            CommandHistory.RecordCommand(new OwnershipChangeCommand(this, owner, PendingOwner ?? owner));
+#if UNITY_EDITOR && DEBUG
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new OwnershipChangeRecord(this, owner, PendingOwner ?? owner)); 
+#endif
 
             if (PendingOwner.HasValue)
             {

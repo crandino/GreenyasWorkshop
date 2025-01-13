@@ -50,6 +50,9 @@ namespace HexaLinks.UI.PlayerHand
                 return;
 
             --Counter;
+#if UNITY_EDITOR && DEBUG
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, -1));
+#endif
 
             if (CountdownReached)
             {
@@ -58,8 +61,23 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
+#if UNITY_EDITOR && DEBUG
+        public void ForceCountdown(int increment)
+        {
+            Counter += increment;
+            counterLabel.visible = !CountdownReached;
+            DrawingPending = false;
+
+            //if(!CountdownReached)
+                Set(HandUI.EmptyTile);
+        }
+#endif
+
         protected override void OnTilePlaced()
         {
+#if UNITY_EDITOR && DEBUG
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
+#endif
             base.OnTilePlaced();
             InitializeCountdown();
         }
@@ -80,18 +98,7 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.PrepareTile(tile);
             tile.GetComponentInChildren<PlayerOwnership>().InstantOwnerChange(TurnManager.CurrentPlayer);
-            //RegisterCallbacks();
         }
-
-        //private void RegisterCallbacks()
-        //{
-        //    TilePlacement.Events.OnFailurePlacement.Register(UnregisterCallbacks);
-        //}
-
-        //private void UnregisterCallbacks()
-        //{
-        //    TilePlacement.Events.OnFailurePlacement.Unregister(UnregisterCallbacks);
-        //}
     }
 }
    

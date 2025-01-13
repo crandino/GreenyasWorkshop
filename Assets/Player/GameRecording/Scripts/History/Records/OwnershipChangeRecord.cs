@@ -1,11 +1,11 @@
 using HexaLinks.Ownership;
 
-public class OwnershipChangeCommand : CommandRecord<PlayerOwnership>
+public class OwnershipChangeRecord : Record<PlayerOwnership>
 {
     private readonly Owner previousOwner;
     private readonly Owner newOwner;
 
-    public OwnershipChangeCommand(PlayerOwnership ownerhsip, Owner previousOwner, Owner newOwner) : base(ownerhsip)
+    public OwnershipChangeRecord(PlayerOwnership ownerhsip, Owner previousOwner, Owner newOwner) : base(ownerhsip)
     {
         this.previousOwner = previousOwner;
         this.newOwner = newOwner;

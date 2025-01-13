@@ -1,14 +1,16 @@
-public abstract class BaseCommand
+public abstract class BaseRecord
 {
     public abstract void Undo();
     public abstract void Redo();
+
+    public virtual void OnRemove() { }
 }
 
-public abstract class CommandRecord<T> : BaseCommand where T : class
+public abstract class Record<T> : BaseRecord where T : class
 {
     protected readonly T actor;
 
-    protected CommandRecord(T actor)
+    protected Record(T actor)
     {
         this.actor = actor;
     }

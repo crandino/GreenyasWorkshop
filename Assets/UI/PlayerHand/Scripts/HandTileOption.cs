@@ -1,3 +1,4 @@
+using HexaLinks.Turn;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,7 +10,7 @@ namespace HexaLinks.UI.PlayerHand
         private readonly DeckContent.Deck.DrawableDeck deck;
 
         protected readonly TilePlacement tilePlacement = null;
-        private TileResource tileResource = null;
+        protected TileResource tileResource = null;
 
         public bool DrawingPending { protected set; get; } = true;
         protected bool Active => button.enabledSelf;
@@ -50,8 +51,28 @@ namespace HexaLinks.UI.PlayerHand
         public void Draw(TileResource fallback)
         {
             if(DrawingPending)
-                Set(deck.Draw(fallback));
+            {
+                TileResource drawnResource = deck.Draw(fallback);
+
+#if UNITY_EDITOR && DEBUG
+                if (tileResource != null)
+                    Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new DrawDeckRecord(this, tileResource, drawnResource));
+#endif
+                Set(drawnResource);
+            }
             DrawingPending = false;
+        }    
+
+        public void FakeDraw(TileResource resource)
+        {
+            deck.FakeDraw();
+            Set(resource);
+        }
+
+        public void FakeUndraw(TileResource resource)
+        {
+            deck.FakeUndraw();
+            Set(resource);
         }
 
         private void LoadTile()
@@ -77,10 +98,10 @@ namespace HexaLinks.UI.PlayerHand
 
         private void UnregisterCallbacks()
         {
+            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
+
             TilePlacement.Events.OnFailurePlacement.Unregister(Reset);
             TilePlacement.Events.OnFailurePlacement.Unregister(Activate);
-
-            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
         }
         
         protected virtual void PrepareTile(Tile.Tile tile)
