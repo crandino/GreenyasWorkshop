@@ -63,7 +63,7 @@ namespace HexaLinks.Tile
             return false;
         }
 
-        public override void Connect(ConnectionCandidate[] connectionCandidates)
+        public override void Connect()
         {
             base.Connect();
             if(strengthIndicator == null)

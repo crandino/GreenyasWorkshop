@@ -1,6 +1,8 @@
 using Greenyas.Hexagon;
+using HexaLinks.Tile.Extensions.Hexside;
 using System.Collections.Generic;
 using UnityEngine;
+using static Greenyas.Hexagon.HexSide;
 
 namespace HexaLinks.Tile
 {
@@ -9,22 +11,30 @@ namespace HexaLinks.Tile
         [SerializeField]
         private TileSegment[] segments = null;
 
-        public List<ConnectionCandidate> GetNeighborCandidates(CubeCoord coord)
+        public ConnectionCandidates GetNeighborCandidates(CubeCoord coord)
         {
-            List<ConnectionCandidate> candidates = new List<ConnectionCandidate>();
+            ConnectionCandidates candidates = new ConnectionCandidates();
 
-            foreach (var s in segments)
-                candidates.AddRange(s.GetCandidates(coord));
+            for (Side s = Side.North; s <= Side.NorthWest; ++s)
+            {
+                CubeCoord neighborHexCoord = coord + CubeCoord.GetToNeighborCoord(s);
+
+                if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
+                {
+                    candidates.AddFromGates(GetAlignedGatesOnSide(s), s);
+                    candidates.AddToGates(neighborTileData.Connectivity.GetAlignedGatesOnSide(s.GetOpposite()), s);
+                }
+            }
 
             return candidates;
         }  
 
-        public SideGate[] GetAlignedGatesAgainst(SideGate gate)
+        public SideGate[] GetAlignedGatesOnSide(HexSide.Side side)
         {
             List<SideGate> alignedGates = new();
 
             for (int i = 0; i < segments.Length; ++i)
-                segments[i].GetAlignedGatesAgainst(gate, alignedGates);
+                alignedGates.AddRange(segments[i].GetAlignedGatesOnSide(side));
 
             return alignedGates.ToArray();
         }

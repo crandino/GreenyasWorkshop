@@ -105,15 +105,15 @@ namespace HexaLinks.UI.PlayerHand
         public override void Activate()
         {
             base.Activate();
-            SideGate.Events.OnSegmentConnected.Register(OnSegmentConnected);
-            SideGate.Events.OnSegmentBlocked.Register(OnSegmentBlocked);
+            ConnectionCandidates.Events.OnSideConnected.Register(OnSegmentConnected);
+            ConnectionCandidates.Events.OnSideBlocked.Register(OnSegmentBlocked);
         }
 
         public override void Deactivate()
         {
             base.Deactivate();
-            SideGate.Events.OnSegmentConnected.Unregister(OnSegmentConnected);
-            SideGate.Events.OnSegmentBlocked.Unregister(OnSegmentBlocked);
+            ConnectionCandidates.Events.OnSideConnected.Unregister(OnSegmentConnected);
+            ConnectionCandidates.Events.OnSideBlocked.Unregister(OnSegmentBlocked);
         }
 
         protected override void PrepareTile(Tile tile)

@@ -1,7 +1,6 @@
-using Greenyas.Hexagon;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Greenyas.Hexagon.HexSide;
 
 namespace HexaLinks.Tile
 {
@@ -15,25 +14,23 @@ namespace HexaLinks.Tile
         public uint Hash => HashFunction(this);
         public uint HashFunction(TileSegment s) => s.GetComponentInParent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
 
-        public List<ConnectionCandidate> GetCandidates(CubeCoord fromCoord)
+        //public void FillCandidates(CubeCoord fromCoord, ConnectionCandidates candidates)
+        //{
+        //    for (Side s = Side.North; s <= Side.NorthWest; ++s)
+        //    {
+        //        CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(s);
+
+        //        if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
+        //        {
+        //            candidates.AddFromGates(GetAlignedGatesOnSide(s), s);
+        //            candidates.AddToGates(neighborTileData.Connectivity.GetAlignedGatesOnSide(s.GetOpposite()), s);
+        //        }
+        //    }
+        //}
+
+        public SideGate[] GetAlignedGatesOnSide(Side side)
         {
-            List<ConnectionCandidate> candidates = new List<ConnectionCandidate>();
-
-            for (int i = 0; i < SideGates.Length; ++i)
-            {
-                CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(SideGates[i].WorldSide);
-
-                if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
-                    candidates.Add(new(neighborTileData, SideGates[i]));
-            }
-
-            return candidates;
-        }
-
-        public void GetAlignedGatesAgainst(SideGate gate, List<SideGate> alignedGates)
-        {
-            foreach (var fromGate in SideGates)
-                fromGate.GetAlignedGatesAgainst(gate, alignedGates);
+            return SideGates.Where(s => s.WorldSide == side).ToArray();
         }
 
         public void Disconnect()

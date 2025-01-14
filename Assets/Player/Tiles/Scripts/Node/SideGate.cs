@@ -66,11 +66,11 @@ namespace HexaLinks.Tile
             return gateA.outwardGates.Contains(gateB) && gateB.outwardGates.Contains(gateA);
         }   
         
-        public static class Events
-        {
-            public readonly static EventType OnSegmentConnected = new();
-            public readonly static EventType OnSegmentBlocked = new();
-        }
+        //public static class Events
+        //{
+        //    public readonly static EventType OnSegmentConnected = new();
+        //    public readonly static EventType OnSegmentBlocked = new();
+        //}
 
 #if UNITY_EDITOR
 
