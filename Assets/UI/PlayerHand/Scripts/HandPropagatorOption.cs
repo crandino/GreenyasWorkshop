@@ -6,7 +6,6 @@ namespace HexaLinks.UI.PlayerHand
     using Tile;
     using Turn;
     using Ownership;
-    using UnityEngine;
 
     public class HandPropagatorOption : HandTileOption
     {
@@ -41,10 +40,18 @@ namespace HexaLinks.UI.PlayerHand
         {
             Counter = connectionsToUnlock;            
             counterLabel.visible = true;
+        }
 
-#if RECORDING
-            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
-#endif
+        public override void Activate()
+        {
+            ConnectionCandidates.Events.OnSideConnected.Register(OnSegmentConnected);
+            ConnectionCandidates.Events.OnSideBlocked.Register(OnSegmentBlocked);
+        }
+
+        public override void Deactivate()
+        {
+            ConnectionCandidates.Events.OnSideConnected.Unregister(OnSegmentConnected);
+            ConnectionCandidates.Events.OnSideBlocked.Unregister(OnSegmentBlocked);
         }
 
         public override void Set(TileResource resource)
@@ -60,9 +67,6 @@ namespace HexaLinks.UI.PlayerHand
 
         private void OnSegmentConnected()
         {
-            //if (!counterLabel.visible)
-            //    return;
-
             --Counter;
 #if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, -1));
@@ -102,21 +106,9 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.OnTilePlaced();
             InitializeCountdown();
-        }
-
-        public override void Activate()
-        {
-            base.Activate();
-            ConnectionCandidates.Events.OnSideConnected.Register(OnSegmentConnected);
-            ConnectionCandidates.Events.OnSideBlocked.Register(OnSegmentBlocked);
-        }
-
-        public override void Deactivate()
-        {
-            base.Deactivate();
-            if (Counter < 0) Counter = 0;
-            ConnectionCandidates.Events.OnSideConnected.Unregister(OnSegmentConnected);
-            ConnectionCandidates.Events.OnSideBlocked.Unregister(OnSegmentBlocked);
+#if RECORDING
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
+#endif
         }
 
         protected override void PrepareTile(Tile tile)

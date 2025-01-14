@@ -39,11 +39,17 @@ namespace HexaLinks.UI.PlayerHand
         }
 
         public virtual void Activate()
+        { }
+
+        public virtual void Deactivate()
+        { }
+
+        public void Enable()
         {
             button.SetEnabled(true);
         }
 
-        public virtual void Deactivate()
+        public void Disable()
         {
             button.SetEnabled(false);
         }
@@ -53,7 +59,6 @@ namespace HexaLinks.UI.PlayerHand
             if(DrawingPending)
             {
                 TileResource drawnResource = deck.Draw(fallback);
-
 #if RECORDING
                 if (tileResource != null)
                     Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new DrawDeckRecord(this, tileResource, drawnResource));
@@ -81,8 +86,6 @@ namespace HexaLinks.UI.PlayerHand
             {
                 PrepareTile(GameObject.Instantiate<Tile.Tile>(tileResource.Prefab));
                 button.iconImage = Background.FromSprite(HandUI.EmptyTile.Icon);
-                
-                Deactivate();
 
                 DrawingPending = true;
             }
@@ -91,17 +94,13 @@ namespace HexaLinks.UI.PlayerHand
         private void RegisterCallbacks()
         {
             TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
-
             TilePlacement.Events.OnFailurePlacement.Register(Reset);
-            TilePlacement.Events.OnFailurePlacement.Register(Activate);
         }
 
         private void UnregisterCallbacks()
         {
             TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
-
             TilePlacement.Events.OnFailurePlacement.Unregister(Reset);
-            TilePlacement.Events.OnFailurePlacement.Unregister(Activate);
         }
         
         protected virtual void PrepareTile(Tile.Tile tile)

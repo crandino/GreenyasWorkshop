@@ -28,6 +28,8 @@ public class TilePlacement : Game.IGameSystem
 
         input.TilePlacement.OnButtonPressed += TryPlacement;
         input.TilePlacementCancellation.OnButtonPressed += CancelPlacement;
+
+        Events.OnStartPlacement.Call();
     }
 
     // Include that as a DEBUG feature
@@ -68,12 +70,14 @@ public class TilePlacement : Game.IGameSystem
 
     public static class Events
     {
+        public readonly static EventType OnStartPlacement = new();
         public readonly static EventType OnSuccessPlacement = new();
         public readonly static EventType OnFailurePlacement = new();
         public readonly static EventType OnFinishPlacement = new();
 
         public static void Clear()
         {
+            OnStartPlacement.Clear();
             OnSuccessPlacement.Clear();
             OnFailurePlacement.Clear();
             OnFinishPlacement.Clear();

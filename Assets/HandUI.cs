@@ -31,22 +31,46 @@ public class HandUI : MonoBehaviour
         playerOptions[^1] = new HandPropagatorOption(buttons[^1], playerHandUI.rootVisualElement.Query<Label>("TileCounter"), deck.PropagatorDeck);
 
         Draw();
-        Deactivate();
+        Disable();
     }
 
     public void Activate()
     {
+        TilePlacement.Events.OnStartPlacement.Register(Disable);
+        TilePlacement.Events.OnFailurePlacement.Register(Enable);
+
         foreach (HandTileOption option in playerOptions)
         {
             option.Activate();
+            option.Enable();
+        }
+    }
+
+    private void Enable()
+    {
+        foreach (HandTileOption option in playerOptions)
+        {
+            option.Enable();
         }
     }
 
     public void Deactivate()
     {
+        TilePlacement.Events.OnStartPlacement.Unregister(Disable);
+        TilePlacement.Events.OnFailurePlacement.Unregister(Enable);
+
         foreach (HandTileOption option in playerOptions)
         {
             option.Deactivate();
+            option.Disable();
+        }
+    }
+
+    private void Disable()
+    {
+        foreach (HandTileOption option in playerOptions)
+        {
+            option.Disable();
         }
     }
 
