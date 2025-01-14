@@ -6,6 +6,7 @@ namespace HexaLinks.UI.PlayerHand
     using Tile;
     using Turn;
     using Ownership;
+    using UnityEngine;
 
     public class HandPropagatorOption : HandTileOption
     {
@@ -40,6 +41,10 @@ namespace HexaLinks.UI.PlayerHand
         {
             Counter = connectionsToUnlock;            
             counterLabel.visible = true;
+
+#if RECORDING
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
+#endif
         }
 
         public override void Set(TileResource resource)
@@ -55,8 +60,8 @@ namespace HexaLinks.UI.PlayerHand
 
         private void OnSegmentConnected()
         {
-            if (!counterLabel.visible)
-                return;
+            //if (!counterLabel.visible)
+            //    return;
 
             --Counter;
 #if RECORDING
@@ -95,9 +100,6 @@ namespace HexaLinks.UI.PlayerHand
 
         protected override void OnTilePlaced()
         {
-#if RECORDING
-            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
-#endif
             base.OnTilePlaced();
             InitializeCountdown();
         }
@@ -112,6 +114,7 @@ namespace HexaLinks.UI.PlayerHand
         public override void Deactivate()
         {
             base.Deactivate();
+            if (Counter < 0) Counter = 0;
             ConnectionCandidates.Events.OnSideConnected.Unregister(OnSegmentConnected);
             ConnectionCandidates.Events.OnSideBlocked.Unregister(OnSegmentBlocked);
         }

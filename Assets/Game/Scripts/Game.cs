@@ -37,8 +37,8 @@ public class Game : SingletonMonobehaviour<Game>
 
     private void RegisterSystem<T>(T system) where T : IGameSystem
     {
-        system.InitSystem();
         systems.Add(system.GetType(), system);
+        system.InitSystem();
     }
 
     private void UnregisterAll()
