@@ -1,4 +1,3 @@
-using HexaLinks.Ownership;
 using HexaLinks.Path.Finder;
 using HexaLinks.Turn;
 using UnityEngine;
@@ -42,14 +41,15 @@ namespace HexaLinks.Tile
             strengthCanvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
             CurrentStrength = maxPropagatorStrength;
             strengthIndicator = strengthCanvas.Show(CurrentStrength, transform);
-            //OnTurnEnded.RegisterCallback(IncreaseStrength);
+            TurnManager.Events.OnTurnEnded.Register(IncreaseStrength);
         }
 
         public override void Terminate()
         {
             base.Terminate();
             Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
-            //OnTurnEnded.UnregisterCallback(IncreaseStrength);
+            strengthIndicator = null;
+            TurnManager.Events.OnTurnEnded.Unregister(IncreaseStrength);
         }
 
         public override bool TryRelease()
@@ -74,8 +74,8 @@ namespace HexaLinks.Tile
         public override void Disconnect()
         {
             base.Disconnect();
-            Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
-            strengthIndicator = null;
+            //Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
+            //strengthIndicator = null;
         }
 
         public void ShowPropagationEvolution()
@@ -94,7 +94,7 @@ namespace HexaLinks.Tile
             currentStrength = Mathf.Clamp(currentStrength - 1, 0, maxPropagatorStrength);
             strengthIndicator.SetText(currentStrength.ToString());
 
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyStrengthRecord(this, -1));
 #endif
         }

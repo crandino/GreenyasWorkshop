@@ -54,7 +54,7 @@ namespace HexaLinks.UI.PlayerHand
             {
                 TileResource drawnResource = deck.Draw(fallback);
 
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
                 if (tileResource != null)
                     Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new DrawDeckRecord(this, tileResource, drawnResource));
 #endif

@@ -1,5 +1,6 @@
 using HexaLinks.UI.PlayerHand;
 
+#if RECORDING
 public class DrawDeckRecord : Record<HandTileOption>
 {
     private readonly TileResource resourceUsed = null;
@@ -19,7 +20,8 @@ public class DrawDeckRecord : Record<HandTileOption>
     public override void Undo()
     {
         actor.FakeUndraw(resourceUsed);
-    } 
-}
+    }
+} 
+#endif
 
 

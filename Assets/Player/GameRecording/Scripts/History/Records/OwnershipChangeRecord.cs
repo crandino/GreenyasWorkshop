@@ -1,5 +1,6 @@
 using HexaLinks.Ownership;
 
+#if RECORDING
 public class OwnershipChangeRecord : Record<PlayerOwnership>
 {
     private readonly Owner previousOwner;
@@ -20,4 +21,5 @@ public class OwnershipChangeRecord : Record<PlayerOwnership>
     {
         actor.InstantOwnerChange(previousOwner);
     }
-}
+} 
+#endif

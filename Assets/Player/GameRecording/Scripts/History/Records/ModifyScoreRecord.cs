@@ -1,4 +1,5 @@
-public class ModifyScoreRecord: Record<Score>
+#if RECORDING
+public class ModifyScoreRecord : Record<Score>
 {
     private readonly int scoreVariation = 0;
 
@@ -16,5 +17,6 @@ public class ModifyScoreRecord: Record<Score>
     {
         actor.Value -= scoreVariation;
     }
-}
+} 
+#endif
 

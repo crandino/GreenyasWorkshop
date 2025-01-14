@@ -59,7 +59,7 @@ namespace HexaLinks.UI.PlayerHand
                 return;
 
             --Counter;
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, -1));
 #endif
 
@@ -70,7 +70,21 @@ namespace HexaLinks.UI.PlayerHand
             }
         }
 
-#if UNITY_EDITOR && DEBUG
+        private void OnSegmentBlocked()
+        {
+            ++Counter;
+#if RECORDING
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, 1));
+#endif
+
+            if (!CountdownReached)
+            {
+                counterLabel.visible = true;
+                Set();
+            }
+        }
+
+#if RECORDING
         public void ForceCountdown(int increment)
         {
             Counter += increment;
@@ -81,7 +95,7 @@ namespace HexaLinks.UI.PlayerHand
 
         protected override void OnTilePlaced()
         {
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
 #endif
             base.OnTilePlaced();
@@ -92,12 +106,14 @@ namespace HexaLinks.UI.PlayerHand
         {
             base.Activate();
             SideGate.Events.OnSegmentConnected.Register(OnSegmentConnected);
+            SideGate.Events.OnSegmentBlocked.Register(OnSegmentBlocked);
         }
 
         public override void Deactivate()
         {
             base.Deactivate();
             SideGate.Events.OnSegmentConnected.Unregister(OnSegmentConnected);
+            SideGate.Events.OnSegmentBlocked.Unregister(OnSegmentBlocked);
         }
 
         protected override void PrepareTile(Tile tile)

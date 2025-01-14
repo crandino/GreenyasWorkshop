@@ -1,5 +1,6 @@
 using HexaLinks.UI.PlayerHand;
 
+#if RECORDING
 public class ModifyPropagatorCounterRecord : Record<HandPropagatorOption>
 {
     private readonly int counterVariation;
@@ -17,7 +18,8 @@ public class ModifyPropagatorCounterRecord : Record<HandPropagatorOption>
     public override void Undo()
     {
         actor.ForceCountdown(-counterVariation);
-    } 
-}
+    }
+} 
+#endif
 
 

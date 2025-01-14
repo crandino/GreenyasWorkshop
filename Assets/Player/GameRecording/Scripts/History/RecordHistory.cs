@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if RECORDING
 public class RecordHistory
 {
     private class TurnHistory
     {
-        public List<BaseRecord> commands = new List<BaseRecord>();  
-        
+        public List<BaseRecord> commands = new List<BaseRecord>();
+
         public void Remove()
         {
             foreach (BaseRecord command in commands)
@@ -34,7 +35,7 @@ public class RecordHistory
 
     public void Save()
     {
-        if(!HistorySynchronized)
+        if (!HistorySynchronized)
         {
             List<TurnHistory> historiesToRemove = turnHistories.GetRange(currentTurn, turnHistories.Count - currentTurn);
             foreach (TurnHistory history in historiesToRemove)
@@ -47,7 +48,7 @@ public class RecordHistory
         currentRecordingTurn = new TurnHistory();
         currentTurn++;
     }
-  
+
     public void RecordCommand<T>(Record<T> command) where T : class
     {
         currentRecordingTurn.commands.Add(command);
@@ -59,7 +60,7 @@ public class RecordHistory
             return;
 
         TurnHistory turnHistory = turnHistories[currentTurn - 1];
-        foreach(BaseRecord command in turnHistory.commands)
+        foreach (BaseRecord command in turnHistory.commands)
         {
             command.Undo();
         }
@@ -80,4 +81,5 @@ public class RecordHistory
 
         Debug.Log($"REDOING Turn {++currentTurn} of {turnHistories.Count}. Now on {currentTurn}");
     }
-}
+} 
+#endif

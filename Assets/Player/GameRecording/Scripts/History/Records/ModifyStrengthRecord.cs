@@ -1,5 +1,6 @@
 using HexaLinks.Tile;
 
+#if RECORDING
 public class ModifyStrengthRecord : Record<TilePropagator>
 {
     private readonly int variation = 0;
@@ -18,5 +19,6 @@ public class ModifyStrengthRecord : Record<TilePropagator>
     {
         actor.CurrentStrength -= variation;
     }
-}
+} 
+#endif
 

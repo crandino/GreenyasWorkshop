@@ -1,6 +1,7 @@
 using HexaLinks.Tile;
 using UnityEngine;
 
+#if RECORDING
 public class AddTileRecord : Record<HexMap>
 {
     private readonly Tile tile = null;
@@ -12,6 +13,7 @@ public class AddTileRecord : Record<HexMap>
 
     public override void Redo()
     {
+        tile.Initialize();
         tile.gameObject.SetActive(true);
         actor.AddTile(tile);
         tile.Connect();
@@ -19,15 +21,17 @@ public class AddTileRecord : Record<HexMap>
 
     public override void Undo()
     {
+        tile.Terminate();
         tile.gameObject.SetActive(false);
-        actor.RemoveTile(tile.Coordinates.Coord);
+        actor.RemoveTile(tile.Coord);
         tile.Disconnect();
     }
 
     public override void OnRemove()
     {
-        if(tile != null)
+        if (tile != null)
             GameObject.Destroy(tile.gameObject);
     }
-}
+} 
+#endif
 

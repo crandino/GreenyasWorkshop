@@ -48,6 +48,9 @@ namespace HexaLinks.Tile
         public void RemoveTile(CubeCoord coord)
         {
             gridData.Remove(coord);
+#if UNITY_EDITOR
+            if(Application.isPlaying)
+#endif
             OnGridChanged();
         }
 

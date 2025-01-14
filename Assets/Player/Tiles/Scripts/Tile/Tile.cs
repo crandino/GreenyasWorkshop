@@ -43,7 +43,7 @@ namespace HexaLinks.Tile
 
                 hexMap.AddTile(this);
 
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
                 Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new AddTileRecord(hexMap, this));
 #endif
                 Connect(connectionCandidates);

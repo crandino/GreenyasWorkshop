@@ -41,7 +41,7 @@ namespace HexaLinks.Turn
                 int scoreVariation = args.GetScoreVariation(Ownership);
                 score.Value += scoreVariation;
 
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
                 Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyScoreRecord(score, scoreVariation));
 #endif
             }
@@ -139,7 +139,7 @@ namespace HexaLinks.Turn
                 FinalizeTurn();
 
                 TurnManager turnManager = Game.Instance.GetSystem<TurnManager>();
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
                 turnManager.History.Save(); 
 #endif
 

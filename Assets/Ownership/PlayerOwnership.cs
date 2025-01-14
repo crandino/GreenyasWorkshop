@@ -19,7 +19,7 @@ namespace HexaLinks.Ownership
     {
         [SerializeField]
         private bool computesInPropagation = true;
-        public bool ComputesInPropagation => computesInPropagation;
+        public bool ComputesInPropagation => computesInPropagation /*&& PendingOwner != null && PendingOwner.Value != owner*/;
 
         [SerializeField]
         private ColorPropagator highligther;
@@ -51,7 +51,7 @@ namespace HexaLinks.Ownership
             highligther.PostPropagation();
             OnSegmentPropagated.Call(new OnSegmentPropagatedArgs(owner, PendingOwner ?? owner, computesInPropagation));
 
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new OwnershipChangeRecord(this, owner, PendingOwner ?? owner)); 
 #endif
 

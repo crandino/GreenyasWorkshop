@@ -132,7 +132,10 @@ public static class TileEditorManipulator
         HexMap hexMap = GameObject.FindAnyObjectByType<HexMap>();
         hexMap.RemoveTile(tile.Coordinates.Coord);
         if (Application.isPlaying)
-            tile.Disconnect();        
+        {
+            tile.Disconnect();
+            tile.Terminate();
+        }
     }
 
     private static void DestroyTile()

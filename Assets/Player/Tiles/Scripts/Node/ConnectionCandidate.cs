@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HexaLinks.Tile
 {
@@ -16,6 +17,11 @@ namespace HexaLinks.Tile
 
             for (int i = 0; i < possibleGates.Length; i++)
                 pairs.Add(new(fromGate, possibleGates[i]));
+
+            if (possibleGates.Length == 0)
+                UnityEngine.Debug.Log("Blocked!");
+            else
+                SideGate.Events.OnSegmentConnected.Call();
         }
 
         public void Connect()

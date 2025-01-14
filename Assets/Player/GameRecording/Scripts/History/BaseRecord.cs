@@ -1,3 +1,4 @@
+#if RECORDING
 public abstract class BaseRecord
 {
     public abstract void Undo();
@@ -14,7 +15,6 @@ public abstract class Record<T> : BaseRecord where T : class
     {
         this.actor = actor;
     }
-}
-
-// Create maximum number of steps recorded. Remove all other commands
+} 
+#endif
 

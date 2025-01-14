@@ -38,7 +38,7 @@ namespace HexaLinks.Tile
             gateA.outwardGates.Add(gateB);
             gateB.outwardGates.Add(gateA);
 
-            Events.OnSegmentConnected.Call();
+            //Events.OnSegmentConnected.Call();
         }
 
         public static void Disconnect(SideGate gate)
@@ -69,6 +69,7 @@ namespace HexaLinks.Tile
         public static class Events
         {
             public readonly static EventType OnSegmentConnected = new();
+            public readonly static EventType OnSegmentBlocked = new();
         }
 
 #if UNITY_EDITOR

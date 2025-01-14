@@ -4,7 +4,7 @@ namespace HexaLinks.Turn
 {
     public partial class TurnManager
     {
-#if UNITY_EDITOR && DEBUG
+#if RECORDING
         public RecordHistory History { private set; get; } = new RecordHistory();
 
         private void Update()
