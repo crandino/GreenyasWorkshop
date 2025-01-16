@@ -35,10 +35,11 @@ namespace HexaLinks.Tile
 
         public static void Connect(SideGate gateA, SideGate gateB)
         {
+            if (gateA.outwardGates.Contains(gateB) && gateB.outwardGates.Contains(gateA))
+                return;
+
             gateA.outwardGates.Add(gateB);
             gateB.outwardGates.Add(gateA);
-
-            //Events.OnSegmentConnected.Call();
         }
 
         public static void Disconnect(SideGate gate)
@@ -65,12 +66,6 @@ namespace HexaLinks.Tile
         {
             return gateA.outwardGates.Contains(gateB) && gateB.outwardGates.Contains(gateA);
         }   
-        
-        //public static class Events
-        //{
-        //    public readonly static EventType OnSegmentConnected = new();
-        //    public readonly static EventType OnSegmentBlocked = new();
-        //}
 
 #if UNITY_EDITOR
 

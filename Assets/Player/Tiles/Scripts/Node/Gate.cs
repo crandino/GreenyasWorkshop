@@ -1,6 +1,5 @@
 using HexaLinks.Ownership;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,7 +12,7 @@ namespace HexaLinks.Tile
 {
     public class Gate : MonoBehaviour
     {
-        public class ReadOnlyGate : IEqualityComparer<ReadOnlyGate>
+        public class ReadOnlyGate
         {
             private readonly Gate gate;
 
@@ -56,15 +55,15 @@ namespace HexaLinks.Tile
                 Ownership = gate.parentSegment.GetComponent<PlayerOwnership>();
                 ForwardTraversalDir = gate.parentSegment.IsTraversalForward(gate);
             }
-            
-            public bool Equals(ReadOnlyGate x, ReadOnlyGate y)
+
+            public static bool operator==(ReadOnlyGate x, ReadOnlyGate y)
             {
                 return x.Ownership == y.Ownership && x.ForwardTraversalDir == y.ForwardTraversalDir;
             }
 
-            public int GetHashCode(ReadOnlyGate product)
+            public static bool operator !=(ReadOnlyGate x, ReadOnlyGate y)
             {
-                return product.GetHashCode();
+                return x.Ownership != y.Ownership || x.ForwardTraversalDir != y.ForwardTraversalDir;
             }
         }
 

@@ -9,6 +9,7 @@ namespace HexaLinks.Path.Finder
     using Propagation;
     using static Propagation.PropagationManager.Events;
     using Tile;
+    using Tripolygon.UModelerX.Runtime.MessagePack.Formatters;
 
     public class PathIterator : Game.IGameSystem
     {
@@ -78,27 +79,28 @@ namespace HexaLinks.Path.Finder
             UnityEngine.Debug.Log($"Searching paths for {step.Precursor}");
 
             ReadOnlyGate initialGate = step.Precursor.StartingGate;
-            int maxPropagationSteps = step.Precursor.CurrentStrength;
-
-            // Tile propagator gate sequence
+            //int maxPropagationSteps = step.Precursor.CurrentStrength;
+            
+            // Needed propagator gate sequence to move to the next tile
             gateTracker.AddStep(initialGate);
             gateTracker.MoveNext();
             gateTracker.AddStep(initialGate.OutwardGates);
 
-            // Rest of the gate sequence
+            // Rest of the gate sequences
             while (gateTracker.MoveNext())
             {
                 ReadOnlyGate currentGate = gateTracker.GetCurrentStep();
 
-                int propagationStrengthUsed = gateTracker.NumAccumulatedSteps(o => o.Ownership.ComputesInPropagation);
+                //int propagationStrengthUsed = gateTracker.NumAccumulatedSteps(o => o.Ownership.ComputesInPropagation);
+                Path currentPath = new Path(gateTracker.GetEvaluatedSteps().ToArray());
 
-                if (currentGate.GoThrough(out ReadOnlyGate[] nextGates) && propagationStrengthUsed < maxPropagationSteps)
+                if (currentGate.GoThrough(out ReadOnlyGate[] nextGates) && currentPath.links.All(p => nextGates.All(n => n != p)))
                     gateTracker.AddStep(nextGates);
                 else
                 {
-                    PathFinder.Path newPath = new PathFinder.Path(gateTracker.GetEvaluatedSteps().ToArray());
-                    if(newPath.links.Length > 2)
-                        step.AddPath(newPath);
+                    //Path newPath = new Path(gateTracker.GetEvaluatedSteps().ToArray());
+                    if(currentPath.links.Length > 2)
+                        step.AddPath(currentPath);
 
                     if (currentGate.IsEnd)
                         QueueSearch(currentGate.Propagator);
