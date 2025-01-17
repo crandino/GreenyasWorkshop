@@ -69,14 +69,7 @@ namespace HexaLinks.Tile
             if(strengthIndicator == null)
                 strengthIndicator = strengthCanvas.Show(CurrentStrength, transform);
             strengthIndicator.UpdateValues(currentStrength.ToString(), strengthCanvas.CurrentLabel, transform);
-        }
-
-        public override void Disconnect()
-        {
-            base.Disconnect();
-            //Game.Instance.GetSystem<StrengthIndicatorCanvas>().Hide(strengthIndicator);
-            //strengthIndicator = null;
-        }
+        }    
 
         public void ShowPropagationEvolution()
         {
@@ -85,8 +78,14 @@ namespace HexaLinks.Tile
 
         private void IncreaseStrength()
         {
-            currentStrength = Mathf.Clamp(currentStrength + 1, 0, maxPropagatorStrength);
+            ++currentStrength;/* = Mathf.Clamp(currentStrength + 1, 0, maxPropagatorStrength);*/
             strengthIndicator.SetText(currentStrength.ToString());
+
+            StrengthIndicatorCanvas canvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
+            canvas.ShowWithCountdown($"+1", transform.position + Vector3.forward * 0.2f, 2f);
+#if RECORDING
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyStrengthRecord(this, +1));
+#endif
         }
 
         private void DecreaseStrength()

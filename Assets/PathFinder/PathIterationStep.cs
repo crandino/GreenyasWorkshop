@@ -11,16 +11,16 @@ namespace HexaLinks.Path.Finder
     {
         public class PathIterationStep
         {
-            public TilePropagator Precursor { private set; get; }
+            public TilePropagator InitialPropagator { private set; get; }
             public ReadOnlyGate[][] CombinedPaths { private set; get; }
             public int MaxLengthPath => paths.Max(p => p.links.Length);
             private bool ContainPaths => paths.Count > 0;
 
             private readonly List<Path> paths = new List<Path>();
 
-            public PathIterationStep(TilePropagator tile)
+            public PathIterationStep(TilePropagator propagator)
             {
-                Precursor = tile;
+                InitialPropagator = propagator;
             }
 
             public void AddPath(Path path)

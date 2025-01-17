@@ -62,7 +62,7 @@ namespace HexaLinks.Tile
             candidates.ConnectPairs(false);
         }
 
-        public virtual void Disconnect()
+        public void Disconnect()
         {
             connectivity.Disconnect();
         }

@@ -35,10 +35,10 @@ public class StrengthIndicatorCanvas : GameSystemMonobehaviour
         return ind;
     }
 
-    public void ShowWithCountdown(string number, Transform transformToFollow, float timeInSeconds)
+    public void ShowWithCountdown(string number, Vector3 worldPos, float timeInSeconds)
     {
         StrenghtIndicator ind = Get();
-        ind.UpdateValues(number, CurrentLabel, transformToFollow);
+        ind.UpdateValues(number, CurrentLabel, worldPos);
         ind.SetTimeToHide(timeInSeconds);
     }
 

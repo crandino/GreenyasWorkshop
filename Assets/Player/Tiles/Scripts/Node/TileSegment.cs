@@ -11,22 +11,20 @@ namespace HexaLinks.Tile
 
         protected SideGate[] SideGates => gates.Where(g => g is SideGate).Cast<SideGate>().ToArray();
 
+        public Vector3 IndicatorWorldPos
+        {
+            get
+            {
+                Vector3 position = Vector3.zero;
+                foreach (var sideGate in SideGates)
+                    position += sideGate.WorldPos;
+
+                return position / SideGates.Count();
+            }
+        }
+
         public uint Hash => HashFunction(this);
         public uint HashFunction(TileSegment s) => s.GetComponentInParent<Tile>().Hash + (uint)(s.transform.GetSiblingIndex() + 1);
-
-        //public void FillCandidates(CubeCoord fromCoord, ConnectionCandidates candidates)
-        //{
-        //    for (Side s = Side.North; s <= Side.NorthWest; ++s)
-        //    {
-        //        CubeCoord neighborHexCoord = fromCoord + CubeCoord.GetToNeighborCoord(s);
-
-        //        if (Game.Instance.GetSystem<HexMap>().TryGetTile(neighborHexCoord, out Tile neighborTileData))
-        //        {
-        //            candidates.AddFromGates(GetAlignedGatesOnSide(s), s);
-        //            candidates.AddToGates(neighborTileData.Connectivity.GetAlignedGatesOnSide(s.GetOpposite()), s);
-        //        }
-        //    }
-        //}
 
         public SideGate[] GetAlignedGatesOnSide(Side side)
         {

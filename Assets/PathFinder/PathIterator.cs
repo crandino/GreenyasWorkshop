@@ -54,7 +54,7 @@ namespace HexaLinks.Path.Finder
 
             private bool IsAlreadyProcessed(TilePropagator tile)
             {
-                return pending.Any(o => o.Precursor == tile) || archive.Any(o => o.Precursor == tile);
+                return pending.Any(o => o.InitialPropagator == tile) || archive.Any(o => o.InitialPropagator == tile);
             }
         }    
         
@@ -72,13 +72,13 @@ namespace HexaLinks.Path.Finder
             }
 
             PathIterationStep step = searches.GetSearch();
-            step.Precursor.ShowPropagationEvolution();
+            step.InitialPropagator.ShowPropagationEvolution();
 
             TileStepTracker<ReadOnlyGate> gateTracker = new TileStepTracker<ReadOnlyGate>();
 
-            UnityEngine.Debug.Log($"Searching paths for {step.Precursor}");
+            UnityEngine.Debug.Log($"Searching paths for {step.InitialPropagator}");
 
-            ReadOnlyGate initialGate = step.Precursor.StartingGate;
+            ReadOnlyGate initialGate = step.InitialPropagator.StartingGate;
             //int maxPropagationSteps = step.Precursor.CurrentStrength;
             
             // Needed propagator gate sequence to move to the next tile

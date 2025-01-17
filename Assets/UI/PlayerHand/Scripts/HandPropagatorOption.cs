@@ -9,8 +9,6 @@ namespace HexaLinks.UI.PlayerHand
 
     public class HandPropagatorOption : HandTileOption
     {
-        private TileResource propagatorResource = null;
-
         private int Counter
         {
             set
@@ -38,8 +36,7 @@ namespace HexaLinks.UI.PlayerHand
 
         private void InitializeCountdown()
         {
-            Counter = connectionsToUnlock;            
-            counterLabel.visible = true;
+            Counter = connectionsToUnlock;
         }
 
         public override void Activate()
@@ -54,61 +51,52 @@ namespace HexaLinks.UI.PlayerHand
             ConnectionCandidates.Events.OnSideBlocked.Unregister(OnSegmentBlocked);
         }
 
-        public override void Set(TileResource resource)
+        public override void Enable()
         {
-            propagatorResource = resource;
-            Set();        
+            UpdateStatus();
         }
 
-        private void Set()
+        private void UpdateStatus()
         {
-            base.Set(CountdownReached ? propagatorResource : HandUI.EmptyTile);
+            if (CountdownReached)
+                base.Enable();
+            else
+                Disable();
         }
 
         private void OnSegmentConnected()
         {
             --Counter;
+            UpdateStatus();
 #if RECORDING
             Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, -1));
 #endif
-
-            if (CountdownReached)
-            {
-                counterLabel.visible = false;
-                Set();
-            }
         }
 
         private void OnSegmentBlocked()
         {
             ++Counter;
+            UpdateStatus();
 #if RECORDING
-            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, 1));
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, +1));
 #endif
 
-            if (!CountdownReached)
-            {
-                counterLabel.visible = true;
-                Set();
-            }
         }
 
 #if RECORDING
         public void ForceCountdown(int increment)
         {
             Counter += increment;
-            counterLabel.visible = !CountdownReached;
-            Set();
         }
 #endif
-
         protected override void OnTilePlaced()
         {
+#if RECORDING
+            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock - Counter));
+#endif
             base.OnTilePlaced();
             InitializeCountdown();
-#if RECORDING
-            Game.Instance.GetSystem<TurnManager>().History.RecordCommand(new ModifyPropagatorCounterRecord(this, connectionsToUnlock));
-#endif
+            UpdateStatus();
         }
 
         protected override void PrepareTile(Tile tile)
@@ -118,4 +106,4 @@ namespace HexaLinks.UI.PlayerHand
         }
     }
 }
-   
+

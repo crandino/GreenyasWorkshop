@@ -33,18 +33,14 @@ namespace HexaLinks.UI.PlayerHand
         public void Reset()
         {
             button.iconImage = Background.FromSprite(tileResource.Icon);
-            DrawingPending = false;
-
-            UnregisterCallbacks();
+            DrawingPending = false;         
         }
 
-        public virtual void Activate()
-        { }
+        public virtual void Activate() { }
 
-        public virtual void Deactivate()
-        { }
+        public virtual void Deactivate() { }
 
-        public void Enable()
+        public virtual void Enable()
         {
             button.SetEnabled(true);
         }
@@ -89,19 +85,7 @@ namespace HexaLinks.UI.PlayerHand
 
                 DrawingPending = true;
             }
-        } 
-
-        private void RegisterCallbacks()
-        {
-            TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
-            TilePlacement.Events.OnFailurePlacement.Register(Reset);
-        }
-
-        private void UnregisterCallbacks()
-        {
-            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
-            TilePlacement.Events.OnFailurePlacement.Unregister(Reset);
-        }
+        }      
         
         protected virtual void PrepareTile(Tile.Tile tile)
         {
@@ -112,6 +96,23 @@ namespace HexaLinks.UI.PlayerHand
         protected virtual void OnTilePlaced()
         {
             UnregisterCallbacks();
+        }
+
+        private void RegisterCallbacks()
+        {
+            TilePlacement.Events.OnSuccessPlacement.Register(OnTilePlaced);
+
+            TilePlacement.Events.OnFailurePlacement.Register(Reset);
+            TilePlacement.Events.OnFailurePlacement.Register(UnregisterCallbacks);
+        }
+
+        private void UnregisterCallbacks()
+        {
+            TilePlacement.Events.OnSuccessPlacement.Unregister(OnTilePlaced);
+
+            TilePlacement.Events.OnFailurePlacement.Unregister(Reset);
+            TilePlacement.Events.OnFailurePlacement.Unregister(UnregisterCallbacks);
+
         }
     } 
 }

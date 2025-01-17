@@ -22,6 +22,17 @@ namespace HexaLinks.Propagation
             public Gate.ReadOnlyGate[] gates;
             public NormalizedTimer timer;
             public bool Computes;
+            public int Cost
+            {
+                get
+                {
+                    return gates.Count(g =>
+                    {
+                        return g.Ownership.ComputesInPropagation &&
+                               !g.Ownership.IsSameOwner(TurnManager.CurrentPlayer);
+                    });
+                }
+            }
 
             public GateSet(Gate.ReadOnlyGate[] gates)
             {
@@ -33,7 +44,7 @@ namespace HexaLinks.Propagation
 
         public override void TerminateSystem()
         {
-            Events.Clear();               
+            Events.Clear();
         }
 
         public void TriggerPropagation(PathIterationStep iterationStep)
@@ -44,7 +55,6 @@ namespace HexaLinks.Propagation
             stepIndex = 0;
 
             strength = 0;
-            Events.OnPropagationStep.Register(ShowStrength);
 
             iterationStep.Combine();
             AddNewStep();
@@ -53,8 +63,7 @@ namespace HexaLinks.Propagation
         public void TerminatePropagation()
         {
             enabled = false;
-            Events.OnPropagationStep.Unregister(iterationStep.Precursor);
-            Events.OnPropagationStep.Unregister(ShowStrength);
+            Events.OnPropagationStep.Unregister(iterationStep.InitialPropagator);
 
             Events.OnPropagationStepEnded.Call();
         }
@@ -74,16 +83,24 @@ namespace HexaLinks.Propagation
                 return;
 
             GateSet set = new(iterationStep.CombinedPaths[stepIndex]);
+
+            if (set.Cost > iterationStep.InitialPropagator.CurrentStrength)
+                return;
+
             set.timer.AddEvent(0.8f, AddNewStep);
             set.timer.AddEvent(1.0f, RemoveLastStep);
 
             gateSetStep.Add(set);
 
             foreach (var gate in set.gates)
+            {
                 gate.Ownership.PreparePropagation(TurnManager.CurrentPlayer, gate.ForwardTraversalDir);
-
-            if (set.Computes)
-                Events.OnPropagationStep.Call();
+                if (gate.Ownership.ComputesInPropagation && !gate.Ownership.IsSameOwner(TurnManager.CurrentPlayer))
+                {
+                    ShowStrength(gate);
+                    Events.OnPropagationStep.Call();
+                }
+            }
         }
 
         private void RemoveLastStep()
@@ -103,16 +120,14 @@ namespace HexaLinks.Propagation
                 setStep.gates[i].Ownership.UpdatePropagation(setStep.timer.NormalizedTime);
         }
 
-        private void ShowStrength()
+        private void ShowStrength(Gate.ReadOnlyGate gate)
         {
             strength++;
             StrengthIndicatorCanvas canvas = Game.Instance.GetSystem<StrengthIndicatorCanvas>();
-
-            foreach (var gate in gateSetStep.Last().gates)
-            {
-                if (gate.Ownership.ComputesInPropagation)
-                    canvas.ShowWithCountdown($"+{strength}", gate.Ownership.transform, 4f);
-            }
+            canvas.ShowWithCountdown($"+{strength}", gate.IndicatorPos, 3f);
+            //var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //go.transform.localScale *= 0.1f;
+            //go.transform.position = gate.IndicatorPos;
         }
 
         public static class Events

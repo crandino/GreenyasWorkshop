@@ -20,6 +20,8 @@ namespace HexaLinks.Tile
             public bool ForwardTraversalDir { get; }
             public uint Hash { get; }
 
+            public Vector3 IndicatorPos => gate.parentSegment.IndicatorWorldPos;
+
             public ReadOnlyGate[] OutwardGates => gate.outwardGates.ToExposedGates();
 
             public TilePropagator Propagator
@@ -81,11 +83,6 @@ namespace HexaLinks.Tile
         public bool IsConnected => outwardGates.Count > 0;
 
         public virtual Vector3 WorldPos => parentSegment.transform.position;
-
-        //private ReadOnlyGate[] GoThrough()
-        //{
-        //    return inwardGate.outwardGates.ToExposedGates();
-        //}
 
 #if UNITY_EDITOR
 

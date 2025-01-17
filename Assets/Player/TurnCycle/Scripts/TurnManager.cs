@@ -122,8 +122,7 @@ namespace HexaLinks.Turn
                 if (prematureExit)
                     CurrentStep.SafeEnd();
 
-                CurrentContext.hand.Deactivate();
-                Events.OnTurnEnded.Call();
+                CurrentContext.hand.Deactivate();                
             }
 
             public void NextStep()
@@ -137,6 +136,7 @@ namespace HexaLinks.Turn
             private void PrepareNextPlayer()
             {
                 FinalizeTurn();
+                Events.OnTurnEnded.Call();
 
                 TurnManager turnManager = Game.Instance.GetSystem<TurnManager>();
 #if RECORDING
